@@ -1,11 +1,10 @@
 // components/uno/GameBoard.tsx
 import React, { useState, useEffect } from 'react';
-import { Card } from './Card';
-import { CardBack } from './Card';
+import { CardBack, Card } from './Card';
 import { ColorSelector } from './ColorSelector';
 import { useUnoGame } from '@/hooks/useUnoGame';
 import { botPlayCard, botChooseColor } from '@/utils/uno';
-import { CardColor } from '@/types/uno';
+import { Card as CardType, CardColor, Player } from '@/types/uno';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card as UICard } from '@/components/ui/card';
@@ -54,7 +53,7 @@ export const GameBoard: React.FC = () => {
     }, 1000);
 
     return () => clearTimeout(timeout);
-  }, [state.currentPlayerIndex, state.gameStarted, state.gameOver, currentPlayer, topCard, state.currentColor, state.mustDrawCards]);
+  }, [state.currentPlayerIndex, state.gameStarted, state.gameOver, currentPlayer, topCard, state.currentColor, state.mustDrawCards, actions]);
 
   const handleCardClick = (cardId: string) => {
     if (!humanPlayer || currentPlayer.id !== humanPlayer.id || state.gameOver) return;
@@ -125,7 +124,7 @@ export const GameBoard: React.FC = () => {
     }
   };
 
-  const renderPlayer = (player: any, index: number) => {
+  const renderPlayer = (player: Player, index: number) => {
     const position = getPlayerPosition(index);
     const isCurrentPlayer = index === state.currentPlayerIndex;
     const isHuman = !player.isBot;
@@ -152,7 +151,7 @@ export const GameBoard: React.FC = () => {
         
         <div className={`flex gap-1 ${positionClasses[position]}`}>
           {isHuman ? (
-            player.cards.map((card: any) => (
+            player.cards.map((card: CardType) => (
               <Card
                 key={card.id}
                 card={card}
@@ -248,7 +247,7 @@ export const GameBoard: React.FC = () => {
             <Badge variant="destructive">Draw {state.mustDrawCards} cards</Badge>
           )}
           {currentPlayer && (
-            <Badge variant="default">{currentPlayer.name}'s turn</Badge>
+            <Badge variant="default">{currentPlayer.name}&apos;s turn</Badge>
           )}
         </div>
       </div>

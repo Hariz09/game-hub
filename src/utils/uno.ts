@@ -1,5 +1,5 @@
 // utils/uno.ts
-import { Card, CardColor, CardValue, Player, GameState } from '@/types/uno';
+import { Card, CardColor, CardValue, Player } from '@/types/uno';
 
 export const createDeck = (): Card[] => {
   const deck: Card[] = [];

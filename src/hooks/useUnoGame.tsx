@@ -1,6 +1,6 @@
 // hooks/useUnoGame.ts
 import { useReducer, useCallback } from 'react';
-import { GameState, GameAction, Player, Card, CardColor } from '@/types/uno';
+import { GameState, GameAction, Card, CardColor } from '@/types/uno';
 import { 
   createDeck, 
   shuffleDeck, 
@@ -109,7 +109,7 @@ const gameReducer = (state: GameState, action: GameAction): GameState => {
         };
       }
 
-      let nextState = {
+      const nextState = {
         ...state,
         players: updatedPlayers,
         discardPile: [...state.discardPile, card],
@@ -172,7 +172,7 @@ const gameReducer = (state: GameState, action: GameAction): GameState => {
       let finalDrawnCards = drawnCards;
 
       if (drawnCards.length < drawCount && state.discardPile.length > 1) {
-        const topCard = state.discardPile[state.discardPile.length - 1];
+        // const topCard = state.discardPile[state.discardPile.length - 1];
         const reshuffledDeck = shuffleDeck(state.discardPile.slice(0, -1));
         finalDeck = [...remainingDeck, ...reshuffledDeck];
         
