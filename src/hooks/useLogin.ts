@@ -68,9 +68,9 @@ export const useLogin = () => {
       // Check if login was successful
       if (data.user) {
         // Use replace instead of push to avoid back button issues
-        router.replace("/subtree/bdbde99d-f6e5-4fc7-a308-79acf4d5765d");
+        router.replace("/");
         // Force a page refresh to ensure proper state update
-        window.location.href = "/subtree/bdbde99d-f6e5-4fc7-a308-79acf4d5765d";
+        // window.location.href = "/";
       }
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "An error occurred");
