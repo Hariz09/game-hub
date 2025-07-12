@@ -3,8 +3,7 @@
 import { createClient } from "@/lib/supabase/client";
 import { SetStateAction, useState } from "react";
 import { useRouter } from "next/navigation";
-import { AuthLayout } from "./auth-layout";
-import { AuthInput, AuthButton, ErrorMessage, SuccessMessage, AuthLink } from "./auth-components";
+import { AuthLayout, AuthInput, AuthButton, ErrorMessage, SuccessMessage, AuthLink } from "./auth-components";
 
 export function ForgotPasswordForm({
   className,
@@ -30,7 +29,7 @@ export function ForgotPasswordForm({
       if (error) throw error;
       setSuccess(true);
     } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "Terjadi kesalahan");
+      setError(error instanceof Error ? error.message : "An error occurred");
     } finally {
       setIsLoading(false);
     }
@@ -43,17 +42,30 @@ export function ForgotPasswordForm({
   if (success) {
     return (
       <AuthLayout
-        title="Periksa Email Anda"
-        subtitle="Instruksi reset kata sandi telah dikirim"
+        title="Check Your Email"
+        subtitle="Password reset instructions have been sent"
+        headerTitle="GameHub"
+        headerSubtitle="Password Recovery"
       >
         <div className="space-y-6">
           <SuccessMessage
-            title="Email Berhasil Dikirim"
-            message="Jika Anda terdaftar menggunakan email dan kata sandi, Anda akan menerima email reset kata sandi."
+            title="Email Sent Successfully"
+            message="If you're registered with email and password, you'll receive a password reset email shortly. Please check your inbox and follow the instructions."
           />
 
+          <div className="bg-blue-900/30 border border-blue-500/50 rounded-lg p-4 backdrop-blur-sm">
+            <p className="text-sm text-blue-300 mb-2">
+              <strong>Didn't receive the email?</strong>
+            </p>
+            <ul className="text-xs text-blue-400 space-y-1">
+              <li>• Check your spam/junk folder</li>
+              <li>• Make sure you entered the correct email address</li>
+              <li>• Wait a few minutes for the email to arrive</li>
+            </ul>
+          </div>
+
           <AuthButton onClick={handleBackToLogin}>
-            Kembali ke Halaman Masuk
+            Back to Login
           </AuthButton>
         </div>
       </AuthLayout>
@@ -62,19 +74,21 @@ export function ForgotPasswordForm({
 
   return (
     <AuthLayout
-      title="Reset Kata Sandi Anda"
-      subtitle="Masukkan email Anda dan kami akan mengirimkan tautan untuk mereset kata sandi"
+      title="Reset Your Password"
+      subtitle="Enter your email and we'll send you a link to reset your password"
+      headerTitle="GameHub"
+      headerSubtitle="Password Recovery"
     >
       <form onSubmit={handleForgotPassword} className="space-y-6">
         <AuthInput
           id="email"
           type="email"
-          label="Email"
-          placeholder="contoh@email.com"
+          label="Email Address"
+          placeholder="Enter your email"
           required
           value={email}
           onChange={(e: { target: { value: SetStateAction<string>; }; }) => setEmail(e.target.value)}
-          error={error?? undefined}
+          error={error ?? undefined}
         />
 
         {error && <ErrorMessage message={error} />}
@@ -82,24 +96,24 @@ export function ForgotPasswordForm({
         <AuthButton
           type="submit"
           loading={isLoading}
-          loadingText="Mengirim..."
+          loadingText="Sending..."
         >
-          Kirim Email Reset
+          Send Reset Email
         </AuthButton>
 
-        {/* Pembatas */}
+        {/* Divider */}
         <div className="flex items-center my-6">
-          <div className="flex-1 h-px bg-gradient-to-r from-transparent via-green-700/50 to-transparent"></div>
-          <span className="px-4 text-sm text-gray-400">atau</span>
-          <div className="flex-1 h-px bg-gradient-to-r from-transparent via-green-700/50 to-transparent"></div>
+          <div className="flex-1 h-px bg-gradient-to-r from-transparent via-purple-700/50 to-transparent"></div>
+          <span className="px-4 text-sm text-gray-400">or</span>
+          <div className="flex-1 h-px bg-gradient-to-r from-transparent via-purple-700/50 to-transparent"></div>
         </div>
 
-        {/* Link kembali ke login */}
+        {/* Back to login link */}
         <div className="text-center">
           <p className="text-gray-300 text-sm">
-            Sudah ingat kata sandi?{' '}
+            Remember your password?{' '}
             <AuthLink onClick={handleBackToLogin}>
-              Masuk disini
+              Sign in here
             </AuthLink>
           </p>
         </div>

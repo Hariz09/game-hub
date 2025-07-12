@@ -1,8 +1,7 @@
 "use client"
 import React from "react";
-import { KeyRound, Mail, User, Lock, AlertCircle, UserPlus } from "lucide-react";
-import { AuthLayout } from "@/components/auth/auth-layout";
-import { AuthInput, AuthPasswordInput, AuthButton, ErrorMessage, SuccessMessage, AuthLink } from "@/components/auth/auth-components";
+import { KeyRound, Mail, User, AlertCircle, UserPlus } from "lucide-react";
+import { AuthLayout, AuthInput, AuthPasswordInput, AuthButton, ErrorMessage, SuccessMessage, AuthLink } from "@/components/auth/auth-components";
 import { useSignup } from "@/hooks/useSignup";
 
 // Confirmation Dialog Component
@@ -21,32 +20,32 @@ function ConfirmationDialog({
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-      <div className="bg-gray-900/95 rounded-2xl border border-green-800/30 max-w-md w-full p-6">
+      <div className="bg-gray-900/95 backdrop-blur-lg rounded-2xl border border-purple-800/50 max-w-md w-full p-6 shadow-2xl">
         <h3 className="text-xl font-bold text-white mb-4 text-center">
-          Konfirmasi Pembuatan Akun
+          Confirm Account Creation
         </h3>
         
         <div className="bg-amber-900/30 border border-amber-700/50 rounded-lg p-3 mb-4">
           <div className="flex items-start space-x-2">
             <AlertCircle className="h-5 w-5 text-amber-400 mt-0.5 flex-shrink-0" />
             <p className="text-sm text-amber-300">
-              Harap periksa informasi Anda dengan teliti. Token registrasi akan ditandai sebagai sudah digunakan dan tidak dapat digunakan lagi.
+              Please check your information carefully. The registration token will be marked as used and cannot be used again.
             </p>
           </div>
         </div>
 
-        <div className="bg-gray-800/50 rounded-lg border border-gray-700/50 p-4 mb-4">
-          <h4 className="text-sm font-semibold text-gray-300 mb-3">Detail Akun</h4>
+        <div className="bg-gray-800/50 rounded-lg border border-purple-700/50 p-4 mb-4">
+          <h4 className="text-sm font-semibold text-purple-200 mb-3">Account Details</h4>
           <div className="space-y-3">
             <div className="flex items-center space-x-3">
-              <Mail className="h-4 w-4 text-gray-400" />
+              <Mail className="h-4 w-4 text-cyan-400" />
               <div>
                 <p className="text-xs text-gray-400">Email</p>
                 <p className="text-sm text-white">{formData.email}</p>
               </div>
             </div>
             <div className="flex items-center space-x-3">
-              <User className="h-4 w-4 text-gray-400" />
+              <User className="h-4 w-4 text-cyan-400" />
               <div>
                 <p className="text-xs text-gray-400">Username</p>
                 <p className="text-sm text-white">{formData.username}</p>
@@ -57,7 +56,7 @@ function ConfirmationDialog({
 
         <div className="bg-blue-900/30 border border-blue-700/50 rounded-lg p-3 mb-6">
           <p className="text-sm text-blue-300">
-            Setelah konfirmasi, silakan periksa email Anda untuk memverifikasi akun sebelum login.
+            After confirmation, please check your email to verify your account before logging in.
           </p>
         </div>
 
@@ -67,13 +66,13 @@ function ConfirmationDialog({
             onClick={onClose}
             className="flex-1"
           >
-            Batal
+            Cancel
           </AuthButton>
           <AuthButton
             onClick={onConfirm}
             className="flex-1"
           >
-            Buat Akun
+            Create Account
           </AuthButton>
         </div>
       </div>
@@ -86,7 +85,6 @@ export default function SignUp() {
     // State
     isLoading,
     error,
-    showPassword,
     isSuccess,
     isLocked,
     showConfirmDialog,
@@ -94,7 +92,6 @@ export default function SignUp() {
     
     // Actions
     handleInputChange,
-    togglePasswordVisibility,
     handleFormSubmit,
     handleConfirmedSubmit,
     setShowConfirmDialog,
@@ -104,31 +101,32 @@ export default function SignUp() {
   // Success state
   if (isSuccess) {
     return (
-      <div className="bg-gradient-to-br from-gray-900 via-green-950 to-gray-800">
       <AuthLayout
-        title="Akun Berhasil Dibuat"
-        subtitle="Selamat! Akun Anda telah berhasil dibuat"
+        title="Account Created Successfully"
+        subtitle="Congratulations! Your gaming account has been created"
+        headerTitle="GameHub"
+        headerSubtitle="Your Ultimate Gaming Experience"
       >
         <div className="space-y-6">
           <SuccessMessage
-            title="Registrasi Berhasil"
-            message="Akun Anda telah dibuat. Silakan periksa email untuk memverifikasi akun sebelum login."
+            title="Registration Successful"
+            message="Your account has been created. Please check your email to verify your account before logging in."
           />
           
           <AuthButton onClick={navigateToLogin}>
-            Ke Halaman Login
+            Go to Login Page
           </AuthButton>
         </div>
       </AuthLayout>
-      </div>
     );
   }
 
   return (
-    <div className="bg-gradient-to-br from-gray-900 via-green-950 to-gray-800">
     <AuthLayout
-      title="Buat Akun Baru"
-      subtitle="Masukkan detail Anda untuk membuat akun"
+      title="Create New Account"
+      subtitle="Join the gaming community today"
+      headerTitle="GameHub"
+      headerSubtitle="Your Ultimate Gaming Experience"
     >
       <form onSubmit={handleFormSubmit} className="space-y-4">
         {error && (
@@ -139,8 +137,8 @@ export default function SignUp() {
           id="token"
           name="token"
           type="text"
-          label="Token Registrasi *"
-          placeholder="Masukkan token registrasi Anda"
+          label="Registration Token *"
+          placeholder="Enter your registration token"
           value={formData.token}
           onChange={handleInputChange}
           required
@@ -152,8 +150,8 @@ export default function SignUp() {
           id="email"
           name="email"
           type="email"
-          label="Email *"
-          placeholder="contoh@gmail.com"
+          label="Email Address *"
+          placeholder="example@gmail.com"
           value={formData.email}
           onChange={handleInputChange}
           required
@@ -166,7 +164,7 @@ export default function SignUp() {
             id="username"
             name="username"
             type="text"
-            label="Username * (huruf saja, maks 12 karakter)"
+            label="Username * (letters only, max 12 characters)"
             placeholder="username"
             value={formData.username}
             onChange={handleInputChange}
@@ -177,14 +175,14 @@ export default function SignUp() {
             rightElement={<User className="h-5 w-5 text-gray-400" />}
           />
           <p className="text-xs text-gray-400">
-            {formData.username.length}/12 karakter
+            {formData.username.length}/12 characters
           </p>
         </div>
 
         <AuthPasswordInput
           id="password"
           name="password"
-          label="Password * (min. 8 karakter)"
+          label="Password * (minimum 8 characters)"
           placeholder="••••••••"
           value={formData.password}
           onChange={handleInputChange}
@@ -196,8 +194,8 @@ export default function SignUp() {
 
         <div className="bg-blue-900/30 border border-blue-700/50 rounded-lg p-3">
           <p className="text-sm text-blue-300">
-            Silakan periksa email Anda setelah registrasi untuk mengkonfirmasi akun. 
-            Anda tidak akan dapat login sampai email terverifikasi.
+            Please check your email after registration to confirm your account. 
+            You won't be able to log in until your email is verified.
           </p>
         </div>
 
@@ -205,8 +203,8 @@ export default function SignUp() {
           <div className="flex items-start space-x-2">
             <AlertCircle className="h-4 w-4 text-amber-400 mt-0.5 flex-shrink-0" />
             <p className="text-sm text-amber-300">
-              Anda memerlukan token registrasi untuk membuat akun. 
-              Silakan hubungi administrator untuk mendapatkannya.
+              You need a registration token to create an account. 
+              Please contact the administrator to obtain one.
             </p>
           </div>
         </div>
@@ -215,22 +213,22 @@ export default function SignUp() {
           type="submit"
           disabled={isLoading || isLocked}
           loading={isLoading}
-          loadingText="Membuat Akun..."
+          loadingText="Creating Account..."
         >
           {isLocked ? (
-            "Pembuatan Akun Terkunci"
+            "Account Creation Locked"
           ) : (
             <div className="flex items-center justify-center space-x-2">
               <UserPlus className="w-4 h-4" />
-              <span>Buat Akun</span>
+              <span>Create Account</span>
             </div>
           )}
         </AuthButton>
 
         <div className="text-center">
-          <span className="text-gray-400">Sudah punya akun? </span>
+          <span className="text-gray-400">Already have an account? </span>
           <AuthLink onClick={navigateToLogin}>
-            Login di sini
+            Sign in here
           </AuthLink>
         </div>
       </form>
@@ -242,6 +240,5 @@ export default function SignUp() {
         formData={formData}
       />
     </AuthLayout>
-    </div>
   );
 }
