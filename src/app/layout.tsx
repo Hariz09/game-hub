@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Game Hub",
-  description: "Game collection by hariz",
+  description: "Game collections by Hariz",
 };
 
 export default function RootLayout({

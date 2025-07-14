@@ -10,7 +10,7 @@ export default function SidebarButton({ onClick }: SidebarButtonProps) {
   return (
     <Button
       variant="ghost"
-      size="sidebar"
+      size="lg"
       className="fixed top-5 left-5 z-50 bg-white/70 backdrop-blur-md shadow-xl rounded-full hover:bg-white dark:bg-slate-800 dark:hover:bg-slate-700 transition"
       onClick={onClick}
     >

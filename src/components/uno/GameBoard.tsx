@@ -1,4 +1,4 @@
-// components/uno/GameBoard.tsx
+'use client'
 import React, { useState, useEffect } from 'react';
 import { CardBack, Card } from './Card';
 import { ColorSelector } from './ColorSelector';
