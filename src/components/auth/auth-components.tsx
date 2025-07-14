@@ -96,7 +96,6 @@ export function AuthButton({
   className,
   href,
   replace = false,
-  prefetch = true,
   onClick,
   ...props 
 }: AuthButtonProps) {
@@ -208,7 +207,6 @@ export function AuthLink({
   scroll = true
 }: AuthLinkProps) {
   const [isPending, startTransition] = useTransition();
-  const router = useRouter();
   
   const baseClasses = "text-cyan-400 hover:text-cyan-300 font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-gray-900 rounded hover:underline";
   
@@ -316,8 +314,6 @@ interface AuthLayoutProps {
 
 export function AuthLayout({ 
   children, 
-  title, 
-  subtitle, 
   headerTitle = "GameHub",
   headerSubtitle = "Your Ultimate Gaming Experience"
 }: AuthLayoutProps) {

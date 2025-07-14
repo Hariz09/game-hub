@@ -32,10 +32,6 @@ import { LogoutButton } from "@/components/auth/logout-button";
 import { createClient } from "@/lib/supabase/client";
 import type { User as UserType } from "@supabase/supabase-js";
 
-interface SidebarProps {
-  // No props needed - component manages its own state
-}
-
 interface SidebarButtonProps {
   onClick: () => void;
 }
@@ -54,7 +50,7 @@ const SidebarButton = ({ onClick }: SidebarButtonProps) => {
   );
 };
 
-const Sidebar = ({}: SidebarProps) => {
+const Sidebar = () => {
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState<UserType | null>(null);
   const [isDarkMode, setIsDarkMode] = useState(false);

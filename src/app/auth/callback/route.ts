@@ -21,24 +21,21 @@ export async function GET(request: Request) {
         username: string;
         token: string;
         tokenId: string;
-        role: string;
-        memberId: string;
       };
 
       if (!metadata) throw new Error('No registration metadata found');
 
-      // Create user role
-      const { error: roleError } = await supabase.from("user_roles").insert([
+      // Create user profile
+      const { error: profileError } = await supabase.from("profiles").insert([
         {
           user_id: user.id,
-          role: metadata.role,
+          role: 'player',
           username: metadata.username,
           email: user.email,
-          member_id: metadata.memberId,
         },
       ]);
 
-      if (roleError) throw roleError;
+      if (profileError) throw profileError;
 
       // // Mark token as used
       // const { error: updateError } = await supabase

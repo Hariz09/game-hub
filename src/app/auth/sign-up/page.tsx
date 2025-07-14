@@ -195,7 +195,7 @@ export default function SignUp() {
         <div className="bg-blue-900/30 border border-blue-700/50 rounded-lg p-3">
           <p className="text-sm text-blue-300">
             Please check your email after registration to confirm your account. 
-            You won't be able to log in until your email is verified.
+            You won&apos;t be able to log in until your email is verified.
           </p>
         </div>
 

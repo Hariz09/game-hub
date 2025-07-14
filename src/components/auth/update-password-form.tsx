@@ -83,10 +83,10 @@ export function UpdatePasswordForm() {
 
           <div className="bg-green-900/30 border border-green-500/50 rounded-lg p-4 backdrop-blur-sm">
             <p className="text-sm text-green-300 mb-2">
-              <strong>What's next?</strong>
+              <strong>What&apos;s next?</strong>
             </p>
             <ul className="text-xs text-green-400 space-y-1">
-              <li>• You're now logged in with your new password</li>
+              <li>• You&apos;re now logged in with your new password</li>
               <li>• Make sure to remember your new password</li>
               <li>• Consider using a password manager for security</li>
             </ul>

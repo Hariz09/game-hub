@@ -119,7 +119,7 @@ export function LoginForm({}: React.ComponentPropsWithoutRef<"div">) {
         {/* Sign Up Link */}
         <div className="text-center">
           <p className="text-gray-300 text-sm">
-            Don't have an account?{' '}
+            Don&apos;t have an account?{' '}
             <AuthLink onClick={handleSignUp}>
               Sign up here
             </AuthLink>

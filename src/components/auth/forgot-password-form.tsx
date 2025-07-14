@@ -6,8 +6,6 @@ import { useRouter } from "next/navigation";
 import { AuthLayout, AuthInput, AuthButton, ErrorMessage, SuccessMessage, AuthLink } from "./auth-components";
 
 export function ForgotPasswordForm({
-  className,
-  ...props
 }: React.ComponentPropsWithoutRef<"div">) {
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -55,7 +53,7 @@ export function ForgotPasswordForm({
 
           <div className="bg-blue-900/30 border border-blue-500/50 rounded-lg p-4 backdrop-blur-sm">
             <p className="text-sm text-blue-300 mb-2">
-              <strong>Didn't receive the email?</strong>
+              <strong>Didn&apos;t receive the email?</strong>
             </p>
             <ul className="text-xs text-blue-400 space-y-1">
               <li>• Check your spam/junk folder</li>

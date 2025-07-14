@@ -21,7 +21,7 @@ export const useLogin = () => {
     
     try {
       const { data, error } = await supabase
-        .from('user_roles')
+        .from('profiles')
         .select('email')
         .eq('username', username)
         .single();
