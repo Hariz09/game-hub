@@ -3,9 +3,22 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Badge } from '@/components/ui/badge'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Trophy, User, Award } from 'lucide-react'
 import { GameBoard } from './GameBoard'
 import { NextPiece } from './NextPiece'
 import { useGameLogic } from '@/hooks/useTetrisLogic'
+import { GameScoreService, LeaderboardEntry, UserBestScore, UserProfile } from '@/hooks/useGameScore'
+
+interface GameStats {
+  startTime: number
+  moves: number
+  linesCleared: number
+}
 
 export default function TetrisGame() {
   const {
@@ -25,6 +38,27 @@ export default function TetrisGame() {
     resetGame
   } = useGameLogic()
 
+  // Game scoring integration
+  const [gameScoreService] = useState(() => new GameScoreService())
+  const [gameStats, setGameStats] = useState<GameStats>({
+    startTime: Date.now(),
+    moves: 0,
+    linesCleared: 0
+  })
+  
+  // User profile and authentication
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [showUsernameDialog, setShowUsernameDialog] = useState(false)
+  const [username, setUsername] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+
+  // Leaderboard and scores
+  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([])
+  const [userBestScore, setUserBestScore] = useState<UserBestScore | null>(null)
+  const [showScoreDialog, setShowScoreDialog] = useState(false)
+  const [scoreSubmitted, setScoreSubmitted] = useState(false)
+
   // Touch handling state
   const [touchStartX, setTouchStartX] = useState<number | null>(null)
   const [touchStartY, setTouchStartY] = useState<number | null>(null)
@@ -36,6 +70,138 @@ export default function TetrisGame() {
   const TAP_MAX_DURATION = 200
   const TAP_MAX_DISTANCE = 10
 
+  // Track game statistics
+  const previousLinesRef = useRef(lines)
+  const previousGameOverRef = useRef(gameOver)
+
+  // Initialize authentication and profile
+  useEffect(() => {
+    const initAuth = async () => {
+      const authenticated = await gameScoreService.isUserAuthenticated()
+      setIsAuthenticated(authenticated)
+      
+      if (authenticated) {
+        const profile = await gameScoreService.getUserProfile()
+        setUserProfile(profile)
+        
+        if (!profile) {
+          setShowUsernameDialog(true)
+        }
+      }
+    }
+    initAuth()
+  }, [gameScoreService])
+
+  // Load leaderboard and user best score
+  useEffect(() => {
+    const loadScoreData = async () => {
+      const [leaderboardData, userBest] = await Promise.all([
+        gameScoreService.getLeaderboard('tetris', 10),
+        gameScoreService.getUserBestScore('tetris')
+      ])
+      
+      setLeaderboard(leaderboardData)
+      setUserBestScore(userBest)
+    }
+    
+    if (isAuthenticated) {
+      loadScoreData()
+    }
+  }, [gameScoreService, isAuthenticated, userProfile])
+
+  // Track moves and lines cleared
+  useEffect(() => {
+    if (lines > previousLinesRef.current) {
+      setGameStats(prev => ({
+        ...prev,
+        linesCleared: lines
+      }))
+    }
+    previousLinesRef.current = lines
+  }, [lines])
+
+  // Handle game over and score submission
+  useEffect(() => {
+    if (gameOver && !previousGameOverRef.current && isAuthenticated && userProfile && !scoreSubmitted) {
+      setShowScoreDialog(true)
+    }
+    previousGameOverRef.current = gameOver
+  }, [gameOver, isAuthenticated, userProfile, gameStats.startTime, scoreSubmitted])
+
+  // Reset game stats when new game starts
+  useEffect(() => {
+    if (!gameOver && previousGameOverRef.current) {
+      setGameStats({
+        startTime: Date.now(),
+        moves: 0,
+        linesCleared: 0
+      })
+      setScoreSubmitted(false)
+    }
+  }, [gameOver])
+
+  const handleCreateProfile = async () => {
+    if (!username.trim()) return
+    
+    setIsLoading(true)
+    const result = await gameScoreService.createOrUpdateProfile(username.trim())
+    
+    if (result.success) {
+      const profile = await gameScoreService.getUserProfile()
+      setUserProfile(profile)
+      setShowUsernameDialog(false)
+      setUsername('')
+    } else {
+      alert(result.error || 'Failed to create profile')
+    }
+    setIsLoading(false)
+  }
+
+  const handleSubmitScore = async () => {
+    if (!userProfile || scoreSubmitted) return
+    
+    setIsLoading(true)
+    const gameEndTime = Date.now()
+    const duration = Math.floor((gameEndTime - gameStats.startTime) / 1000)
+    
+    const result = await gameScoreService.saveScore(
+      'tetris',
+      score,
+      gameStats.moves,
+      'game_over',
+      duration,
+      {
+        level,
+        lines: gameStats.linesCleared,
+        finalScore: score
+      }
+    )
+    
+    if (result.success) {
+      setScoreSubmitted(true)
+      setShowScoreDialog(false)
+      
+      // Refresh leaderboard and user best score
+      const [leaderboardData, userBest] = await Promise.all([
+        gameScoreService.getLeaderboard('tetris', 10),
+        gameScoreService.getUserBestScore('tetris')
+      ])
+      
+      setLeaderboard(leaderboardData)
+      setUserBestScore(userBest)
+    } else {
+      alert(result.error || 'Failed to save score')
+    }
+    setIsLoading(false)
+  }
+
+  const incrementMoves = useCallback(() => {
+    setGameStats(prev => ({
+      ...prev,
+      moves: prev.moves + 1
+    }))
+  }, [])
+
   const handleKeyPress = useCallback((e: KeyboardEvent) => {
     if (gameOver) return
 
@@ -43,22 +209,27 @@ export default function TetrisGame() {
       case 'ArrowLeft':
         e.preventDefault()
         movePiece(-1, 0)
+        incrementMoves()
         break
       case 'ArrowRight':
         e.preventDefault()
         movePiece(1, 0)
+        incrementMoves()
         break
       case 'ArrowDown':
         e.preventDefault()
         movePiece(0, 1)
+        incrementMoves()
         break
       case 'ArrowUp':
         e.preventDefault()
         rotatePiece()
+        incrementMoves()
         break
       case ' ':
         e.preventDefault()
         dropPiece()
+        incrementMoves()
         break
       case 'p':
       case 'P':
@@ -66,7 +237,7 @@ export default function TetrisGame() {
         togglePause()
         break
     }
-  }, [gameOver, movePiece, rotatePiece, dropPiece, togglePause])
+  }, [gameOver, movePiece, rotatePiece, dropPiece, togglePause, incrementMoves])
 
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     if (gameOver) return
@@ -76,12 +247,10 @@ export default function TetrisGame() {
     setTouchStartY(touch.clientY)
     setTouchStartTime(Date.now())
     
-    // Prevent default to avoid scrolling
     e.preventDefault()
   }, [gameOver])
 
   const handleTouchMove = useCallback((e: React.TouchEvent) => {
-    // Prevent scrolling while touching the game area
     e.preventDefault()
   }, [])
 
@@ -94,38 +263,45 @@ export default function TetrisGame() {
     const duration = Date.now() - touchStartTime
     const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY)
 
-    // Reset touch state
     setTouchStartX(null)
     setTouchStartY(null)
     setTouchStartTime(null)
 
-    // Handle tap (short touch with minimal movement)
     if (duration < TAP_MAX_DURATION && distance < TAP_MAX_DISTANCE) {
       rotatePiece()
+      incrementMoves()
       return
     }
 
-    // Handle swipes
     if (distance > SWIPE_THRESHOLD) {
       if (Math.abs(deltaX) > Math.abs(deltaY)) {
-        // Horizontal swipe
         if (deltaX > 0) {
-          movePiece(1, 0) // Right
+          movePiece(1, 0)
         } else {
-          movePiece(-1, 0) // Left
+          movePiece(-1, 0)
         }
       } else {
-        // Vertical swipe
         if (deltaY > 0) {
-          dropPiece() // Down - hard drop
+          dropPiece()
         } else {
-          rotatePiece() // Up - rotate
+          rotatePiece()
         }
       }
+      incrementMoves()
     }
 
     e.preventDefault()
-  }, [gameOver, touchStartX, touchStartY, touchStartTime, movePiece, rotatePiece, dropPiece])
+  }, [gameOver, touchStartX, touchStartY, touchStartTime, movePiece, rotatePiece, dropPiece, incrementMoves])
+
+  const handleNewGame = () => {
+    resetGame()
+    setGameStats({
+      startTime: Date.now(),
+      moves: 0,
+      linesCleared: 0
+    })
+    setScoreSubmitted(false)
+  }
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyPress)
@@ -136,11 +312,25 @@ export default function TetrisGame() {
     initGame()
   }, [initGame])
 
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60)
+    const secs = seconds % 60
+    return `${mins}:${secs.toString().padStart(2, '0')}`
+  }
+
   return (
     <div className="flex flex-col lg:flex-row gap-6 max-w-6xl w-full">
       <Card className="bg-gray-800 border-gray-700">
         <CardHeader>
-          <CardTitle className="text-white text-center">Tetris</CardTitle>
+          <CardTitle className="text-white text-center flex items-center justify-center gap-2">
+            <Trophy className="h-5 w-5" />
+            Tetris
+            {isAuthenticated && userProfile && (
+              <Badge variant="secondary" className="text-xs">
+                {userProfile.username}
+              </Badge>
+            )}
+          </CardTitle>
         </CardHeader>
         <CardContent className="flex justify-center">
           <div
@@ -175,10 +365,114 @@ export default function TetrisGame() {
             <CardTitle className="text-white text-sm">Stats</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
-            <div className="text-white text-sm">
+            <div className="text-white text-sm space-y-1">
               <div>Score: {score}</div>
               <div>Level: {level}</div>
               <div>Lines: {lines}</div>
+              <div>Moves: {gameStats.moves}</div>
+              <div>Time: {formatTime(Math.floor((Date.now() - gameStats.startTime) / 1000))}</div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* User Best Score */}
+        {userBestScore && (
+          <Card className="bg-gray-800 border-gray-700">
+            <CardHeader>
+              <CardTitle className="text-white text-sm flex items-center gap-2">
+                <Award className="h-4 w-4" />
+                Your Best
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-white text-sm space-y-1">
+                <div>Score: {userBestScore.score}</div>
+                <div>Moves: {userBestScore.moves}</div>
+                {userBestScore.duration_seconds && (
+                  <div>Time: {formatTime(userBestScore.duration_seconds)}</div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Leaderboard */}
+        <Card className="bg-gray-800 border-gray-700">
+          <CardHeader>
+            <CardTitle className="text-white text-sm">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="ghost" size="sm" className="p-0 h-auto text-white">
+                    <Trophy className="h-4 w-4 mr-1" />
+                    Leaderboard
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl">
+                  <DialogHeader>
+                    <DialogTitle>Tetris Leaderboard</DialogTitle>
+                  </DialogHeader>
+                  <Tabs defaultValue="leaderboard" className="w-full">
+                    <TabsList className="grid w-full grid-cols-1">
+                      <TabsTrigger value="leaderboard">Top Players</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="leaderboard" className="space-y-4">
+                      {leaderboard.length > 0 ? (
+                        <div className="space-y-2">
+                          {leaderboard.map((entry, index) => (
+                            <div
+                              key={index}
+                              className="flex items-center justify-between p-3 bg-gray-100 rounded-lg"
+                            >
+                              <div className="flex items-center gap-3">
+                                <div className="flex items-center justify-center w-8 h-8 bg-yellow-500 text-white rounded-full font-bold">
+                                  {entry.rank}
+                                </div>
+                                <div>
+                                  <div className="font-semibold">{entry.username}</div>
+                                  <div className="text-sm text-gray-600">
+                                    {entry.moves} moves
+                                    {entry.duration_seconds && (
+                                      <span> • {formatTime(entry.duration_seconds)}</span>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="text-right">
+                                <div className="font-bold text-lg">{entry.score}</div>
+                                <div className="text-sm text-gray-600">
+                                  {new Date(entry.created_at).toLocaleDateString()}
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-center text-gray-500 py-8">
+                          No scores yet. Be the first to play!
+                        </p>
+                      )}
+                    </TabsContent>
+                  </Tabs>
+                </DialogContent>
+              </Dialog>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              {leaderboard.slice(0, 3).map((entry, index) => (
+                <div key={index} className="flex items-center justify-between text-white text-xs">
+                  <div className="flex items-center gap-2">
+                    <span className="text-yellow-400">#{entry.rank}</span>
+                    <span>{entry.username}</span>
+                  </div>
+                  <span>{entry.score}</span>
+                </div>
+              ))}
+              {leaderboard.length === 0 && (
+                <div className="text-gray-400 text-xs text-center">
+                  No scores yet
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -211,7 +505,7 @@ export default function TetrisGame() {
                 {paused ? 'Resume' : 'Pause'}
               </Button>
               <Button
-                onClick={resetGame}
+                onClick={handleNewGame}
                 className="w-full"
                 variant="destructive"
               >
@@ -232,6 +526,7 @@ export default function TetrisGame() {
                 onTouchStart={(e) => {
                   e.preventDefault()
                   movePiece(-1, 0)
+                  incrementMoves()
                 }}
                 className="h-12 text-lg"
                 variant="outline"
@@ -243,6 +538,7 @@ export default function TetrisGame() {
                 onTouchStart={(e) => {
                   e.preventDefault()
                   rotatePiece()
+                  incrementMoves()
                 }}
                 className="h-12 text-lg"
                 variant="outline"
@@ -254,6 +550,7 @@ export default function TetrisGame() {
                 onTouchStart={(e) => {
                   e.preventDefault()
                   movePiece(1, 0)
+                  incrementMoves()
                 }}
                 className="h-12 text-lg"
                 variant="outline"
@@ -265,6 +562,7 @@ export default function TetrisGame() {
                 onTouchStart={(e) => {
                   e.preventDefault()
                   movePiece(0, 1)
+                  incrementMoves()
                 }}
                 className="h-12 text-lg col-span-1"
                 variant="outline"
@@ -276,6 +574,7 @@ export default function TetrisGame() {
                 onTouchStart={(e) => {
                   e.preventDefault()
                   dropPiece()
+                  incrementMoves()
                 }}
                 className="h-12 text-sm col-span-2"
                 variant="outline"
@@ -287,6 +586,76 @@ export default function TetrisGame() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Username Setup Dialog */}
+      <Dialog open={showUsernameDialog} onOpenChange={setShowUsernameDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <User className="h-5 w-5" />
+              Set Your Username
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="username">Username</Label>
+              <Input
+                id="username"
+                placeholder="Enter your username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleCreateProfile()}
+              />
+            </div>
+            <Button
+              onClick={handleCreateProfile}
+              disabled={!username.trim() || isLoading}
+              className="w-full"
+            >
+              {isLoading ? 'Creating...' : 'Create Profile'}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Score Submission Dialog */}
+      <Dialog open={showScoreDialog} onOpenChange={setShowScoreDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Trophy className="h-5 w-5" />
+              Game Over!
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="text-center space-y-2">
+              <div className="text-2xl font-bold">Final Score: {score}</div>
+              <div className="text-sm text-gray-600 space-y-1">
+                <div>Level: {level}</div>
+                <div>Lines Cleared: {lines}</div>
+                <div>Moves Made: {gameStats.moves}</div>
+                <div>Time Played: {formatTime(Math.floor((Date.now() - gameStats.startTime) / 1000))}</div>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <Button
+                onClick={handleSubmitScore}
+                disabled={isLoading || scoreSubmitted}
+                className="flex-1"
+              >
+                {isLoading ? 'Saving...' : 'Save Score'}
+              </Button>
+              <Button
+                onClick={() => setShowScoreDialog(false)}
+                variant="outline"
+                className="flex-1"
+              >
+                Skip
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
