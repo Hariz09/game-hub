@@ -1,12 +1,15 @@
 'use client'
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect, useRef } from 'react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { RotateCcw, Trophy, Zap, ArrowUp, ArrowDown, ArrowLeft, ArrowRight, Crown, User } from 'lucide-react'
+import { RotateCcw, Trophy, Zap, ArrowUp, ArrowDown, ArrowLeft, ArrowRight, User } from 'lucide-react'
 import { initializeGame, moveTilesInDirection, getGridPositions, getValueColor, addRandomTile, canMove } from '@/utils/2048'
 import { GameState } from '@/types/2048'
 import { TARGET_NUMBER } from '@/lib/constants/2048'
 import { GameScoreService, LeaderboardEntry, UserBestScore } from '@/hooks/useGameScore'
+import UserBestScoreCard from '@/components/GameCards/UserBestScore'
+import LeaderboardCard from '@/components/GameCards/Leaderboard'
+import GameActionsCard from '@/components/GameCards/ActionsCard'
 
 const GAME_NAME = '2048'
 
@@ -52,7 +55,7 @@ export default function SquareMergeGame() {
     const initializeGameAndScores = async () => {
       try {
         setIsLoading(true)
-        
+
         // Initialize game
         const newGameState = initializeGame()
         setGameState(newGameState)
@@ -79,12 +82,90 @@ export default function SquareMergeGame() {
   }, [gameScoreService, loadUserData])
 
   // Save score when game ends
+  const saveScoreRef = useRef(false)
+  const gameSessionRef = useRef(0)
+
+  const resetGame = useCallback(() => {
+    gameSessionRef.current += 1 // Increment session ID
+    setGameState(initializeGame())
+    setGameStartTime(Date.now())
+    setIsScoreSaved(false)
+    saveScoreRef.current = false
+  }, [])
+
+  // New function to end game and save score
+  const endGameAndSave = useCallback(async () => {
+    if (!isAuthenticated || !isMounted) {
+      // If not authenticated, just reset the game
+      resetGame()
+      return
+    }
+
+    // Don't save if game hasn't started (no moves)
+    if (gameState.moves === 0) {
+      resetGame()
+      return
+    }
+
+    // Don't save if already saved
+    if (saveScoreRef.current) {
+      resetGame()
+      return
+    }
+
+    try {
+      saveScoreRef.current = true
+      const durationSeconds = Math.floor((Date.now() - gameStartTime) / 1000)
+      const status = gameState.gameWon ? 'won' : 'game_over'
+      const highestTile = gameState.tiles.length > 0 ? Math.max(...gameState.tiles.map(t => t.value)) : 0
+
+      const result = await gameScoreService.saveScore(
+        GAME_NAME,
+        gameState.score,
+        gameState.moves,
+        status,
+        durationSeconds,
+        {
+          finalTiles: gameState.tiles,
+          targetReached: gameState.gameWon,
+          highestTile,
+          endedEarly: !gameState.gameOver && !gameState.gameWon
+        }
+      )
+
+      if (result.success) {
+        setIsScoreSaved(true)
+        await loadUserData()
+        console.log('Score saved successfully')
+      } else {
+        console.error('Failed to save score:', result.error)
+        saveScoreRef.current = false
+      }
+    } catch (error) {
+      console.error('Error saving score:', error)
+      saveScoreRef.current = false
+    }
+
+    // Reset the game after saving
+    resetGame()
+  }, [isAuthenticated, isMounted, gameState, gameStartTime, gameScoreService, loadUserData, resetGame])
+
+  // Updated useEffect with session tracking
   useEffect(() => {
+    const currentSession = gameSessionRef.current
+
     const saveGameScore = async () => {
-      if (!isAuthenticated || !isMounted || isScoreSaved) return
-      
+      if (!isAuthenticated || !isMounted) return
+
       const isGameEnded = gameState.gameOver || gameState.gameWon
       if (!isGameEnded || gameState.moves === 0) return
+
+      // Check if this is still the same game session
+      if (currentSession !== gameSessionRef.current) return
+
+      // Use ref to prevent duplicate saves
+      if (saveScoreRef.current) return
+      saveScoreRef.current = true
 
       try {
         const durationSeconds = Math.floor((Date.now() - gameStartTime) / 1000)
@@ -106,38 +187,38 @@ export default function SquareMergeGame() {
 
         if (result.success) {
           setIsScoreSaved(true)
-          
-          // Refresh user data
           await loadUserData()
+          console.log('Score saved successfully')
         } else {
           console.error('Failed to save score:', result.error)
+          saveScoreRef.current = false
         }
       } catch (error) {
         console.error('Error saving score:', error)
+        saveScoreRef.current = false
       }
     }
 
     saveGameScore()
-  }, [gameState.gameOver, isAuthenticated, isMounted, isScoreSaved, gameState.moves, gameState.score, gameState.tiles, gameStartTime, gameScoreService, loadUserData])
+  }, [gameState.gameOver, gameState.gameWon, isAuthenticated, isMounted, gameState.moves, gameState.score, gameState.tiles, gameStartTime, gameScoreService, loadUserData])
 
-  const resetGame = useCallback(() => {
-    setGameState(initializeGame())
-    setGameStartTime(Date.now())
-    setIsScoreSaved(false)
+  // Initialize game session ref
+  useEffect(() => {
+    gameSessionRef.current = 0
   }, [])
 
   const handleMove = useCallback((direction: 'up' | 'down' | 'left' | 'right') => {
     if (gameState.gameOver) return
-    
+
     const { newTiles, scoreIncrease, moved } = moveTilesInDirection(gameState.tiles, direction)
-    
+
     if (!moved) return
-    
+
     const tilesWithNew = addRandomTile(newTiles)
     const newScore = gameState.score + scoreIncrease
     const gameWon = newTiles.some(tile => tile.value >= TARGET_NUMBER)
     const gameOver = !canMove(tilesWithNew)
-    
+
     setGameState(prev => ({
       tiles: tilesWithNew,
       score: newScore,
@@ -151,7 +232,7 @@ export default function SquareMergeGame() {
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
       if (gameState.gameOver) return
-      
+
       switch (e.key) {
         case 'ArrowUp':
           e.preventDefault()
@@ -171,14 +252,14 @@ export default function SquareMergeGame() {
           break
       }
     }
-    
+
     window.addEventListener('keydown', handleKeyPress)
     return () => window.removeEventListener('keydown', handleKeyPress)
   }, [gameState.gameOver, handleMove])
 
   // Touch gesture handling
-  const [touchStart, setTouchStart] = useState<{x: number, y: number} | null>(null)
-  const [touchEnd, setTouchEnd] = useState<{x: number, y: number} | null>(null)
+  const [touchStart, setTouchStart] = useState<{ x: number, y: number } | null>(null)
+  const [touchEnd, setTouchEnd] = useState<{ x: number, y: number } | null>(null)
 
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     if (gameState.gameOver) return
@@ -199,7 +280,7 @@ export default function SquareMergeGame() {
 
   const handleTouchEnd = useCallback(() => {
     if (gameState.gameOver || !touchStart || !touchEnd) return
-    
+
     const deltaX = touchStart.x - touchEnd.x
     const deltaY = touchStart.y - touchEnd.y
     const minSwipeDistance = 50
@@ -236,13 +317,13 @@ export default function SquareMergeGame() {
         }))
       }))
     }, 300)
-    
+
     return () => clearTimeout(timer)
   }, [gameState.tiles])
 
   const renderSquareTile = (row: number, col: number) => {
     const tile = gameState.tiles.find(t => t.row === row && t.col === col)
-    
+
     return (
       <div
         key={`${row}-${col}`}
@@ -272,6 +353,9 @@ export default function SquareMergeGame() {
   const getCurrentGameDuration = () => {
     return Math.floor((Date.now() - gameStartTime) / 1000)
   }
+
+  // Check if game is active (has moves and not ended)
+  const isGameActive = gameState.moves > 0 && !gameState.gameOver
 
   if (isLoading || !isMounted) {
     return (
@@ -388,12 +472,20 @@ export default function SquareMergeGame() {
               </div>
             )}
 
+            {/* Square Grid */}
+            <div
+              className="relative bg-slate-900 rounded-lg p-4 touch-none select-none"
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+            >
+              <div className="grid grid-cols-4 gap-2 w-fit mx-auto">
+                {getGridPositions().map(({ row, col }) => renderSquareTile(row, col))}
+              </div>
+            </div>
+
             {/* Instructions */}
-            <div className="mb-6 p-4 bg-slate-700/50 rounded-lg">
-              <p className="text-slate-300 text-sm mb-2">
-                Use arrow keys, swipe gestures, or buttons to move tiles. When two tiles with the same number touch, they merge! Reach {TARGET_NUMBER} to win!
-              </p>
-              
+            <div className="pb-4 bg-slate-700/50 rounded-lg">
               {/* Control Buttons */}
               <div className="flex justify-center gap-2 mt-4">
                 <div className="grid grid-cols-3 gap-1">
@@ -440,90 +532,35 @@ export default function SquareMergeGame() {
                   <div></div>
                 </div>
               </div>
-            </div>
-
-            {/* Square Grid */}
-            <div 
-              className="relative bg-slate-900 rounded-lg p-4 touch-none select-none"
-              onTouchStart={handleTouchStart}
-              onTouchMove={handleTouchMove}
-              onTouchEnd={handleTouchEnd}
-            >
-              <div className="grid grid-cols-4 gap-2 w-fit mx-auto">
-                {getGridPositions().map(({ row, col }) => renderSquareTile(row, col))}
-              </div>
+              <p className="text-slate-300 text-sm my-2">
+                Use arrow keys, swipe gestures, or buttons to move tiles. When two tiles with the same number touch, they merge! Reach {TARGET_NUMBER} to win!
+              </p>
             </div>
           </Card>
         </div>
 
         {/* Sidebar with Stats */}
         <div className="space-y-6">
-          {/* User Best Score */}
-          {isAuthenticated && userBestScore && (
-            <Card className="p-4 bg-slate-800/90 backdrop-blur-sm border-slate-700">
-              <div className="flex items-center gap-2 mb-3">
-                <User className="w-5 h-5 text-blue-400" />
-                <h3 className="font-semibold text-white">Your Best</h3>
-              </div>
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span className="text-slate-400">Score:</span>
-                  <span className="text-white font-bold">{userBestScore.score}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-400">Moves:</span>
-                  <span className="text-white">{userBestScore.moves}</span>
-                </div>
-                {userBestScore.duration_seconds && (
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">Time:</span>
-                    <span className="text-white">{formatDuration(userBestScore.duration_seconds)}</span>
-                  </div>
-                )}
-                <div className="flex justify-between">
-                  <span className="text-slate-400">Status:</span>
-                  <span className={`font-medium ${userBestScore.status === 'won' ? 'text-green-400' : 'text-red-400'}`}>
-                    {userBestScore.status === 'won' ? 'Won' : 'Game Over'}
-                  </span>
-                </div>
-              </div>
-            </Card>
-          )}
+          {/* Game Actions Card */}
+          <GameActionsCard
+            onEndGame={endGameAndSave}
+            onReset={resetGame}
+            isGameActive={isGameActive}
+            isAuthenticated={isAuthenticated}
+          />
 
-          {/* Leaderboard */}
-          {isAuthenticated && leaderboard.length > 0 && (
-            <Card className="p-4 bg-slate-800/90 backdrop-blur-sm border-slate-700">
-              <div className="flex items-center gap-2 mb-3">
-                <Crown className="w-5 h-5 text-yellow-400" />
-                <h3 className="font-semibold text-white">Leaderboard</h3>
-              </div>
-              <div className="space-y-2">
-                {leaderboard.map((entry, index) => (
-                  <div
-                    key={`${entry.username}-${entry.score}-${index}`}
-                    className="flex items-center justify-between p-2 bg-slate-700/50 rounded"
-                  >
-                    <div className="flex items-center gap-2">
-                      <span className={`text-sm font-bold ${
-                        entry.rank === 1 ? 'text-yellow-400' : 
-                        entry.rank === 2 ? 'text-gray-300' : 
-                        entry.rank === 3 ? 'text-amber-600' : 'text-slate-400'
-                      }`}>
-                        #{entry.rank}
-                      </span>
-                      <span className="text-white text-sm truncate max-w-20">
-                        {entry.username}
-                      </span>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-white font-bold text-sm">{entry.score}</div>
-                      <div className="text-slate-400 text-xs">{entry.moves} moves</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </Card>
-          )}
+          {/* User Best Score Component */}
+          <UserBestScoreCard
+            userBestScore={userBestScore}
+            isAuthenticated={isAuthenticated}
+          />
+
+          {/* Leaderboard Component */}
+          <LeaderboardCard
+            leaderboard={leaderboard}
+            isAuthenticated={isAuthenticated}
+            maxEntries={5}
+          />
 
           {/* Authentication Notice */}
           {!isAuthenticated && (
