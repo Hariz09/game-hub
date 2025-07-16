@@ -532,7 +532,7 @@ export default function SquareMergeGame() {
                   <div></div>
                 </div>
               </div>
-              <p className="text-slate-300 text-sm my-2">
+              <p className="text-slate-300 text-sm my-2 px-4">
                 Use arrow keys, swipe gestures, or buttons to move tiles. When two tiles with the same number touch, they merge! Reach {TARGET_NUMBER} to win!
               </p>
             </div>

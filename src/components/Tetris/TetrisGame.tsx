@@ -5,14 +5,18 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Trophy, User, Award } from 'lucide-react'
+import { Trophy, User } from 'lucide-react'
 import { GameBoard } from './GameBoard'
 import { NextPiece } from './NextPiece'
 import { useGameLogic } from '@/hooks/useTetrisLogic'
 import { GameScoreService, LeaderboardEntry, UserBestScore, UserProfile } from '@/hooks/useGameScore'
+
+// Import the new game card components
+import GameActionsCard from '@/components/GameCards/ActionsCard'
+import LeaderboardCard from '@/components/GameCards/Leaderboard'
+import UserBestScoreCard from '@/components/GameCards/UserBestScore'
 
 interface GameStats {
   startTime: number
@@ -293,6 +297,43 @@ export default function TetrisGame() {
     e.preventDefault()
   }, [gameOver, touchStartX, touchStartY, touchStartTime, movePiece, rotatePiece, dropPiece, incrementMoves])
 
+  const handleEndGame = async () => {
+    if (!isAuthenticated || !userProfile || scoreSubmitted) return
+    
+    setIsLoading(true)
+    const gameEndTime = Date.now()
+    const duration = Math.floor((gameEndTime - gameStats.startTime) / 1000)
+    
+    const result = await gameScoreService.saveScore(
+      'tetris',
+      score,
+      gameStats.moves,
+      'game_over',
+      duration,
+      {
+        level,
+        lines: gameStats.linesCleared,
+        finalScore: score
+      }
+    )
+    
+    if (result.success) {
+      setScoreSubmitted(true)
+      
+      // Refresh leaderboard and user best score
+      const [leaderboardData, userBest] = await Promise.all([
+        gameScoreService.getLeaderboard('tetris', 10),
+        gameScoreService.getUserBestScore('tetris')
+      ])
+      
+      setLeaderboard(leaderboardData)
+      setUserBestScore(userBest)
+    } else {
+      alert(result.error || 'Failed to save score')
+    }
+    setIsLoading(false)
+  }
+
   const handleNewGame = () => {
     resetGame()
     setGameStats({
@@ -375,107 +416,26 @@ export default function TetrisGame() {
           </CardContent>
         </Card>
 
-        {/* User Best Score */}
-        {userBestScore && (
-          <Card className="bg-gray-800 border-gray-700">
-            <CardHeader>
-              <CardTitle className="text-white text-sm flex items-center gap-2">
-                <Award className="h-4 w-4" />
-                Your Best
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-white text-sm space-y-1">
-                <div>Score: {userBestScore.score}</div>
-                <div>Moves: {userBestScore.moves}</div>
-                {userBestScore.duration_seconds && (
-                  <div>Time: {formatTime(userBestScore.duration_seconds)}</div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        )}
+        {/* New Game Actions Card */}
+        <GameActionsCard
+          onEndGame={handleEndGame}
+          onReset={handleNewGame}
+          isGameActive={!gameOver && !paused}
+          isAuthenticated={isAuthenticated}
+        />
 
-        {/* Leaderboard */}
-        <Card className="bg-gray-800 border-gray-700">
-          <CardHeader>
-            <CardTitle className="text-white text-sm">
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button variant="ghost" size="sm" className="p-0 h-auto text-white">
-                    <Trophy className="h-4 w-4 mr-1" />
-                    Leaderboard
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-2xl">
-                  <DialogHeader>
-                    <DialogTitle>Tetris Leaderboard</DialogTitle>
-                  </DialogHeader>
-                  <Tabs defaultValue="leaderboard" className="w-full">
-                    <TabsList className="grid w-full grid-cols-1">
-                      <TabsTrigger value="leaderboard">Top Players</TabsTrigger>
-                    </TabsList>
-                    <TabsContent value="leaderboard" className="space-y-4">
-                      {leaderboard.length > 0 ? (
-                        <div className="space-y-2">
-                          {leaderboard.map((entry, index) => (
-                            <div
-                              key={index}
-                              className="flex items-center justify-between p-3 bg-gray-100 rounded-lg"
-                            >
-                              <div className="flex items-center gap-3">
-                                <div className="flex items-center justify-center w-8 h-8 bg-yellow-500 text-white rounded-full font-bold">
-                                  {entry.rank}
-                                </div>
-                                <div>
-                                  <div className="font-semibold">{entry.username}</div>
-                                  <div className="text-sm text-gray-600">
-                                    {entry.moves} moves
-                                    {entry.duration_seconds && (
-                                      <span> • {formatTime(entry.duration_seconds)}</span>
-                                    )}
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="text-right">
-                                <div className="font-bold text-lg">{entry.score}</div>
-                                <div className="text-sm text-gray-600">
-                                  {new Date(entry.created_at).toLocaleDateString()}
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <p className="text-center text-gray-500 py-8">
-                          No scores yet. Be the first to play!
-                        </p>
-                      )}
-                    </TabsContent>
-                  </Tabs>
-                </DialogContent>
-              </Dialog>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              {leaderboard.slice(0, 3).map((entry, index) => (
-                <div key={index} className="flex items-center justify-between text-white text-xs">
-                  <div className="flex items-center gap-2">
-                    <span className="text-yellow-400">#{entry.rank}</span>
-                    <span>{entry.username}</span>
-                  </div>
-                  <span>{entry.score}</span>
-                </div>
-              ))}
-              {leaderboard.length === 0 && (
-                <div className="text-gray-400 text-xs text-center">
-                  No scores yet
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+        {/* New User Best Score Card */}
+        <UserBestScoreCard
+          userBestScore={userBestScore}
+          isAuthenticated={isAuthenticated}
+        />
+
+        {/* New Leaderboard Card */}
+        <LeaderboardCard
+          leaderboard={leaderboard}
+          isAuthenticated={isAuthenticated}
+          maxEntries={5}
+        />
 
         <Card className="bg-gray-800 border-gray-700">
           <CardHeader>
@@ -503,13 +463,6 @@ export default function TetrisGame() {
                 variant="outline"
               >
                 {paused ? 'Resume' : 'Pause'}
-              </Button>
-              <Button
-                onClick={handleNewGame}
-                className="w-full"
-                variant="destructive"
-              >
-                New Game
               </Button>
             </div>
           </CardContent>
