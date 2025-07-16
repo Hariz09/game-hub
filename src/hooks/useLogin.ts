@@ -16,27 +16,39 @@ export const useLogin = () => {
   };
 
   // Helper function to get email from username
-  const getEmailFromUsername = async (username: string): Promise<string | null> => {
-    const supabase = createClient();
+  // Helper function to get email from username
+const getEmailFromUsername = async (username: string): Promise<string | null> => {
+  const supabase = createClient();
+ 
+  console.log('Attempting to fetch email for username:', username);
+  
+  try {
+    const { data, error, count } = await supabase
+      .from('profiles')
+      .select('email', { count: 'exact' })
+      .eq('username', username)
+      .maybeSingle(); // Use maybeSingle() which returns null if no match
     
-    try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('email')
-        .eq('username', username)
-        .single();
-
-      if (error) {
-        console.error('Error fetching email from username:', error);
-        return null;
-      }
-
-      return data?.email || null;
-    } catch (error) {
-      console.error('Error in getEmailFromUsername:', error);
+    console.log('Query result:', { data, error, count });
+    
+    if (error) {
+      console.error('Error fetching email from username:', error);
       return null;
     }
-  };
+    
+    // maybeSingle returns null if no match found
+    if (!data) {
+      console.log('No user found with username:', username);
+      return null;
+    }
+    
+    console.log('Found email for username:', data.email);
+    return data.email || null;
+  } catch (error) {
+    console.error('Error in getEmailFromUsername:', error);
+    return null;
+  }
+};
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
