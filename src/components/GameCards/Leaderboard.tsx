@@ -76,7 +76,7 @@ function LeaderboardCard({
         </div>
         <div>
           <h3 className="font-bold text-xl text-slate-900 dark:text-white">Leaderboard</h3>
-          <p className="text-sm text-slate-600 dark:text-slate-300">Top {maxEntries} Players</p>
+          <p className="text-sm text-slate-600 dark:text-slate-300">Top {maxEntries} Scores</p>
         </div>
       </div>
 
@@ -129,7 +129,7 @@ function LeaderboardCard({
       {leaderboard.length > maxEntries && (
         <div className="mt-6 pt-4 border-t border-slate-200/50 dark:border-slate-700/50">
           <p className="text-slate-600 dark:text-slate-300 text-xs text-center">
-            Showing top {maxEntries} of {leaderboard.length} players
+            Showing top {maxEntries} of {leaderboard.length} scores
           </p>
         </div>
       )}

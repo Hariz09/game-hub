@@ -17,7 +17,7 @@ interface GameLink {
 const games: GameLink[] = [
   {
     id: 'uno',
-    title: 'UNO',
+    title: 'UNO (Static)',
     description: 'Classic card game',
     icon: Dice1,
     href: '/games/uno',
@@ -94,36 +94,6 @@ export default function Home() {
                 </CardFooter>
               </Card>
             ))}
-          </div>
-
-          {/* Stats */}
-          <div className="mt-8 grid grid-cols-3 gap-4">
-            <div className="text-center p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
-              <div className="text-xl font-bold text-gray-900 dark:text-white mb-1">
-                3
-              </div>
-              <div className="text-xs text-gray-600 dark:text-gray-400">
-                Games
-              </div>
-            </div>
-            
-            <div className="text-center p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
-              <div className="text-xl font-bold text-gray-900 dark:text-white mb-1">
-                ∞
-              </div>
-              <div className="text-xs text-gray-600 dark:text-gray-400">
-                Fun
-              </div>
-            </div>
-            
-            <div className="text-center p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
-              <div className="text-xl font-bold text-gray-900 dark:text-white mb-1">
-                100%
-              </div>
-              <div className="text-xs text-gray-600 dark:text-gray-400">
-                Free
-              </div>
-            </div>
           </div>
         </div>
       </div>
