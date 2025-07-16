@@ -28,7 +28,6 @@ interface RegistrationMetadata {
   token: string;
   tokenId: string;
   role: string;
-  memberId: string;
 }
 
 export const useSignup = () => {
@@ -180,9 +179,9 @@ export const useSignup = () => {
         token: formData.token,
         tokenId: tokenData.id,
         role: tokenData.role,
-        memberId: tokenData.member_id,
       };
 
+      console.log(registrationMetadata)
       const { error: authError } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
