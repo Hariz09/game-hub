@@ -1,25 +1,35 @@
-// app/chat/page.tsx
+// app/chat/page.tsx - Main chat page
 'use client'
 
-import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Profile } from '@/types/database'
-import { useProfiles, useMessages, useCurrentUser } from '@/hooks/useChat'
+import { useProfiles, useCurrentUser } from '@/hooks'
 import { UserList } from '@/components/Chat/UserList'
-import { ChatWindow } from '@/components/Chat/ChatWindow'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { MessageCircle } from 'lucide-react'
 import Sidebar from '@/components/sidebar/Sidebar'
-
+import { useState } from 'react'
 
 export default function ChatPage() {
-  const [selectedUser, setSelectedUser] = useState<Profile | null>(null)
+  const router = useRouter()
   const { user: currentUser, loading: userLoading } = useCurrentUser()
   const { profiles } = useProfiles()
-  const { messages, loading: messagesLoading, sendMessage } = useMessages(
-    currentUser?.id || '',
-    selectedUser?.id || ''
-  )
+    const [isUserListCollapsed, setIsUserListCollapsed] = useState(false)
+
+  const handleSelectUser = (user: Profile) => {
+    const conversationId = createConversationId(currentUser!.id, user.id)
+    router.push(`/chat/${conversationId}`)
+  }
+
+  const createConversationId = (userId1: string, userId2: string) => {
+    const sortedIds = [userId1, userId2].sort()
+    return sortedIds.join('_')
+  }
+
+  const handleToggleUserList = () => {
+    setIsUserListCollapsed(!isUserListCollapsed)
+  }
 
   if (userLoading) {
     return (
@@ -51,7 +61,6 @@ export default function ChatPage() {
 
   return (
     <div className="h-screen flex flex-col">
-      {/* Header */}
       <Sidebar />
       <div className="bg-white border-b p-4 flex items-center justify-between shadow-sm">
         <div className="flex items-center gap-3 pl-16">
@@ -70,22 +79,25 @@ export default function ChatPage() {
         </div>
       </div>
 
-      {/* Main Chat Interface */}
       <div className="flex-1 flex overflow-hidden">
         <UserList
           profiles={profiles}
           currentUser={currentUser}
-          onSelectUser={setSelectedUser}
-          selectedUser={selectedUser}
-        />
+          onSelectUser={handleSelectUser}
+          selectedUser={null} 
+          isCollapsed={isUserListCollapsed} 
+          onToggleCollapse={handleToggleUserList}        
+          />
         
-        <ChatWindow
-          messages={messages}
-          currentUser={currentUser}
-          selectedUser={selectedUser}
-          onSendMessage={sendMessage}
-          loading={messagesLoading}
-        />
+        <div className="flex-1 flex items-center justify-center bg-gray-50">
+          <div className="text-center">
+            <div className="text-6xl mb-4">💬</div>
+            <p className="text-gray-500 text-lg">Select a user to start chatting</p>
+            <p className="text-gray-400 text-sm mt-2">
+              Choose someone from the users list to begin your conversation
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   )
