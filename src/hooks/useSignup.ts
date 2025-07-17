@@ -1,5 +1,5 @@
 "use client"
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 
@@ -31,9 +31,20 @@ interface RegistrationMetadata {
   role: string;
 }
 
+// Define a proper type for token data instead of using 'any'
+interface TokenData {
+  id: string;
+  token: string;
+  role: string;
+  expires_at: string;
+  is_used: boolean;
+  created_at: string;
+  created_by?: string;
+}
+
 interface TokenValidationResult {
   isValid: boolean;
-  tokenData?: any;
+  tokenData?: TokenData;
   error?: string;
 }
 
@@ -75,20 +86,8 @@ export const useSignup = () => {
     }
   }, []);
 
-  // Validate token when token input changes
-  useEffect(() => {
-    if (formData.token && formData.token.length > 5) { // Start validation after reasonable length
-      const timeoutId = setTimeout(() => {
-        validateToken(formData.token);
-      }, 500); // Debounce validation
-
-      return () => clearTimeout(timeoutId);
-    } else {
-      setTokenValidationResult(null);
-    }
-  }, [formData.token]);
-
-  const validateToken = async (token: string): Promise<TokenValidationResult> => {
+  // Memoize validateToken function to prevent unnecessary re-renders
+  const validateToken = useCallback(async (token: string): Promise<TokenValidationResult> => {
     if (!token) {
       return { isValid: false, error: "Token is required" };
     }
@@ -114,7 +113,7 @@ export const useSignup = () => {
 
       const result = { 
         isValid: true, 
-        tokenData,
+        tokenData: tokenData as TokenData,
         error: undefined 
       };
       setTokenValidationResult(result);
@@ -130,7 +129,20 @@ export const useSignup = () => {
     } finally {
       setIsValidatingToken(false);
     }
-  };
+  }, [supabase]);
+
+  // Validate token when token input changes
+  useEffect(() => {
+    if (formData.token && formData.token.length > 5) { // Start validation after reasonable length
+      const timeoutId = setTimeout(() => {
+        validateToken(formData.token);
+      }, 500); // Debounce validation
+
+      return () => clearTimeout(timeoutId);
+    } else {
+      setTokenValidationResult(null);
+    }
+  }, [formData.token, validateToken]);
 
   const handleRateLimit = () => {
     const newAttemptCount = attemptCount + 1;

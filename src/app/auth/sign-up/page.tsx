@@ -4,6 +4,18 @@ import { KeyRound, Mail, User, AlertCircle, UserPlus, CheckCircle, Loader2, XCir
 import { AuthLayout, AuthInput, AuthPasswordInput, AuthButton, ErrorMessage, SuccessMessage, AuthLink } from "@/components/auth/auth-components";
 import { useSignup } from "@/hooks/useSignup";
 
+// Type definitions
+interface TokenData {
+  role?: string;
+  // Add other properties as needed
+}
+
+interface TokenValidationResult {
+  isValid: boolean;
+  error?: string;
+  tokenData?: TokenData;
+}
+
 // Enhanced AuthInput wrapper with error highlighting
 function EnhancedAuthInput({ 
   hasError, 
@@ -189,7 +201,7 @@ function TokenValidationStatus({
   hasFieldError,
   getFieldError 
 }: {
-  tokenValidationResult: any;
+  tokenValidationResult: TokenValidationResult | null;
   isValidatingToken: boolean;
   hasFieldError: (field: string) => boolean;
   getFieldError: (field: string) => string | null;
@@ -244,7 +256,7 @@ function TokenValidationStatus({
             </p>
             <div className="text-xs text-red-300/80">
               <p>• Make sure you copied the token correctly</p>
-              <p>• Check that the token hasn't expired</p>
+              <p>• Check that the token hasn&apos;t expired</p>
               <p>• Contact the administrator if you need a new token</p>
             </div>
           </div>
