@@ -1,20 +1,274 @@
 "use client"
 import React from "react";
-import { KeyRound, Mail, User, AlertCircle, UserPlus } from "lucide-react";
+import { KeyRound, Mail, User, AlertCircle, UserPlus, CheckCircle, Loader2, XCircle } from "lucide-react";
 import { AuthLayout, AuthInput, AuthPasswordInput, AuthButton, ErrorMessage, SuccessMessage, AuthLink } from "@/components/auth/auth-components";
 import { useSignup } from "@/hooks/useSignup";
+
+// Enhanced AuthInput wrapper with error highlighting
+function EnhancedAuthInput({ 
+  hasError, 
+  errorMessage,
+  validationStatus,
+  ...props 
+}: {
+  hasError: boolean;
+  errorMessage?: string | null;
+  validationStatus?: 'validating' | 'valid' | 'error' | null;
+} & React.ComponentProps<typeof AuthInput>) {
+  const getValidationIcon = () => {
+    switch (validationStatus) {
+      case 'validating':
+        return <Loader2 className="h-4 w-4 text-blue-400 animate-spin" />;
+      case 'valid':
+        return <CheckCircle className="h-4 w-4 text-green-400" />;
+      case 'error':
+        return <XCircle className="h-4 w-4 text-red-400" />;
+      default:
+        return props.rightElement;
+    }
+  };
+
+  return (
+    <div className="space-y-1">
+      <AuthInput
+        {...props}
+        rightElement={getValidationIcon()}
+        className={`${props.className || ''} ${
+          hasError 
+            ? 'border-red-500/50 focus:border-red-500 focus:ring-red-500/20' 
+            : validationStatus === 'valid' 
+              ? 'border-green-500/50 focus:border-green-500 focus:ring-green-500/20'
+              : ''
+        }`}
+      />
+      {hasError && errorMessage && (
+        <p className="text-sm text-red-400 flex items-center space-x-1">
+          <AlertCircle className="h-3 w-3" />
+          <span>{errorMessage}</span>
+        </p>
+      )}
+    </div>
+  );
+}
+
+// Password validation rules
+const passwordRules = [
+  {
+    id: 'length',
+    label: 'At least 8 characters',
+    validator: (password: string) => password.length >= 8
+  },
+  {
+    id: 'uppercase',
+    label: 'At least one uppercase letter (A-Z)',
+    validator: (password: string) => /[A-Z]/.test(password)
+  },
+  {
+    id: 'lowercase',
+    label: 'At least one lowercase letter (a-z)',
+    validator: (password: string) => /[a-z]/.test(password)
+  },
+  {
+    id: 'number',
+    label: 'At least one number (0-9)',
+    validator: (password: string) => /\d/.test(password)
+  },
+  {
+    id: 'special',
+    label: 'At least one special character (!@#$%^&*)',
+    validator: (password: string) => /[!@#$%^&*(),.?":{}|<>]/.test(password)
+  },
+  {
+    id: 'noSpaces',
+    label: 'No spaces allowed',
+    validator: (password: string) => !/\s/.test(password)
+  }
+];
+
+// Password Rules Component
+function PasswordRules({ password }: { password: string }) {
+  return (
+    <div className="bg-gray-800/50 border border-gray-700/50 rounded-lg p-3 space-y-2">
+      <h4 className="text-sm font-semibold text-gray-300 mb-2">Password Requirements:</h4>
+      <div className="space-y-1.5">
+        {passwordRules.map((rule) => {
+          const isValid = rule.validator(password);
+          const hasValue = password.length > 0;
+          
+          return (
+            <div key={rule.id} className="flex items-center space-x-2">
+              {hasValue ? (
+                isValid ? (
+                  <CheckCircle className="h-3.5 w-3.5 text-green-400 flex-shrink-0" />
+                ) : (
+                  <XCircle className="h-3.5 w-3.5 text-red-400 flex-shrink-0" />
+                )
+              ) : (
+                <div className="h-3.5 w-3.5 rounded-full border border-gray-500 flex-shrink-0" />
+              )}
+              <span className={`text-xs ${
+                hasValue 
+                  ? isValid 
+                    ? 'text-green-300' 
+                    : 'text-red-300'
+                  : 'text-gray-400'
+              }`}>
+                {rule.label}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+      {password.length > 0 && (
+        <div className="pt-2 border-t border-gray-700/50">
+          <div className="flex items-center space-x-2">
+            <div className="flex-1 bg-gray-700 rounded-full h-2">
+              <div 
+                className={`h-2 rounded-full transition-all duration-300 ${
+                  passwordRules.filter(rule => rule.validator(password)).length === passwordRules.length
+                    ? 'bg-green-500'
+                    : passwordRules.filter(rule => rule.validator(password)).length >= passwordRules.length / 2
+                    ? 'bg-yellow-500'
+                    : 'bg-red-500'
+                }`}
+                style={{ 
+                  width: `${(passwordRules.filter(rule => rule.validator(password)).length / passwordRules.length) * 100}%` 
+                }}
+              />
+            </div>
+            <span className="text-xs text-gray-400">
+              {passwordRules.filter(rule => rule.validator(password)).length}/{passwordRules.length}
+            </span>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Enhanced AuthPasswordInput wrapper with error highlighting
+function EnhancedAuthPasswordInput({ 
+  hasError, 
+  errorMessage,
+  showRules = false,
+  ...props 
+}: {
+  hasError: boolean;
+  errorMessage?: string | null;
+  showRules?: boolean;
+} & React.ComponentProps<typeof AuthPasswordInput>) {
+  return (
+    <div className="space-y-3">
+      <div className="space-y-1">
+        <AuthPasswordInput
+          {...props}
+          className={`${props.className || ''} ${
+            hasError 
+              ? 'border-red-500/50 focus:border-red-500 focus:ring-red-500/20' 
+              : ''
+          }`}
+        />
+        {hasError && errorMessage && (
+          <p className="text-sm text-red-400 flex items-center space-x-1">
+            <AlertCircle className="h-3 w-3" />
+            <span>{errorMessage}</span>
+          </p>
+        )}
+      </div>
+      {showRules && (
+        <PasswordRules password={String(props.value || '')} />
+      )}
+    </div>
+  );
+}
+
+// Token Validation Status Component
+function TokenValidationStatus({ 
+  tokenValidationResult, 
+  isValidatingToken, 
+  hasFieldError,
+  getFieldError 
+}: {
+  tokenValidationResult: any;
+  isValidatingToken: boolean;
+  hasFieldError: (field: string) => boolean;
+  getFieldError: (field: string) => string | null;
+}) {
+  // Don't show anything if no token is entered
+  if (!tokenValidationResult && !isValidatingToken && !hasFieldError('token')) {
+    return null;
+  }
+
+  // Show loading state
+  if (isValidatingToken) {
+    return (
+      <div className="bg-blue-900/30 border border-blue-700/50 rounded-lg p-3">
+        <div className="flex items-center space-x-2">
+          <Loader2 className="h-4 w-4 text-blue-400 animate-spin" />
+          <p className="text-sm text-blue-300">
+            Validating registration token...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show valid token
+  if (tokenValidationResult?.isValid) {
+    return (
+      <div className="bg-green-900/30 border border-green-700/50 rounded-lg p-3">
+        <div className="flex items-center space-x-2">
+          <CheckCircle className="h-4 w-4 text-green-400" />
+          <p className="text-sm text-green-300">
+            ✓ Valid registration token for {tokenValidationResult.tokenData?.role || 'user'} role
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show invalid token with detailed error
+  if (tokenValidationResult?.error || hasFieldError('token')) {
+    const errorMessage = getFieldError('token') || tokenValidationResult?.error || 'Invalid registration token';
+    
+    return (
+      <div className="bg-red-900/30 border border-red-700/50 rounded-lg p-3">
+        <div className="flex items-start space-x-2">
+          <XCircle className="h-4 w-4 text-red-400 mt-0.5 flex-shrink-0" />
+          <div className="space-y-2">
+            <p className="text-sm text-red-300 font-medium">
+              Invalid Registration Token
+            </p>
+            <p className="text-sm text-red-200">
+              {errorMessage}
+            </p>
+            <div className="text-xs text-red-300/80">
+              <p>• Make sure you copied the token correctly</p>
+              <p>• Check that the token hasn't expired</p>
+              <p>• Contact the administrator if you need a new token</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return null;
+}
 
 // Confirmation Dialog Component
 function ConfirmationDialog({ 
   isOpen, 
   onClose, 
   onConfirm, 
-  formData 
+  formData,
+  isLoading 
 }: {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
   formData: { email: string; username: string };
+  isLoading: boolean;
 }) {
   if (!isOpen) return null;
 
@@ -65,12 +319,16 @@ function ConfirmationDialog({
             variant="secondary"
             onClick={onClose}
             className="flex-1"
+            disabled={isLoading}
           >
             Cancel
           </AuthButton>
           <AuthButton
             onClick={onConfirm}
             className="flex-1"
+            disabled={isLoading}
+            loading={isLoading}
+            loadingText="Creating..."
           >
             Create Account
           </AuthButton>
@@ -89,6 +347,8 @@ export default function SignUp() {
     isLocked,
     showConfirmDialog,
     formData,
+    isValidatingToken,
+    tokenValidationResult,
     
     // Actions
     handleInputChange,
@@ -96,7 +356,20 @@ export default function SignUp() {
     handleConfirmedSubmit,
     setShowConfirmDialog,
     navigateToLogin,
+    
+    // Field validation helpers
+    hasFieldError,
+    getFieldError,
   } = useSignup();
+
+  // Get token validation status for visual feedback
+  const getTokenValidationStatus = () => {
+    if (!formData.token) return null;
+    if (isValidatingToken) return 'validating';
+    if (tokenValidationResult?.isValid) return 'valid';
+    if (tokenValidationResult?.error || hasFieldError('token')) return 'error';
+    return null;
+  };
 
   // Success state
   if (isSuccess) {
@@ -129,11 +402,11 @@ export default function SignUp() {
       headerSubtitle="Your Ultimate Gaming Experience"
     >
       <form onSubmit={handleFormSubmit} className="space-y-4">
-        {error && (
+        {error && !error.field && (
           <ErrorMessage message={error.message} />
         )}
 
-        <AuthInput
+        <EnhancedAuthInput
           id="token"
           name="token"
           type="text"
@@ -143,10 +416,20 @@ export default function SignUp() {
           onChange={handleInputChange}
           required
           disabled={isLoading || isLocked}
+          hasError={hasFieldError('token')}
+          errorMessage={getFieldError('token')}
+          validationStatus={getTokenValidationStatus()}
           rightElement={<KeyRound className="h-5 w-5 text-gray-400" />}
         />
 
-        <AuthInput
+        <TokenValidationStatus
+          tokenValidationResult={tokenValidationResult}
+          isValidatingToken={isValidatingToken}
+          hasFieldError={hasFieldError}
+          getFieldError={getFieldError}
+        />
+
+        <EnhancedAuthInput
           id="email"
           name="email"
           type="email"
@@ -156,11 +439,13 @@ export default function SignUp() {
           onChange={handleInputChange}
           required
           disabled={isLoading || isLocked}
+          hasError={hasFieldError('email')}
+          errorMessage={getFieldError('email')}
           rightElement={<Mail className="h-5 w-5 text-gray-400" />}
         />
 
         <div className="space-y-2">
-          <AuthInput
+          <EnhancedAuthInput
             id="username"
             name="username"
             type="text"
@@ -172,6 +457,8 @@ export default function SignUp() {
             disabled={isLoading || isLocked}
             maxLength={12}
             pattern="[a-zA-Z]*"
+            hasError={hasFieldError('username')}
+            errorMessage={getFieldError('username')}
             rightElement={<User className="h-5 w-5 text-gray-400" />}
           />
           <p className="text-xs text-gray-400">
@@ -179,10 +466,10 @@ export default function SignUp() {
           </p>
         </div>
 
-        <AuthPasswordInput
+        <EnhancedAuthPasswordInput
           id="password"
           name="password"
-          label="Password * (minimum 8 characters)"
+          label="Password *"
           placeholder="••••••••"
           value={formData.password}
           onChange={handleInputChange}
@@ -190,6 +477,9 @@ export default function SignUp() {
           disabled={isLoading || isLocked}
           minLength={8}
           showToggle={true}
+          showRules={true}
+          hasError={hasFieldError('password')}
+          errorMessage={getFieldError('password')}
         />
 
         <div className="bg-blue-900/30 border border-blue-700/50 rounded-lg p-3">
@@ -211,7 +501,7 @@ export default function SignUp() {
 
         <AuthButton
           type="submit"
-          disabled={isLoading || isLocked}
+          disabled={isLoading || isLocked || !tokenValidationResult?.isValid}
           loading={isLoading}
           loadingText="Creating Account..."
         >
@@ -238,6 +528,7 @@ export default function SignUp() {
         onClose={() => setShowConfirmDialog(false)}
         onConfirm={handleConfirmedSubmit}
         formData={formData}
+        isLoading={isLoading}
       />
     </AuthLayout>
   );
