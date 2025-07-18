@@ -9,8 +9,9 @@ import {
   Menu,
   User,
   Settings,
-  List, // Added for Game List
-  Trophy, // Added for Leaderboard
+  List,
+  Trophy, 
+  MessageCircle,
 } from 'lucide-react';
 import {
   Sheet,
@@ -186,71 +187,91 @@ const Sidebar = () => {
       <SidebarButton onClick={toggleSidebar} />
       <Sheet open={open} onOpenChange={handleOpenChange}>
         <SheetContent side="left" className={sheetContentClass}>
-          <SheetHeader className="pb-6">
+          <SheetHeader className="pb-4">
             <SheetTitle className="text-3xl font-bold bg-gradient-to-r from-purple-600 via-cyan-600 to-indigo-600 bg-clip-text text-transparent">
               Game Hub
             </SheetTitle>
           </SheetHeader>
 
-          <div className="flex-1 py-4 flex flex-col justify-between">
-            <div>
-              {/* User Profile Section */}
-              <div className="bg-gradient-to-br from-white to-purple-50 dark:from-gray-800 dark:to-gray-700 rounded-2xl p-6 shadow-sm border border-purple-100 dark:border-gray-700 mb-6">
-                <div className="flex items-center space-x-4">
-                  <Avatar className="h-16 w-16 ring-4 ring-purple-100 dark:ring-purple-800">
-                    <AvatarFallback className="bg-gradient-to-br from-purple-600 to-cyan-600 text-white font-bold text-xl">
-                      {getInitials(username)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1">
-                    <h3 className="font-bold text-xl text-gray-900 dark:text-white mb-1">
-                      {username}
-                    </h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-300">
-                      {email}
-                    </p>
+          <div className="flex-1 py-2 flex flex-col">
+            <div className="flex-1 space-y-4">
+              {/* Clickable User Profile Section */}
+              <Button
+                variant="ghost"
+                className="w-full p-0 h-auto bg-transparent hover:bg-transparent"
+                onClick={() => { router.push(`/profile/${username}`); setOpen(false); }}
+              >
+                <div className="w-full bg-gradient-to-br from-white to-purple-50 dark:from-gray-800 dark:to-gray-700 rounded-2xl p-4 shadow-sm border border-purple-100 dark:border-gray-700 hover:shadow-md transition-all duration-200 hover:scale-[1.02]">
+                  <div className="flex items-center space-x-3">
+                    <Avatar className="h-12 w-12 ring-2 ring-purple-200 dark:ring-purple-700">
+                      <AvatarFallback className="bg-gradient-to-br from-purple-600 to-cyan-600 text-white font-bold text-lg">
+                        {getInitials(username)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 text-left">
+                      <h3 className="font-bold text-lg text-gray-900 dark:text-white truncate">
+                        {username}
+                      </h3>
+                      <p className="text-xs text-gray-600 dark:text-gray-300 truncate">
+                        {email}
+                      </p>
+                      <p className="text-xs text-purple-600 dark:text-cyan-400 mt-1">
+                        View Profile →
+                      </p>
+                    </div>
                   </div>
                 </div>
+              </Button>
+
+              {/* Main Navigation Buttons - Grid Layout for better spacing */}
+              <div className="grid grid-cols-2 gap-3 mb-4">
+                <Button
+                  variant="ghost"
+                  className="h-20 flex flex-col items-center justify-center space-y-2 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-800/30 hover:from-purple-100 hover:to-purple-200 dark:hover:from-purple-800/40 dark:hover:to-purple-700/40 transition-all duration-200 rounded-xl group border border-purple-200/50 dark:border-purple-700/50"
+                  onClick={() => { router.push('/leaderboard'); setOpen(false); }}
+                >
+                  <Trophy className="h-6 w-6 text-purple-600 group-hover:text-purple-700 dark:text-purple-400 dark:group-hover:text-purple-300" />
+                  <span className="text-sm font-medium text-purple-700 dark:text-purple-300">Leaderboard</span>
+                </Button>
+
+                <Button
+                  variant="ghost"
+                  className="h-20 flex flex-col items-center justify-center space-y-2 bg-gradient-to-br from-cyan-50 to-cyan-100 dark:from-cyan-900/30 dark:to-cyan-800/30 hover:from-cyan-100 hover:to-cyan-200 dark:hover:from-cyan-800/40 dark:hover:to-cyan-700/40 transition-all duration-200 rounded-xl group border border-cyan-200/50 dark:border-cyan-700/50"
+                  onClick={() => { router.push('/'); setOpen(false); }}
+                >
+                  <List className="h-6 w-6 text-cyan-600 group-hover:text-cyan-700 dark:text-cyan-400 dark:group-hover:text-cyan-300" />
+                  <span className="text-sm font-medium text-cyan-700 dark:text-cyan-300">Game List</span>
+                </Button>
               </div>
 
-              {/* Main Navigation Buttons */}
-              <div className="space-y-3 mb-6">
-                <Button
-                  variant="ghost"
-                  className="w-full justify-start text-lg px-4 py-3 bg-transparent hover:bg-purple-100 dark:hover:bg-gray-800 transition-colors duration-200 rounded-lg group text-gray-800 dark:text-gray-200"
-                  onClick={() => { router.push('/leaderboard'); setOpen(false); }} // Next.js routing
-                >
-                  <Trophy className="mr-3 h-5 w-5 text-purple-600 group-hover:text-purple-700 dark:text-cyan-400 dark:group-hover:text-cyan-300" />
-                  Leaderboard
-                </Button>
-                <Button
-                  variant="ghost"
-                  className="w-full justify-start text-lg px-4 py-3 bg-transparent hover:bg-cyan-100 dark:hover:bg-gray-800 transition-colors duration-200 rounded-lg group text-gray-800 dark:text-gray-200"
-                  onClick={() => { router.push('/'); setOpen(false); }} // Next.js routing
-                >
-                  <List className="mr-3 h-5 w-5 text-cyan-600 group-hover:text-cyan-700 dark:text-purple-400 dark:group-hover:text-purple-300" />
-                  Game List
-                </Button>
-              </div>
+              {/* Chat Button - Full width for emphasis */}
+              <Button
+                variant="ghost"
+                className="w-full h-16 flex items-center justify-center space-x-3 bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-indigo-900/30 dark:to-blue-900/30 hover:from-indigo-100 hover:to-blue-100 dark:hover:from-indigo-800/40 dark:hover:to-blue-800/40 transition-all duration-200 rounded-xl group border border-indigo-200/50 dark:border-indigo-700/50"
+                onClick={() => { router.push('/chat'); setOpen(false); }}
+              >
+                <MessageCircle className="h-6 w-6 text-indigo-600 group-hover:text-indigo-700 dark:text-indigo-400 dark:group-hover:text-indigo-300" />
+                <span className="text-lg font-medium text-indigo-700 dark:text-indigo-300">Chat</span>
+              </Button>
             </div>
 
-            {/* Settings Section - now includes Logout */}
-            <div className="mt-auto pt-6 border-t border-gray-200 dark:border-gray-700">
-              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-                <div className="flex items-center space-x-3 mb-4">
-                  <Settings className="h-5 w-5 text-gray-600 dark:text-gray-400" />
-                  <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Settings</h2>
+            {/* Settings Section - Compact and bottom-aligned */}
+            <div className="mt-auto pt-4 border-t border-gray-200 dark:border-gray-700">
+              <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-200 dark:border-gray-700">
+                <div className="flex items-center space-x-2 mb-3">
+                  <Settings className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+                  <h2 className="text-base font-semibold text-gray-900 dark:text-white">Settings</h2>
                 </div>
 
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-xl">
-                    <div className="flex items-center space-x-3">
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                    <div className="flex items-center space-x-2">
                       {isDarkMode ? (
-                        <Moon className="h-5 w-5 text-purple-600 dark:text-cyan-400" />
+                        <Moon className="h-4 w-4 text-purple-600 dark:text-cyan-400" />
                       ) : (
-                        <Sun className="h-5 w-5 text-yellow-600" />
+                        <Sun className="h-4 w-4 text-yellow-600" />
                       )}
-                      <span className="font-medium text-gray-900 dark:text-white">
+                      <span className="text-sm font-medium text-gray-900 dark:text-white">
                         {isDarkMode ? 'Dark Mode' : 'Light Mode'}
                       </span>
                     </div>
@@ -260,14 +281,14 @@ const Sidebar = () => {
                     />
                   </div>
 
-                  {/* Logout Button moved inside Settings */}
+                  {/* Logout Button */}
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <Button
                         variant="destructive"
-                        className="w-full bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white font-medium py-3 rounded-xl shadow-md hover:shadow-lg transition-all duration-200"
+                        className="w-full bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white font-medium py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 text-sm"
                       >
-                        <LogOut className="mr-2 h-5 w-5" />
+                        <LogOut className="mr-2 h-4 w-4" />
                         Log Out
                       </Button>
                     </AlertDialogTrigger>
