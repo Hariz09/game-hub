@@ -1,9 +1,13 @@
 // app/page.tsx
+'use client'
 import Sidebar from '@/components/sidebar/Sidebar';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Dice1, PuzzleIcon, Shapes, Play } from 'lucide-react';
+import { Dice1, PuzzleIcon, Shapes, Play, Star, Users, Clock, Loader2, Zap, Target, Gamepad2, Sword, Car, Music, Coffee } from 'lucide-react';
+import Image from 'next/image';
+import { useState } from 'react';
+import CleanBackground from '@/components/LobbyBackground';
 
 interface GameLink {
   id: string;
@@ -11,89 +15,294 @@ interface GameLink {
   description: string;
   icon: React.ElementType;
   href: string;
-  color: string;
+  players?: string;
+  duration?: string;
+  rating?: number;
+  isNew?: boolean;
+  isPopular?: boolean;
+  thumbnail?: string;
+}
+
+interface ComingSoonGame {
+  id: string;
+  title: string;
+  description: string;
+  icon: React.ElementType;
+  players?: string;
+  duration?: string;
+  category: string;
 }
 
 const games: GameLink[] = [
+  
   {
-    id: 'uno',
-    title: 'UNO (Static)',
-    description: 'Classic card game',
-    icon: Dice1,
-    href: '/games/uno',
-    color: 'text-red-500 dark:text-red-400',
+    id: 'coffee-brew-idle',
+    title: 'Coffee Brew Idle',
+    description: 'Build your coffee empire from a single bean! Automate brewing, unlock recipes, and become the ultimate barista tycoon',
+    icon: Coffee,
+    href: '/games/coffee-brew-idle',
+    players: '1',
+    duration: '∞',
+    isNew: true,
+    rating: 4.8,
+    thumbnail: '/images/coffee-brew-idle-thumbnail.png',
   },
   {
     id: '2048',
     title: '2048',
-    description: 'Merge numbers',
+    description: 'Addictive puzzle game - merge tiles to reach the ultimate 2048',
     icon: PuzzleIcon,
     href: '/games/2048',
-    color: 'text-orange-500 dark:text-orange-400',
+    players: '1',
+    duration: '10-20m',
+    thumbnail: '/images/2048-thumbnail.png',
   },
   {
     id: 'tetris',
     title: 'Tetris',
-    description: 'Arrange blocks',
+    description: 'Timeless block-stacking challenge - clear lines and beat your score',
     icon: Shapes,
     href: '/games/tetris',
-    color: 'text-blue-500 dark:text-blue-400',
+    players: '1',
+    duration: '5-∞',
+    thumbnail: '/images/tetris-thumbnail.png',
+  },
+  {
+    id: 'uno',
+    title: 'UNO (Static)',
+    description: 'Classic card game with friends - match colors and numbers to win',
+    icon: Dice1,
+    href: '/games/uno',
+    players: '2-4',
+    duration: '15-30m',
+    thumbnail: '/images/uno-thumbnail.png',
+  },
+];
+
+const comingSoonGames: ComingSoonGame[] = [
+  {
+    id: 'nexus-conquest',
+    title: 'Nexus Conquest',
+    description: ' multiplayer turn-based strategy game where players gather resources and build units to conquer their opponents base.',
+    icon: Zap,
+    players: '1',
+    duration: '5-15m',
+    category: 'Strategy'
   },
 ];
 
 export default function Home() {
+  const [loadingGame, setLoadingGame] = useState<string | null>(null);
+
+  const handleGameClick = (gameId: string) => {
+    setLoadingGame(gameId);
+  };
+
   return (
-    <main className="flex h-screen bg-gray-50 dark:bg-gray-900">
+    <main className="flex h-screen">
+      <CleanBackground />
       <Sidebar />
-      <div className="flex-1 overflow-y-auto">
-        <div className="p-6 max-w-5xl mx-auto">
+      
+      <div className="flex-1 overflow-y-auto relative z-10">
+        <div className="p-8 max-w-7xl mx-auto">
           {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
-              Game Hub
-            </h1>
-            <p className="text-gray-600 dark:text-gray-400 text-sm">
-              Choose your game and start playing
-            </p>
+          <div className="mb-12">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="p-3 rounded-2xl bg-gradient-to-r from-purple-500/20 to-cyan-500/20 border border-purple-400/30">
+                <Play className="w-8 h-8 text-cyan-400" />
+              </div>
+              <div>
+                <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent">
+                  Game Hub
+                </h1>
+                <p className="text-slate-400 text-lg mt-1">
+                  Choose your adventure and dive into the action
+                </p>
+              </div>
+            </div>
           </div>
 
           {/* Games Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {games.map((game) => (
-              <Card key={game.id} className="group hover:shadow-md transition-all duration-300 border-0 bg-white dark:bg-gray-800 shadow-sm hover:scale-[1.01]">
-                <CardHeader className="pb-2">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className={`p-2 rounded-lg bg-gray-100 dark:bg-gray-700 ${game.color}`}>
-                      <game.icon className="w-5 h-5" />
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+            {games.map((game, index) => (
+              <Card key={game.id} className="group relative overflow-hidden bg-slate-800/50 border border-slate-700/50 hover:border-purple-400/50 transition-all duration-500 hover:shadow-2xl hover:shadow-purple-500/10 backdrop-blur-sm">
+                {/* Status badges */}
+                <div className="absolute top-4 left-4 z-10 flex gap-2">
+                  {game.isNew && (
+                    <span className="px-2 py-1 text-xs font-semibold bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-full">
+                      NEW
+                    </span>
+                  )}
+                  {game.isPopular && (
+                    <span className="px-2 py-1 text-xs font-semibold bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-full flex items-center gap-1">
+                      <Star className="w-3 h-3 fill-current" />
+                      HOT
+                    </span>
+                  )}
+                </div>
+
+                {/* Thumbnail Section */}
+                <Link 
+                  href={game.href} 
+                  className="relative h-48 overflow-hidden block cursor-pointer"
+                  onClick={() => handleGameClick(game.id)}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-purple-600/20 to-cyan-600/20"></div>
+                  <Image
+                    src={game.thumbnail || "/placeholder.png"}
+                    alt={`${game.title} game thumbnail`}
+                    width={1920}
+                    height={1080}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  
+                  {/* Loading overlay */}
+                  {loadingGame === game.id && (
+                    <div className="absolute inset-0 bg-slate-900/80 flex items-center justify-center z-20">
+                      <div className="flex flex-col items-center gap-3">
+                        <div className="p-4 rounded-full bg-gradient-to-r from-purple-500 to-cyan-500">
+                          <Loader2 className="w-8 h-8 text-white animate-spin" />
+                        </div>
+                        <span className="text-white font-medium">Loading {game.title}...</span>
+                      </div>
                     </div>
-                    <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <Play className="w-3 h-3 text-gray-400" />
+                  )}
+                  
+                  {/* Overlay gradient */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  
+                  {/* Play button overlay */}
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
+                    <div className="p-4 rounded-full bg-gradient-to-r from-purple-500 to-cyan-500 transform scale-75 group-hover:scale-100 transition-transform duration-300">
+                      <Play className="w-8 h-8 text-white fill-current" />
                     </div>
                   </div>
-                  <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white">
-                    {game.title}
-                  </CardTitle>
+                </Link>
+
+                <CardHeader className="pb-3">
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2.5 rounded-xl bg-gradient-to-r from-purple-500/20 to-cyan-500/20 border border-purple-400/30">
+                        <game.icon className="w-5 h-5 text-cyan-400" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-xl font-bold text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-purple-400 group-hover:to-cyan-400 group-hover:bg-clip-text transition-all duration-300">
+                          {game.title}
+                        </CardTitle>
+                        {game.rating && (
+                          <div className="flex items-center gap-1 mt-1">
+                            <Star className="w-4 h-4 text-yellow-400 fill-current" />
+                            <span className="text-sm text-yellow-400 font-medium">{game.rating}</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </CardHeader>
                 
-                <CardContent className="pb-3">
-                  <p className="text-gray-600 dark:text-gray-400 text-xs">
+                <CardContent className="pb-4">
+                  <p className="text-slate-300 text-sm leading-relaxed mb-4">
                     {game.description}
                   </p>
+                  
+                  {/* Game stats */}
+                  <div className="flex items-center justify-between text-xs">
+                    {game.players && (
+                      <div className="flex items-center gap-1.5 text-slate-400">
+                        <Users className="w-4 h-4" />
+                        <span>{game.players} players</span>
+                      </div>
+                    )}
+                    {game.duration && (
+                      <div className="flex items-center gap-1.5 text-slate-400">
+                        <Clock className="w-4 h-4" />
+                        <span>{game.duration}</span>
+                      </div>
+                    )}
+                  </div>
                 </CardContent>
                 
                 <CardFooter className="pt-0">
-                  <Link href={game.href} className="w-full">
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      className="w-full group-hover:bg-gray-900 group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-gray-900 transition-colors duration-300"
-                    >
-                      Play
-                    </Button>
-                  </Link>
+                  <Button 
+                    className="w-full bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg hover:shadow-purple-500/25 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                    asChild
+                    disabled={loadingGame === game.id}
+                  >
+                    <Link href={game.href} onClick={() => handleGameClick(game.id)}>
+                      {loadingGame === game.id ? (
+                        <>
+                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                          Loading...
+                        </>
+                      ) : (
+                        <>
+                          <Play className="w-4 h-4 mr-2" />
+                          Start Playing
+                        </>
+                      )}
+                    </Link>
+                  </Button>
                 </CardFooter>
               </Card>
             ))}
+          </div>
+
+          {/* Coming Soon Section */}
+          <div className="mt-16">
+            <div className="mb-8">
+              <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent mb-2">
+                Coming Soon
+              </h2>
+              <p className="text-slate-400 text-lg">
+                Exciting new games in development
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {comingSoonGames.map((game) => (
+                <Card key={game.id} className="bg-slate-800/30 border border-slate-700/30 backdrop-blur-sm relative overflow-hidden">
+                  {/* Category badge */}
+                  <div className="absolute top-4 right-4">
+                    <span className="px-2 py-1 text-xs font-medium bg-slate-700/50 text-slate-300 rounded-full">
+                      {game.category}
+                    </span>
+                  </div>
+
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="p-2 rounded-lg bg-gradient-to-r from-slate-600/20 to-slate-500/20 border border-slate-600/30">
+                        <game.icon className="w-5 h-5 text-slate-400" />
+                      </div>
+                      <CardTitle className="text-lg font-semibold text-slate-200">
+                        {game.title}
+                      </CardTitle>
+                    </div>
+                  </CardHeader>
+                  
+                  <CardContent>
+                    <p className="text-slate-400 text-sm leading-relaxed mb-4">
+                      {game.description}
+                    </p>
+                    
+                    {/* Game stats */}
+                    <div className="flex items-center justify-between text-xs text-slate-500">
+                      {game.players && (
+                        <div className="flex items-center gap-1.5">
+                          <Users className="w-3 h-3" />
+                          <span>{game.players} players</span>
+                        </div>
+                      )}
+                      {game.duration && (
+                        <div className="flex items-center gap-1.5">
+                          <Clock className="w-3 h-3" />
+                          <span>{game.duration}</span>
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
         </div>
       </div>
