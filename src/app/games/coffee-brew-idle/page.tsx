@@ -10,6 +10,7 @@ import { EquipmentSection } from '@/components/coffee/EquipmentSection';
 import { UpgradesSection } from '@/components/coffee/UpgradesSection';
 import { Modals } from '@/components/coffee/Modals';
 import Sidebar from '@/components/sidebar/Sidebar';
+import CleanBackground from '@/components/CleanBackground';
 
 const CoffeeBrewIdleGame: React.FC = () => {
   const {
@@ -76,62 +77,70 @@ const CoffeeBrewIdleGame: React.FC = () => {
   }
 
   return (
-<div className="min-h-screen bg-gradient-to-b from-amber-50 to-orange-100 dark:from-slate-900 dark:via-slate-800 dark:to-gray-900 p-4">     <div className="max-w-6xl mx-auto">
-        <Sidebar />
-        {/* Header */}
-        <GameHeader
-          gameState={gameState}
-          gameStats={gameStats}
-          savingProgress={savingProgress}
-          isReady={isReady}
-          saveStatus={saveStatus}
-          formatNumber={formatNumber}
-          onManualSave={handleManualSaveWithFeedback}
-        />
-
-        {/* Main Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Coffee Bean Clicker */}
-          <BeanClicker
-            gameState={gameState}
-            isReady={isReady}
-            canPrestige={canPrestige}
-            onHandleClick={handleClick}
-            onShowPrestige={() => setShowPrestige(true)}
-            formatNumber={formatNumber}
-            getPrestigeProgress={getPrestigeProgress}
-          />
-
-          {/* Equipment */}
-          <EquipmentSection
-            gameState={gameState}
-            isReady={isReady}
-            formatNumber={formatNumber}
-            buyEquipment={buyEquipment}
-          />
-
-          {/* Upgrades */}
-          <UpgradesSection
+    <>
+      {/* Background component - renders behind everything */}
+      <CleanBackground />
+      
+      {/* Main game content */}
+      <div className="min-h-screen p-4 relative z-10">
+        <div className="max-w-6xl mx-auto">
+          <Sidebar />
+          
+          {/* Header */}
+          <GameHeader
             gameState={gameState}
             gameStats={gameStats}
-            isReady={isReady}
             savingProgress={savingProgress}
+            isReady={isReady}
+            saveStatus={saveStatus}
             formatNumber={formatNumber}
-            buyUpgrade={buyUpgrade}
+            onManualSave={handleManualSaveWithFeedback}
+          />
+
+          {/* Main Content */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Coffee Bean Clicker */}
+            <BeanClicker
+              gameState={gameState}
+              isReady={isReady}
+              canPrestige={canPrestige}
+              onHandleClick={handleClick}
+              onShowPrestige={() => setShowPrestige(true)}
+              formatNumber={formatNumber}
+              getPrestigeProgress={getPrestigeProgress}
+            />
+
+            {/* Equipment */}
+            <EquipmentSection
+              gameState={gameState}
+              isReady={isReady}
+              formatNumber={formatNumber}
+              buyEquipment={buyEquipment}
+            />
+
+            {/* Upgrades */}
+            <UpgradesSection
+              gameState={gameState}
+              gameStats={gameStats}
+              isReady={isReady}
+              savingProgress={savingProgress}
+              formatNumber={formatNumber}
+              buyUpgrade={buyUpgrade}
+            />
+          </div>
+
+          {/* Modals */}
+          <Modals
+            showPrestige={showPrestige}
+            gameState={gameState}
+            isReady={isReady}
+            formatNumber={formatNumber}
+            onClosePrestige={() => setShowPrestige(false)}
+            onPrestige={handlePrestige}
           />
         </div>
-
-        {/* Modals */}
-        <Modals
-          showPrestige={showPrestige}
-          gameState={gameState}
-          isReady={isReady}
-          formatNumber={formatNumber}
-          onClosePrestige={() => setShowPrestige(false)}
-          onPrestige={handlePrestige}
-        />
       </div>
-    </div>
+    </>
   );
 };
 
