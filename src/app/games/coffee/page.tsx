@@ -81,8 +81,7 @@ const CoffeeBrewIdleGame: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-amber-50 to-orange-100 p-4">
-      <div className="max-w-6xl mx-auto">
+<div className="min-h-screen bg-gradient-to-b from-amber-50 to-orange-100 dark:from-slate-900 dark:via-slate-800 dark:to-gray-900 p-4">     <div className="max-w-6xl mx-auto">
         <Sidebar />
         {/* Header */}
         <GameHeader
