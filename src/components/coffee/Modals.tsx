@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Star, X, Zap, Sparkles } from 'lucide-react';
+import { GameState } from '@/types/coffee';
 
 interface ModalsProps {
   showPrestige: boolean;
-  gameState: any;
+  gameState: GameState;
   isReady: boolean;
   formatNumber: (num: number) => string;
   onClosePrestige: () => void;
@@ -87,7 +88,7 @@ export const Modals: React.FC<ModalsProps> = ({
                     <div>
                       <h3 className="font-semibold text-orange-800 dark:text-orange-300">Reset Warning</h3>
                       <p className="text-sm text-orange-700 dark:text-orange-400">
-                        Your current progress will be reset, but you'll gain permanent bonuses!
+                        Your current progress will be reset, but you&apos;ll gain permanent bonuses!
                       </p>
                     </div>
                   </div>

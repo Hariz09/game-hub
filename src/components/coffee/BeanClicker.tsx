@@ -1,8 +1,9 @@
 import React from 'react';
 import { Coffee, Star, Loader2, Zap, Crown } from 'lucide-react';
+import { GameState } from '@/types/coffee';
 
 interface BeanClickerProps {
-  gameState: any;
+  gameState: GameState;
   isReady: boolean;
   canPrestige: () => boolean;
   getPrestigeProgress: () => { current: number; next: number; progress: number };

@@ -4,7 +4,7 @@ import Sidebar from '@/components/sidebar/Sidebar';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Dice1, PuzzleIcon, Shapes, Play, Star, Users, Clock, Loader2, Zap, Target, Gamepad2, Sword, Car, Music, Coffee } from 'lucide-react';
+import { Dice1, PuzzleIcon, Shapes, Play, Star, Users, Clock, Loader2, Zap, Coffee } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
 import CleanBackground from '@/components/LobbyBackground';
@@ -124,7 +124,7 @@ export default function Home() {
 
           {/* Games Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
-            {games.map((game, index) => (
+            {games.map((game) => (
               <Card key={game.id} className="group relative overflow-hidden bg-slate-800/50 border border-slate-700/50 hover:border-purple-400/50 transition-all duration-500 hover:shadow-2xl hover:shadow-purple-500/10 backdrop-blur-sm">
                 {/* Status badges */}
                 <div className="absolute top-4 left-4 z-10 flex gap-2">

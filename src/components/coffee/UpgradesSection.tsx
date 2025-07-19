@@ -1,12 +1,13 @@
 import React from 'react';
-import { Loader2, Star, TrendingUp, Shield, Zap } from 'lucide-react';
+import { Loader2, Star, TrendingUp } from 'lucide-react';
 import { Icon } from '@iconify/react';
 import { UpgradeKey } from '@/types/coffee';
 import { UPGRADES } from '@/lib/coffee';
+import { GameState, GameStats } from '@/types/coffee';
 
 interface UpgradesSectionProps {
-  gameState: any;
-  gameStats: any;
+  gameState: GameState;
+  gameStats: GameStats;
   isReady: boolean;
   savingProgress: boolean;
   formatNumber: (num: number) => string;

@@ -1,15 +1,15 @@
 import React from 'react';
 import { Icon } from '@iconify/react';
+import { GameState, GameStats } from '@/types/coffee';
 
 interface GameHeaderProps {
-  gameState: any;
-  gameStats: any;
+  gameState: GameState;
+  gameStats: GameStats;
   savingProgress: boolean;
   isReady: boolean;
   saveStatus: string;
   formatNumber: (num: number) => string;
   onManualSave: () => void;
-  onShowProfile: () => void;
 }
 
 export const GameHeader: React.FC<GameHeaderProps> = ({
@@ -20,7 +20,6 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
   saveStatus,
   formatNumber,
   onManualSave,
-  onShowProfile
 }) => {
   const [showMobileMenu, setShowMobileMenu] = React.useState(false);
   
@@ -120,7 +119,6 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
                 {!gameState?.username && (
                   <button
                     onClick={() => {
-                      onShowProfile();
                       setShowMobileMenu(false);
                     }}
                     className="text-sm bg-blue-500 dark:bg-blue-600 text-white px-3 py-1 rounded-lg hover:bg-blue-600 dark:hover:bg-blue-700 transition-colors"

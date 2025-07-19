@@ -4,9 +4,10 @@ import { Icon } from '@iconify/react';
 
 import { EquipmentKey } from '@/types/coffee';
 import { EQUIPMENT } from '@/lib/coffee';
+import { GameState } from '@/types/coffee';
 
 interface EquipmentSectionProps {
-  gameState: any;
+  gameState: GameState;
   isReady: boolean;
   formatNumber: (num: number) => string;
   buyEquipment: (equipmentKey: EquipmentKey) => void;

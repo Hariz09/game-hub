@@ -18,7 +18,6 @@ const CoffeeBrewIdleGame: React.FC = () => {
     authLoading,
     gameLoading,
     savingProgress,
-    loadingLeaderboard,
     initializing,
     isReady,
     handleClick,
@@ -27,30 +26,13 @@ const CoffeeBrewIdleGame: React.FC = () => {
     canPrestige,
     prestige,
     handleManualSave,
-    loadLeaderboard,
     formatNumber,
     getPrestigeProgress
   } = useCoffeeGame();
 
   // UI state
   const [showPrestige, setShowPrestige] = useState<boolean>(false);
-  const [showProfile, setShowProfile] = useState<boolean>(false);
-  const [showLeaderboard, setShowLeaderboard] = useState<boolean>(false);
-  const [newUsername, setNewUsername] = useState<string>('');
-  const [leaderboard, setLeaderboard] = useState<any[]>([]);
-  const [userBest, setUserBest] = useState<any>(null);
   const [saveStatus, setSaveStatus] = useState<string>('');
-
-  const handleLoadLeaderboard = async () => {
-    try {
-      const { leaderboard: leaderboardData, userBest: userBestData } = await loadLeaderboard();
-      setLeaderboard(leaderboardData);
-      setUserBest(userBestData);
-      setShowLeaderboard(true);
-    } catch (error) {
-      console.error('Failed to load leaderboard');
-    }
-  };
 
   const handleManualSaveWithFeedback = async () => {
     setSaveStatus('Saving...');
@@ -59,6 +41,7 @@ const CoffeeBrewIdleGame: React.FC = () => {
       setSaveStatus(success ? 'Saved!' : 'Save failed');
       setTimeout(() => setSaveStatus(''), 2000);
     } catch (error) {
+      console.error(error)
       setSaveStatus('Save failed');
       setTimeout(() => setSaveStatus(''), 2000);
     }
@@ -92,7 +75,6 @@ const CoffeeBrewIdleGame: React.FC = () => {
           saveStatus={saveStatus}
           formatNumber={formatNumber}
           onManualSave={handleManualSaveWithFeedback}
-          onShowProfile={() => setShowProfile(true)}
         />
 
         {/* Main Content */}
