@@ -20,6 +20,8 @@ export interface Upgrade {
   description: string;
   cost: number;
   effect: string;
+  beansPerSecond?: number;
+  multiplier?: number;
 }
 
 export interface EquipmentLevels {
@@ -37,6 +39,7 @@ export type UpgradeKey = 'clickPower' | 'autoClicker' | 'efficiency' | 'speedBoo
 
 export interface GameState {
   coffeeBeans: number;
+  lifetimeTotal: number;
   totalCoffeeProduced: number;
   prestigePoints: number;
   prestigeLevel: number;

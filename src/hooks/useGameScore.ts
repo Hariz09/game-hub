@@ -84,6 +84,173 @@ export class GameScoreService {
     }
   }
 
+  /**
+   * Dedicated save method for coffee game - overwrites existing save data
+   * instead of creating new entries since idle games only need current progress
+   */
+  async saveCoffeeGameProgress(
+    score: number,
+    gameData: unknown
+  ): Promise<{ success: boolean; error?: string; scoreId?: string }> {
+    try {
+      // Check if user is authenticated
+      const { data: { user }, error: authError } = await this.supabase.auth.getUser()
+      
+      if (authError || !user) {
+        console.error('❌ Coffee Save: User not authenticated:', authError)
+        return { success: false, error: 'User not authenticated' }
+      }
+
+      console.log('☕ Saving coffee game progress for user:', user.id, 'score:', score)
+
+      // First, get the game_id for coffee-brew-idle
+      const { data: gameResult, error: gameError } = await this.supabase
+        .from('games')
+        .select('id')
+        .eq('name', 'coffee-brew-idle')
+        .single()
+
+      if (gameError || !gameResult) {
+        console.error('❌ Error finding coffee game:', gameError)
+        return { success: false, error: 'Coffee game not found in database' }
+      }
+
+      const gameId = gameResult.id
+      console.log('🎮 Coffee game ID:', gameId)
+
+      // Check if user already has a save for this game
+      const { data: existingScore, error: checkError } = await this.supabase
+        .from('game_scores')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('game_id', gameId)
+        .single()
+
+      if (checkError && checkError.code !== 'PGRST116') { // PGRST116 = no rows found
+        console.error('❌ Error checking existing coffee save:', checkError)
+        return { success: false, error: 'Failed to check existing save' }
+      }
+
+      const currentTime = new Date().toISOString()
+
+      if (existingScore) {
+        // Update existing save
+        console.log('🔄 Updating existing coffee save:', existingScore.id)
+        
+        const { data, error } = await this.supabase
+          .from('game_scores')
+          .update({
+            score: score,
+            moves: 0, // Not applicable for idle games
+            status: 'completed',
+            duration_seconds: null,
+            game_data: gameData,
+            updated_at: currentTime
+          })
+          .eq('id', existingScore.id)
+          .select('id')
+          .single()
+
+        if (error) {
+          console.error('❌ Error updating coffee save:', error)
+          return { success: false, error: error.message }
+        }
+
+        console.log('✅ Coffee save updated successfully:', data.id)
+        return { success: true, scoreId: data.id }
+
+      } else {
+        // Create new save
+        console.log('🆕 Creating new coffee save')
+        
+        const { data, error } = await this.supabase
+          .from('game_scores')
+          .insert({
+            user_id: user.id,
+            game_id: gameId,
+            score: score,
+            moves: 0, // Not applicable for idle games
+            status: 'completed',
+            duration_seconds: null,
+            game_data: gameData,
+            created_at: currentTime,
+            updated_at: currentTime
+          })
+          .select('id')
+          .single()
+
+        if (error) {
+          console.error('❌ Error creating coffee save:', error)
+          return { success: false, error: error.message }
+        }
+
+        console.log('✅ Coffee save created successfully:', data.id)
+        return { success: true, scoreId: data.id }
+      }
+
+    } catch (error) {
+      console.error('❌ Exception saving coffee game:', error)
+      return { success: false, error: 'Failed to save coffee game progress' }
+    }
+  }
+
+  /**
+   * Load the latest (and only) coffee game save for the current user
+   */
+  async loadCoffeeGameProgress(): Promise<{ success: boolean; error?: string; gameData?: unknown }> {
+    try {
+      const { data: { user }, error: authError } = await this.supabase.auth.getUser()
+      
+      if (authError || !user) {
+        console.error('❌ Coffee Load: User not authenticated:', authError)
+        return { success: false, error: 'User not authenticated' }
+      }
+
+      console.log('☕ Loading coffee game progress for user:', user.id)
+
+      // Get the game_id for coffee-brew-idle
+      const { data: gameResult, error: gameError } = await this.supabase
+        .from('games')
+        .select('id')
+        .eq('name', 'coffee-brew-idle')
+        .single()
+
+      if (gameError || !gameResult) {
+        console.error('❌ Error finding coffee game:', gameError)
+        return { success: false, error: 'Coffee game not found in database' }
+      }
+
+      const gameId = gameResult.id
+
+      // Get user's coffee game save
+      const { data, error } = await this.supabase
+        .from('game_scores')
+        .select('game_data, score, updated_at')
+        .eq('user_id', user.id)
+        .eq('game_id', gameId)
+        .single()
+
+      if (error) {
+        if (error.code === 'PGRST116') { // No rows found
+          console.log('📭 No coffee save found for user')
+          return { success: true, gameData: null }
+        }
+        console.error('❌ Error loading coffee save:', error)
+        return { success: false, error: error.message }
+      }
+
+      console.log('✅ Coffee save loaded successfully, score:', data.score)
+      console.log('📊 Last updated:', data.updated_at)
+      console.log('📊 Game data exists:', !!data.game_data)
+
+      return { success: true, gameData: data.game_data }
+
+    } catch (error) {
+      console.error('❌ Exception loading coffee game:', error)
+      return { success: false, error: 'Failed to load coffee game progress' }
+    }
+  }
+
   async getUserBestScore(gameName: string): Promise<UserBestScore | null> {
     try {
       const { data, error } = await this.supabase.rpc('get_user_best_score', {
@@ -229,7 +396,7 @@ export class GameScoreService {
       console.log('✅ Profile created/updated:', data)
       return { success: true, profileId: data }
     } catch (error) {
-      console.error('❌ Exception creating/updating profile:', error)
+      console.error('❌ Exception creating/update profile:', error)
       return { success: false, error: 'Failed to create/update profile' }
     }
   }

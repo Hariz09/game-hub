@@ -27,6 +27,7 @@ export const useCoffeeGame = () => {
   const [gameState, setGameState] = useState<GameState>({
     coffeeBeans: 0,
     totalCoffeeProduced: 0,
+    lifetimeTotal: 0, // New: tracks total across all prestiges
     prestigePoints: 0,
     prestigeLevel: 0,
     clickPower: 1,
@@ -125,14 +126,16 @@ export const useCoffeeGame = () => {
         
         // Auto-clicker
         const hasAutoClicker = prev.upgrades.includes('autoClicker');
-        const autoClickBeans = hasAutoClicker ? prev.clickPower * (100 / 1000) : 0;
+        const autoClickerBeansPerSecond = hasAutoClicker ? UPGRADES.autoClicker.beansPerSecond || 1 : 0;
+        const autoClickBeans = autoClickerBeansPerSecond * (100 / 1000);
         
         const totalNewBeans = beansThisTick + autoClickBeans;
         
         return {
           ...prev,
           coffeeBeans: prev.coffeeBeans + totalNewBeans,
-          totalCoffeeProduced: prev.totalCoffeeProduced + totalNewBeans
+          totalCoffeeProduced: prev.totalCoffeeProduced + totalNewBeans,
+          lifetimeTotal: prev.lifetimeTotal + totalNewBeans
         };
       });
     }, 100); // 100ms tick rate
@@ -160,9 +163,15 @@ export const useCoffeeGame = () => {
         const savedState = JSON.parse(saved);
         console.log('📱 Loaded from localStorage:', savedState);
         
+        // Migrate old saves that don't have lifetimeTotal
+        const migratedState = {
+          ...savedState,
+          lifetimeTotal: savedState.lifetimeTotal || savedState.totalCoffeeProduced || 0
+        };
+        
         setGameState(prev => ({
           ...prev,
-          ...savedState,
+          ...migratedState,
           lastSave: Date.now(),
           isAuthenticated: false,
           username: null
@@ -181,7 +190,8 @@ export const useCoffeeGame = () => {
           setGameState(prev => ({
             ...prev,
             coffeeBeans: prev.coffeeBeans + offlineBeans,
-            totalCoffeeProduced: prev.totalCoffeeProduced + offlineBeans
+            totalCoffeeProduced: prev.totalCoffeeProduced + offlineBeans,
+            lifetimeTotal: prev.lifetimeTotal + offlineBeans
           }));
           
           // Don't show alert during loading - let the component handle notifications
@@ -207,7 +217,8 @@ export const useCoffeeGame = () => {
         isAuthenticated: state.isAuthenticated,
         username: state.username,
         coffeeBeans: Math.floor(state.coffeeBeans),
-        totalProduced: Math.floor(state.totalCoffeeProduced)
+        totalProduced: Math.floor(state.totalCoffeeProduced),
+        lifetimeTotal: Math.floor(state.lifetimeTotal)
       });
 
       // Always save to localStorage as backup
@@ -230,6 +241,7 @@ export const useCoffeeGame = () => {
         const gameData = {
           coffeeBeans: state.coffeeBeans,
           totalCoffeeProduced: state.totalCoffeeProduced,
+          lifetimeTotal: state.lifetimeTotal,
           prestigePoints: state.prestigePoints,
           prestigeLevel: state.prestigeLevel,
           clickPower: state.clickPower,
@@ -238,8 +250,8 @@ export const useCoffeeGame = () => {
           lastSave: Date.now()
         };
 
-        // Calculate a score based on total production and prestige
-        const score = Math.floor(state.totalCoffeeProduced + (state.prestigePoints * 1000000));
+        // Calculate a score based on lifetime total and prestige
+        const score = Math.floor(state.lifetimeTotal + (state.prestigePoints * 1000000));
         
         console.log('📊 Saving score:', score, 'with game data keys:', Object.keys(gameData));
         
@@ -288,9 +300,15 @@ export const useCoffeeGame = () => {
         const savedData = latestSave.game_data as any;
         
         if (savedData) {
+          // Migrate old saves that don't have lifetimeTotal
+          const migratedData = {
+            ...savedData,
+            lifetimeTotal: savedData.lifetimeTotal || savedData.totalCoffeeProduced || 0
+          };
+          
           setGameState(prev => ({
             ...prev,
-            ...savedData,
+            ...migratedData,
             lastSave: Date.now(),
             isAuthenticated: true,
             username: user.username
@@ -309,7 +327,8 @@ export const useCoffeeGame = () => {
             setGameState(prev => ({
               ...prev,
               coffeeBeans: prev.coffeeBeans + offlineBeans,
-              totalCoffeeProduced: prev.totalCoffeeProduced + offlineBeans
+              totalCoffeeProduced: prev.totalCoffeeProduced + offlineBeans,
+              lifetimeTotal: prev.lifetimeTotal + offlineBeans
             }));
             
             console.log(`📈 Offline progress: ${formatNumber(offlineBeans)} beans produced`);
@@ -379,12 +398,12 @@ export const useCoffeeGame = () => {
       production += equipment.baseProduction * level;
     });
     
-    // Apply upgrades
+    // Apply upgrades using the upgrade definitions
     if (state.upgrades.includes('efficiency')) {
-      production *= 1.5;
+      production *= UPGRADES.efficiency.multiplier || 1.5;
     }
     if (state.upgrades.includes('speedBoost')) {
-      production *= 1.25;
+      production *= UPGRADES.speedBoost.multiplier || 1.8;
     }
     
     // Apply prestige bonus
@@ -396,11 +415,15 @@ export const useCoffeeGame = () => {
   const handleClick = (): void => {
     if (loadingStates.initializing) return;
 
-    const beansToAdd = gameState.clickPower * (gameState.upgrades.includes('clickPower') ? 2 : 1);
+    const clickMultiplier = gameState.upgrades.includes('clickPower') ? 
+      (UPGRADES.clickPower.multiplier || 2) : 1;
+    const beansToAdd = gameState.clickPower * clickMultiplier;
+    
     setGameState(prev => ({
       ...prev,
       coffeeBeans: prev.coffeeBeans + beansToAdd,
-      totalCoffeeProduced: prev.totalCoffeeProduced + beansToAdd
+      totalCoffeeProduced: prev.totalCoffeeProduced + beansToAdd,
+      lifetimeTotal: prev.lifetimeTotal + beansToAdd
     }));
   };
 
@@ -438,20 +461,35 @@ export const useCoffeeGame = () => {
   };
 
   const canPrestige = (): boolean => {
-    return gameState.totalCoffeeProduced >= 1000000; // 1M threshold
+    return gameState.lifetimeTotal >= (gameState.prestigeLevel + 1) * 1000000; // Next million threshold
+  };
+
+  const getPrestigeProgress = () => {
+    const currentThreshold = gameState.prestigeLevel * 1000000;
+    const nextThreshold = (gameState.prestigeLevel + 1) * 1000000;
+    const progress = Math.min(
+      ((gameState.lifetimeTotal - currentThreshold) / (nextThreshold - currentThreshold)) * 100, 
+      100
+    );
+    return {
+      current: gameState.lifetimeTotal,
+      next: nextThreshold,
+      progress: Math.max(0, progress)
+    };
   };
 
   const prestige = (): void => {
     if (!canPrestige() || loadingStates.initializing) return;
     
-    const prestigePointsGained = Math.floor(gameState.totalCoffeeProduced / 1000000);
+    const newPrestigeLevel = Math.floor(gameState.lifetimeTotal / 1000000);
     
     setGameState(prev => ({
       ...prev,
       coffeeBeans: 0,
       totalCoffeeProduced: 0,
-      prestigePoints: prev.prestigePoints + prestigePointsGained,
-      prestigeLevel: prev.prestigeLevel + 1,
+      // lifetimeTotal stays the same!
+      prestigePoints: prev.prestigePoints + (newPrestigeLevel - prev.prestigeLevel),
+      prestigeLevel: newPrestigeLevel,
       equipment: {
         manualGrinder: 1,
         dripCoffee: 0,
@@ -497,6 +535,7 @@ export const useCoffeeGame = () => {
     
     // Utilities
     formatNumber,
-    calculateProductionPerSecond
+    calculateProductionPerSecond,
+    getPrestigeProgress
   };
 };
