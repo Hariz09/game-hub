@@ -55,8 +55,11 @@ export class GameScoreService {
       const { data: { user }, error: authError } = await this.supabase.auth.getUser()
       
       if (authError || !user) {
+        console.error('❌ Save: User not authenticated:', authError)
         return { success: false, error: 'User not authenticated' }
       }
+
+      console.log('💾 Saving score for user:', user.id, 'game:', gameName, 'score:', score)
 
       // Call the database function to save the score
       const { data, error } = await this.supabase.rpc('save_game_score', {
@@ -69,13 +72,14 @@ export class GameScoreService {
       })
 
       if (error) {
-        console.error('Error saving score:', error)
+        console.error('❌ Error saving score:', error)
         return { success: false, error: error.message }
       }
 
+      console.log('✅ Score saved successfully:', data)
       return { success: true, scoreId: data }
     } catch (error) {
-      console.error('Error saving score:', error)
+      console.error('❌ Exception saving score:', error)
       return { success: false, error: 'Failed to save score' }
     }
   }
@@ -87,13 +91,13 @@ export class GameScoreService {
       })
 
       if (error) {
-        console.error('Error fetching user best score:', error)
+        console.error('❌ Error fetching user best score:', error)
         return null
       }
 
       return data?.[0] || null
     } catch (error) {
-      console.error('Error fetching user best score:', error)
+      console.error('❌ Exception fetching user best score:', error)
       return null
     }
   }
@@ -106,46 +110,97 @@ export class GameScoreService {
       })
 
       if (error) {
-        console.error('Error fetching leaderboard:', error)
+        console.error('❌ Error fetching leaderboard:', error)
         return []
       }
 
       return data || []
     } catch (error) {
-      console.error('Error fetching leaderboard:', error)
+      console.error('❌ Exception fetching leaderboard:', error)
       return []
     }
   }
 
+  // FIXED: Better approach using direct query instead of problematic join
   async getUserScores(gameName: string, limit: number = 10): Promise<GameScore[]> {
     try {
       const { data: { user }, error: authError } = await this.supabase.auth.getUser()
       
       if (authError || !user) {
+        console.error('❌ Load: User not authenticated:', authError)
         return []
       }
 
+      console.log('📥 Loading scores for user:', user.id, 'game:', gameName)
+
+      // First, get the game_id for the game name
+      const { data: gameData, error: gameError } = await this.supabase
+        .from('games')
+        .select('id')
+        .eq('name', gameName)
+        .single()
+
+      if (gameError || !gameData) {
+        console.error('❌ Error finding game:', gameError)
+        return []
+      }
+
+      console.log('🎮 Found game ID:', gameData.id)
+
+      // Then get user scores for that game
       const { data, error } = await this.supabase
         .from('game_scores')
-        .select(`
-          *,
-          games (name)
-        `)
+        .select('*')
         .eq('user_id', user.id)
-        .eq('games.name', gameName)
-        .order('score', { ascending: false })
-        .order('moves', { ascending: true })
+        .eq('game_id', gameData.id)
         .order('created_at', { ascending: false })
         .limit(limit)
 
       if (error) {
-        console.error('Error fetching user scores:', error)
+        console.error('❌ Error fetching user scores:', error)
         return []
+      }
+
+      console.log('📊 Found scores:', data?.length || 0)
+      if (data && data.length > 0) {
+        console.log('📊 Latest score data:', data[0])
+        console.log('📊 Game data exists:', !!data[0].game_data)
+        console.log('📊 Game data preview:', data[0].game_data ? Object.keys(data[0].game_data as any) : 'none')
       }
 
       return data || []
     } catch (error) {
-      console.error('Error fetching user scores:', error)
+      console.error('❌ Exception fetching user scores:', error)
+      return []
+    }
+  }
+
+  // ADDED: Alternative method using RPC if available
+  async getUserScoresViaRPC(gameName: string, limit: number = 10): Promise<GameScore[]> {
+    try {
+      const { data: { user }, error: authError } = await this.supabase.auth.getUser()
+      
+      if (authError || !user) {
+        console.error('❌ RPC Load: User not authenticated:', authError)
+        return []
+      }
+
+      console.log('📥 Loading scores via RPC for user:', user.id, 'game:', gameName)
+
+      const { data, error } = await this.supabase.rpc('get_user_game_scores', {
+        p_game_name: gameName,
+        p_limit: limit
+      })
+
+      if (error) {
+        console.error('❌ RPC Error fetching user scores:', error)
+        return []
+      }
+
+      console.log('📊 RPC Found scores:', data?.length || 0)
+      return data || []
+    } catch (error) {
+      console.error('❌ RPC Exception fetching user scores:', error)
       return []
     }
   }
@@ -159,19 +214,22 @@ export class GameScoreService {
         return { success: false, error: 'User not authenticated' }
       }
 
+      console.log('👤 Creating/updating profile for user:', user.id, 'username:', username)
+
       // Call the database function to create or update profile
       const { data, error } = await this.supabase.rpc('create_or_update_profile', {
         p_username: username
       })
 
       if (error) {
-        console.error('Error creating/updating profile:', error)
+        console.error('❌ Error creating/updating profile:', error)
         return { success: false, error: error.message }
       }
 
+      console.log('✅ Profile created/updated:', data)
       return { success: true, profileId: data }
     } catch (error) {
-      console.error('Error creating/updating profile:', error)
+      console.error('❌ Exception creating/updating profile:', error)
       return { success: false, error: 'Failed to create/update profile' }
     }
   }
@@ -181,13 +239,13 @@ export class GameScoreService {
       const { data, error } = await this.supabase.rpc('get_user_profile')
 
       if (error) {
-        console.error('Error fetching user profile:', error)
+        console.error('❌ Error fetching user profile:', error)
         return null
       }
 
       return data?.[0] || null
     } catch (error) {
-      console.error('Error fetching user profile:', error)
+      console.error('❌ Exception fetching user profile:', error)
       return null
     }
   }
@@ -216,6 +274,46 @@ export class GameScoreService {
       return !!profile
     } catch {
       return false
+    }
+  }
+
+  // ADDED: Debug method to check data exists
+  async debugCheckData(gameName: string): Promise<void> {
+    try {
+      const { data: { user } } = await this.supabase.auth.getUser()
+      if (!user) {
+        console.log('🐛 Debug: No user authenticated')
+        return
+      }
+
+      console.log('🐛 Debug: Checking data for user:', user.id, 'game:', gameName)
+
+      // Check if game exists
+      const { data: gameData } = await this.supabase
+        .from('games')
+        .select('*')
+        .eq('name', gameName)
+
+      console.log('🐛 Game data:', gameData)
+
+      // Check all scores for this user
+      const { data: allScores } = await this.supabase
+        .from('game_scores')
+        .select('*')
+        .eq('user_id', user.id)
+
+      console.log('🐛 All user scores:', allScores)
+
+      // Check profile
+      const { data: profile } = await this.supabase
+        .from('user_profiles')
+        .select('*')
+        .eq('user_id', user.id)
+
+      console.log('🐛 User profile:', profile)
+
+    } catch (error) {
+      console.error('🐛 Debug error:', error)
     }
   }
 }
