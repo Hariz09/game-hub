@@ -41,18 +41,18 @@ export const LeaderboardEntry: React.FC<LeaderboardEntryProps> = ({ player }) =>
   };
 
   const getCardStyles = (rank: number) => {
-    const baseStyles = 'transition-all duration-300 hover:shadow-lg hover:scale-[1.02]';
+    const baseStyles = 'transition-all duration-300 hover:shadow-lg hover:scale-[1.01] sm:hover:scale-[1.02]';
     const shineEffect = rank <= 3 ? 'relative overflow-hidden' : '';
     
     switch (rank) {
       case 1:
-        return `${baseStyles} ${shineEffect} bg-gradient-to-r from-yellow-50 via-amber-50 to-yellow-100 border-yellow-300 shadow-yellow-200/50 dark:from-yellow-900/20 dark:via-amber-900/20 dark:to-yellow-900/30 dark:border-yellow-600/50 dark:shadow-yellow-500/20`;
+        return `${baseStyles} ${shineEffect} bg-gradient-to-br from-yellow-50 via-amber-50 to-yellow-100 border-yellow-300 shadow-yellow-200/50 dark:from-yellow-900/20 dark:via-amber-900/20 dark:to-yellow-900/30 dark:border-yellow-600/50 dark:shadow-yellow-500/20`;
       case 2:
-        return `${baseStyles} ${shineEffect} bg-gradient-to-r from-gray-50 via-slate-50 to-gray-100 border-gray-300 shadow-gray-200/50 dark:from-gray-800/40 dark:via-slate-800/40 dark:to-gray-800/50 dark:border-gray-600/50 dark:shadow-gray-400/20`;
+        return `${baseStyles} ${shineEffect} bg-gradient-to-br from-gray-50 via-slate-50 to-gray-100 border-gray-300 shadow-gray-200/50 dark:from-gray-800/40 dark:via-slate-800/40 dark:to-gray-800/50 dark:border-gray-600/50 dark:shadow-gray-400/20`;
       case 3:
-        return `${baseStyles} ${shineEffect} bg-gradient-to-r from-orange-50 via-amber-50 to-orange-100 border-orange-300 shadow-orange-200/50 dark:from-orange-900/20 dark:via-amber-900/20 dark:to-orange-900/30 dark:border-orange-600/50 dark:shadow-orange-500/20`;
+        return `${baseStyles} ${shineEffect} bg-gradient-to-br from-orange-50 via-amber-50 to-orange-100 border-orange-300 shadow-orange-200/50 dark:from-orange-900/20 dark:via-amber-900/20 dark:to-orange-900/30 dark:border-orange-600/50 dark:shadow-orange-500/20`;
       default:
-        return `${baseStyles} bg-gradient-to-r from-purple-50 via-cyan-50 to-purple-100 border-purple-200 shadow-purple-200/30 dark:from-purple-900/20 dark:via-cyan-900/20 dark:to-purple-900/30 dark:border-purple-600/50 dark:shadow-purple-500/20`;
+        return `${baseStyles} bg-gradient-to-br from-purple-50 via-cyan-50 to-purple-100 border-purple-200 shadow-purple-200/30 dark:from-purple-900/20 dark:via-cyan-900/20 dark:to-purple-900/30 dark:border-purple-600/50 dark:shadow-purple-500/20`;
     }
   };
 
@@ -66,7 +66,7 @@ export const LeaderboardEntry: React.FC<LeaderboardEntryProps> = ({ player }) =>
     };
 
     return (
-      <div className="absolute inset-0 -top-2 -bottom-2">
+      <div className="absolute inset-0 -top-2 -bottom-2 pointer-events-none">
         <div 
           className={`absolute inset-0 bg-gradient-to-r ${shineColors[rank as keyof typeof shineColors]} transform -skew-x-12 animate-pulse`}
           style={{
@@ -84,26 +84,98 @@ export const LeaderboardEntry: React.FC<LeaderboardEntryProps> = ({ player }) =>
     );
   };
 
+  const formatNumber = (num: number) => {
+    if (num >= 1000000000000) {
+      return (num / 1000000000000).toFixed(1) + 'T';
+    }
+    if (num >= 1000000000) {
+      return (num / 1000000000).toFixed(1) + 'B';
+    }
+    if (num >= 1000000) {
+      return (num / 1000000).toFixed(1) + 'M';
+    }
+    if (num >= 1000) {
+      return (num / 1000).toFixed(1) + 'K';
+    }
+    return num.toString();
+  };
+
   const rankBadge = getRankBadge(player.rank);
 
   return (
-    <div className={`p-4 rounded-xl border-2 ${getCardStyles(player.rank)}`}>
+    <div className={`p-3 sm:p-4 rounded-lg sm:rounded-xl border-2 ${getCardStyles(player.rank)}`}>
       {/* Shining effect for top 3 */}
       {getShineEffect(player.rank)}
       
-      <div className="flex items-center justify-between relative z-10">
+      {/* Mobile Layout - Stacked */}
+      <div className="block sm:hidden relative z-10">
+        {/* Top Row: Rank + Name + Champion badge */}
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center space-x-2">
+            <div className={`text-lg font-bold w-8 h-8 rounded-full bg-gradient-to-r ${rankBadge.gradient} flex items-center justify-center text-white shadow-lg text-xs`}>
+              {player.rank <= 3 ? rankBadge.emoji : player.rank}
+            </div>
+            <h3 className={`text-sm font-bold ${rankBadge.textColor} truncate`}>
+              {player.username}
+            </h3>
+          </div>
+          {player.rank === 1 && (
+            <div className="flex items-center gap-1 animate-pulse shrink-0">
+              <Sparkles className="h-3 w-3 text-yellow-500" />
+              <span className="text-xs font-semibold text-yellow-700 dark:text-yellow-300 uppercase tracking-wide">
+                Champion
+              </span>
+            </div>
+          )}
+        </div>
+        
+        {/* Stats Grid - 2x2 */}
+        <div className="grid grid-cols-2 gap-2 text-xs">
+          <div className="flex flex-col space-y-0.5">
+            <span className="text-gray-500 dark:text-gray-400 text-xs font-medium">Total Score</span>
+            <div className="flex items-center space-x-1 text-gray-700 dark:text-gray-200">
+              <Trophy className="h-3 w-3 text-yellow-500 shrink-0" />
+              <span className="font-semibold">{formatNumber(player.total_score)}</span>
+            </div>
+          </div>
+          <div className="flex flex-col space-y-0.5">
+            <span className="text-gray-500 dark:text-gray-400 text-xs font-medium">Best Score</span>
+            <div className="flex items-center space-x-1 text-gray-700 dark:text-gray-200">
+              <Target className="h-3 w-3 text-green-500 shrink-0" />
+              <span className="font-medium">{formatNumber(player.best_single_score)}</span>
+            </div>
+          </div>
+          <div className="flex flex-col space-y-0.5">
+            <span className="text-gray-500 dark:text-gray-400 text-xs font-medium">Games</span>
+            <div className="flex items-center space-x-1 text-gray-700 dark:text-gray-200">
+              <GamepadIcon className="h-3 w-3 text-blue-500 shrink-0" />
+              <span>{player.games_played}</span>
+            </div>
+          </div>
+          <div className="flex flex-col space-y-0.5">
+            <span className="text-gray-500 dark:text-gray-400 text-xs font-medium">Moves</span>
+            <div className="flex items-center space-x-1 text-gray-700 dark:text-gray-200">
+              <Clock className="h-3 w-3 text-gray-500 shrink-0" />
+              <span>{formatNumber(player.total_moves)}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Desktop Layout - Original Horizontal */}
+      <div className="hidden sm:flex items-center justify-between relative z-10">
         {/* Player Info */}
-        <div className="flex items-center space-x-4">
-          <div className={`text-2xl font-bold w-12 h-12 rounded-full bg-gradient-to-r ${rankBadge.gradient} flex items-center justify-center text-white shadow-lg`}>
+        <div className="flex items-center space-x-3 lg:space-x-4 min-w-0 flex-1">
+          <div className={`text-xl lg:text-2xl font-bold w-10 h-10 lg:w-12 lg:h-12 rounded-full bg-gradient-to-r ${rankBadge.gradient} flex items-center justify-center text-white shadow-lg shrink-0`}>
             {player.rank <= 3 ? rankBadge.emoji : `#${player.rank}`}
           </div>
-          <div>
+          <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2 mb-1">
-              <h3 className={`text-lg font-bold ${rankBadge.textColor}`}>
+              <h3 className={`text-base lg:text-lg font-bold ${rankBadge.textColor} truncate`}>
                 {player.username}
               </h3>
               {player.rank === 1 && (
-                <div className="flex items-center gap-1 animate-pulse">
+                <div className="flex items-center gap-1 animate-pulse shrink-0">
                   <Sparkles className="h-3 w-3 text-yellow-500" />
                   <span className="text-xs font-semibold text-yellow-700 dark:text-yellow-300 uppercase tracking-wide">
                     Champion
@@ -111,30 +183,32 @@ export const LeaderboardEntry: React.FC<LeaderboardEntryProps> = ({ player }) =>
                 </div>
               )}
             </div>
-            <div className="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-300">
-              <span className="flex items-center space-x-1">
+            <div className="flex items-center space-x-3 lg:space-x-4 text-xs lg:text-sm text-gray-600 dark:text-gray-300">
+              <span className="flex items-center space-x-1 shrink-0">
                 <Trophy className="h-3 w-3 text-yellow-500" />
                 <span className="font-semibold">{player.total_score.toLocaleString()}</span>
-                <span>pts</span>
+                <span className="hidden lg:inline">pts</span>
               </span>
-              <span className="flex items-center space-x-1">
+              <span className="flex items-center space-x-1 shrink-0">
                 <GamepadIcon className="h-3 w-3 text-blue-500" />
                 <span>{player.games_played}</span>
-                <span>games played</span>
+                <span className="hidden lg:inline">games</span>
               </span>
             </div>
           </div>
         </div>
         
         {/* Compact Stats */}
-        <div className="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
+        <div className="flex items-center space-x-3 lg:space-x-4 text-xs lg:text-sm text-gray-500 dark:text-gray-400 shrink-0">
           <span className="flex items-center space-x-1">
             <Target className="h-3 w-3 text-green-500" />
-            <span className="font-medium">{player.best_single_score.toLocaleString()}</span>
+            <span className="font-medium">{formatNumber(player.best_single_score)}</span>
+            <span className="hidden lg:inline text-xs">best</span>
           </span>
           <span className="flex items-center space-x-1">
             <Clock className="h-3 w-3" />
-            <span>{player.total_moves.toLocaleString()}</span>
+            <span>{formatNumber(player.total_moves)}</span>
+            <span className="hidden lg:inline text-xs">moves</span>
           </span>
         </div>
       </div>
