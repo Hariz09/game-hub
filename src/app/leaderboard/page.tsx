@@ -14,6 +14,7 @@ import { LoadingState, ErrorState, EmptyState } from '@/components/Leaderboard/S
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import Sidebar from '@/components/sidebar/Sidebar';
+import CleanBackground from '@/components/CleanBackground';
 
 export default function LeaderboardPage() {
     const [activeTab, setActiveTab] = useState<'overall' | 'games'>('overall');
@@ -73,7 +74,8 @@ export default function LeaderboardPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <div className="min-h-screen">
+            <CleanBackground />
             {/* Desktop sidebar - hidden on mobile */}
             <div className="hidden lg:block">
                 <Sidebar />
