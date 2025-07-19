@@ -71,6 +71,17 @@ const games: GameLink[] = [
     tags: ['Arcade', 'Puzzle', 'Classic', 'Fast-paced']
   },
   {
+    id: 'minesweeper',
+    title: 'Mine Sweeper',
+    description: 'WIP',
+    icon: Shapes,
+    href: '/games/minesweeper',
+    players: '1',
+    duration: '5-∞',
+    thumbnail: '/placeholder.png',
+    tags: ['']
+  },
+  {
     id: 'uno',
     title: 'UNO (Static)',
     description: 'Classic card game with friends - match colors and numbers to win',
