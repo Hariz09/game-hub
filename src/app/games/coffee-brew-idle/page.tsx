@@ -35,17 +35,29 @@ const CoffeeBrewIdleGame: React.FC = () => {
   const [saveStatus, setSaveStatus] = useState<string>('');
 
   const handleManualSaveWithFeedback = async () => {
-    setSaveStatus('Saving...');
-    try {
-      const success = await handleManualSave();
-      setSaveStatus(success ? 'Saved!' : 'Save failed');
-      setTimeout(() => setSaveStatus(''), 2000);
-    } catch (error) {
-      console.error(error)
-      setSaveStatus('Save failed');
-      setTimeout(() => setSaveStatus(''), 2000);
+  setSaveStatus('Saving...');
+  try {
+    console.log('Manual save triggered');
+    console.log('Current game state:', gameState);
+    console.log('Is authenticated:', gameState.isAuthenticated);
+    
+    const success = await handleManualSave();
+    
+    if (success) {
+      setSaveStatus('Saved!');
+      console.log('✅ Manual save successful');
+    } else {
+      setSaveStatus('Save failed - Check console');
+      console.log('❌ Manual save failed - check logs above');
     }
-  };
+    
+    setTimeout(() => setSaveStatus(''), 3000); // Show message longer
+  } catch (error) {
+    console.error('❌ Manual save exception:', error);
+    setSaveStatus('Save failed - Exception');
+    setTimeout(() => setSaveStatus(''), 3000);
+  }
+};
 
   const handlePrestige = () => {
     prestige();

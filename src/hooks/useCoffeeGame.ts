@@ -44,7 +44,7 @@ export const useCoffeeGame = () => {
   const [gameState, setGameState] = useState<GameState>({
     coffeeBeans: 0,
     totalCoffeeProduced: 0,
-    lifetimeTotal: 0, // New: tracks total across all prestiges
+    lifetimeTotal: 0,
     prestigePoints: 0,
     prestigeLevel: 0,
     clickPower: 1,
@@ -71,6 +71,7 @@ export const useCoffeeGame = () => {
   // Game loop ref for cleanup
   const gameLoopRef = useRef<NodeJS.Timeout | null>(null);
   const autoSaveIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const isInitializedRef = useRef(false);
 
   // Use refs to store latest state for intervals
   const gameStateRef = useRef(gameState);
@@ -78,7 +79,7 @@ export const useCoffeeGame = () => {
     gameStateRef.current = gameState;
   }, [gameState]);
 
-  // Calculate production per second
+  // Calculate production per second - stable function with no dependencies
   const calculateProductionPerSecond = useCallback((state: GameState): number => {
     let production = 0;
     
@@ -99,9 +100,9 @@ export const useCoffeeGame = () => {
     production *= (1 + state.prestigeLevel * 0.1);
     
     return production;
-  }, []);
+  }, []); // No dependencies needed - uses parameters and external constants
 
-  // Format number helper
+  // Format number helper - stable function
   const formatNumber = useCallback((num: number): string => {
     if (num < 1000) return Math.floor(num).toString();
     if (num < 1000000) return (num / 1000).toFixed(1) + 'K';
@@ -110,176 +111,109 @@ export const useCoffeeGame = () => {
     return (num / 1000000000000).toFixed(1) + 'T';
   }, []);
 
-  // Load from localStorage fallback
-  const loadFromLocalStorage = useCallback(async (): Promise<void> => {
-    try {
-      const saved = localStorage.getItem('coffeeBrewSave');
-      if (saved) {
-        const savedState = JSON.parse(saved);
-        
-        // Migrate old saves that don't have lifetimeTotal
-        const migratedState = {
-          ...savedState,
-          lifetimeTotal: savedState.lifetimeTotal || savedState.totalCoffeeProduced || 0
-        };
-        
-        setGameState(prev => ({
-          ...prev,
-          ...migratedState,
-          lastSave: Date.now(),
-          isAuthenticated: false,
-          username: null
-        }));
-        
-        // Calculate offline progress
-        const offlineTime = Math.min(
-          (Date.now() - savedState.lastSave) / 1000,
-          12 * 3600 // 12 hours cap
-        );
-        
-        if (offlineTime > 60) {
-          const offlineProduction = calculateProductionPerSecond(savedState) * offlineTime;
-          const offlineBeans = Math.floor(offlineProduction);
-          
-          setGameState(prev => ({
-            ...prev,
-            coffeeBeans: prev.coffeeBeans + offlineBeans,
-            totalCoffeeProduced: prev.totalCoffeeProduced + offlineBeans,
-            lifetimeTotal: prev.lifetimeTotal + offlineBeans
-          }));
-        }
-      }
-    } catch (error) {
-      console.error('Failed to load from localStorage:', error);
-    }
-  }, [calculateProductionPerSecond]);
+  // Save game progress - stable function with proper dependencies
+  // Enhanced saveGameProgress function with detailed error logging
+const saveGameProgress = useCallback(async (state: GameState): Promise<boolean> => {
+  // Don't save if still initializing
+  if (loadingStates.initializing) {
+    console.log('Save skipped: Game still initializing');
+    return false;
+  }
 
-  // Save game progress to Supabase or localStorage
-  const saveGameProgress = useCallback(async (state: GameState): Promise<boolean> => {
-    // Don't save if still initializing
-    if (loadingStates.initializing) {
+  console.log('Starting save process...');
+  setLoadingStates(prev => ({ ...prev, savingProgress: true }));
+
+  try {
+    // Always save to localStorage as backup
+    try {
+      const saveData = JSON.stringify(state);
+      localStorage.setItem('coffeeBrewSave', saveData);
+      console.log('✅ LocalStorage save successful');
+    } catch (localStorageError) {
+      console.error('❌ Failed to save to localStorage:', localStorageError);
+      // Don't return false here - continue with cloud save attempt
+    }
+
+    // If not authenticated, return early
+    if (!state.isAuthenticated || !user) {
+      console.log('✅ Save completed (localStorage only - not authenticated)');
+      return true;
+    }
+
+    // Validate user object
+    if (!user.username) {
+      console.error('❌ User object missing username:', user);
       return false;
     }
 
-    setLoadingStates(prev => ({ ...prev, savingProgress: true }));
-
     try {
-      // Always save to localStorage as backup
-      try {
-        localStorage.setItem('coffeeBrewSave', JSON.stringify(state));
-      } catch (localStorageError) {
-        console.error('Failed to save to localStorage:', localStorageError);
-      }
+      // Prepare game data
+      const gameData: GameData = {
+        coffeeBeans: state.coffeeBeans,
+        totalCoffeeProduced: state.totalCoffeeProduced,
+        lifetimeTotal: state.lifetimeTotal,
+        prestigePoints: state.prestigePoints,
+        prestigeLevel: state.prestigeLevel,
+        clickPower: state.clickPower,
+        equipment: state.equipment,
+        upgrades: state.upgrades,
+        lastSave: Date.now(),
+        isAuthenticated: true,
+        username: user.username
+      };
 
-      // If not authenticated, return early
-      if (!state.isAuthenticated || !user) {
-        return true; // localStorage save succeeded
-      }
-
-      try {
-        const gameData: GameData = {
-          coffeeBeans: state.coffeeBeans,
-          totalCoffeeProduced: state.totalCoffeeProduced,
-          lifetimeTotal: state.lifetimeTotal,
-          prestigePoints: state.prestigePoints,
-          prestigeLevel: state.prestigeLevel,
-          clickPower: state.clickPower,
-          equipment: state.equipment,
-          upgrades: state.upgrades,
-          lastSave: Date.now(),
-          isAuthenticated: true,
-          username: user.username
-        };
-
-        // Calculate a score based on lifetime total and prestige
-        const score = Math.floor(state.lifetimeTotal + (state.prestigePoints * 1000000));
-        
-        const result = await gameService.saveScore(
-          'coffee-brew-idle',
-          score,
-          0, // moves not applicable for idle games
-          'completed',
-          undefined,
-          gameData
-        );
-        
-        if (!result.success) {
-          console.error('Supabase save failed:', result.error);
-          return false;
-        }
-
-        return true;
-        
-      } catch (supabaseError) {
-        console.error('Supabase save error:', supabaseError);
+      // Validate game data
+      if (!gameData.coffeeBeans && gameData.coffeeBeans !== 0) {
+        console.error('❌ Invalid game data - missing coffeeBeans');
         return false;
       }
 
-    } finally {
-      setLoadingStates(prev => ({ ...prev, savingProgress: false }));
-    }
-  }, [gameService, user, loadingStates.initializing]);
-
-  // Load game progress from Supabase
-  const loadGameProgress = useCallback(async (): Promise<void> => {
-    if (!user) {
-      await loadFromLocalStorage();
-      return;
-    }
-
-    try {
-      const scores = await gameService.getUserScores('coffee-brew-idle', 1);
+      const score = Math.floor(state.lifetimeTotal + (state.prestigePoints * 1000000));
+      console.log('Attempting cloud save with score:', score);
       
-      if (scores && scores.length > 0) {
-        const latestSave = scores[0];
-        const savedData = latestSave.game_data as GameData;
-        
-        if (savedData) {
-          // Migrate old saves that don't have lifetimeTotal
-          const migratedData = {
-            ...savedData,
-            lifetimeTotal: savedData.lifetimeTotal || savedData.totalCoffeeProduced || 0
-          };
-          
-          setGameState(prev => ({
-            ...prev,
-            ...migratedData,
-            lastSave: Date.now(),
-            isAuthenticated: true,
-            username: user.username
-          }));
-          
-          // Calculate offline progress
-          const offlineTime = Math.min(
-            (Date.now() - savedData.lastSave) / 1000,
-            12 * 3600 // 12 hours cap
-          );
-          
-          if (offlineTime > 60) {
-            const offlineProduction = calculateProductionPerSecond(savedData) * offlineTime;
-            const offlineBeans = Math.floor(offlineProduction);
-            
-            setGameState(prev => ({
-              ...prev,
-              coffeeBeans: prev.coffeeBeans + offlineBeans,
-              totalCoffeeProduced: prev.totalCoffeeProduced + offlineBeans,
-              lifetimeTotal: prev.lifetimeTotal + offlineBeans
-            }));
-          }
-          
-          return;
-        }
+      // Check if gameService is available
+      if (!gameService) {
+        console.error('❌ GameService not available');
+        return false;
       }
-      
-      await loadFromLocalStorage();
-      
-    } catch (error) {
-      console.error('Failed to load from Supabase:', error);
-      await loadFromLocalStorage();
-    }
-  }, [gameService, loadFromLocalStorage, user, calculateProductionPerSecond]);
 
-  // Start game loop
+      const result = await gameService.saveScore(
+        'coffee-brew-idle',
+        score,
+        0,
+        'completed',
+        undefined,
+        gameData
+      );
+      
+      if (!result.success) {
+        console.error('❌ Supabase save failed:', result.error);
+        console.error('Full result object:', result);
+        return false;
+      }
+
+      console.log('✅ Cloud save successful');
+      return true;
+      
+    } catch (supabaseError) {
+      console.error('❌ Supabase save error:', supabaseError);
+      // Log more details about the error
+      if (supabaseError instanceof Error) {
+        console.error('Error message:', supabaseError.message);
+        console.error('Error stack:', supabaseError.stack);
+      }
+      return false;
+    }
+
+  } catch (generalError) {
+    console.error('❌ General save error:', generalError);
+    return false;
+  } finally {
+    setLoadingStates(prev => ({ ...prev, savingProgress: false }));
+  }
+}, [gameService, user, loadingStates.initializing]);
+
+  // Start game loop - stable function
   const startGameLoop = useCallback(() => {
     if (gameLoopRef.current) {
       clearInterval(gameLoopRef.current);
@@ -288,9 +222,8 @@ export const useCoffeeGame = () => {
     gameLoopRef.current = setInterval(() => {
       setGameState(prev => {
         const beansPerSecond = calculateProductionPerSecond(prev);
-        const beansThisTick = beansPerSecond * (100 / 1000); // 100ms tick rate
+        const beansThisTick = beansPerSecond * (100 / 1000);
         
-        // Auto-clicker
         const hasAutoClicker = prev.upgrades.includes('autoClicker');
         const autoClickerBeansPerSecond = hasAutoClicker ? UPGRADES.autoClicker.beansPerSecond || 1 : 0;
         const autoClickBeans = autoClickerBeansPerSecond * (100 / 1000);
@@ -304,10 +237,10 @@ export const useCoffeeGame = () => {
           lifetimeTotal: prev.lifetimeTotal + totalNewBeans
         };
       });
-    }, 100); // 100ms tick rate
+    }, 100);
   }, [calculateProductionPerSecond]);
 
-  // Start auto-save
+  // Start auto-save - stable function
   const startAutoSave = useCallback(() => {
     if (autoSaveIntervalRef.current) {
       clearInterval(autoSaveIntervalRef.current);
@@ -315,7 +248,7 @@ export const useCoffeeGame = () => {
     
     autoSaveIntervalRef.current = setInterval(() => {
       saveGameProgress(gameStateRef.current);
-    }, 30000); // 30 seconds
+    }, 30000);
   }, [saveGameProgress]);
 
   // Manual save function
@@ -323,7 +256,9 @@ export const useCoffeeGame = () => {
     return await saveGameProgress(gameStateRef.current);
   }, [saveGameProgress]);
 
-  // Load leaderboard with loading state
+  
+
+  // Load leaderboard
   const loadLeaderboard = useCallback(async () => {
     setLoadingStates(prev => ({ ...prev, loadingLeaderboard: true }));
     
@@ -340,11 +275,17 @@ export const useCoffeeGame = () => {
     }
   }, [gameService]);
 
-  // Initialize game when auth state is ready
+  // Initialize game - this effect should only run once when auth state changes
   useEffect(() => {
-    const initializeGame = async () => {
-      if (authLoading) return; // Wait for auth to complete
+    // Prevent multiple initializations
+    if (isInitializedRef.current) {
+      return;
+    }
 
+    const initializeGame = async () => {
+      if (authLoading) return;
+
+      console.log('Initializing game...');
       setLoadingStates(prev => ({ ...prev, gameLoading: true, initializing: true }));
 
       try {
@@ -357,10 +298,104 @@ export const useCoffeeGame = () => {
 
         // Load game data
         if (user) {
-          await loadGameProgress();
+          try {
+            const scores = await gameService.getUserScores('coffee-brew-idle', 1);
+            
+            if (scores && scores.length > 0) {
+              const latestSave = scores[0];
+              const savedData = latestSave.game_data as GameData;
+              
+              if (savedData) {
+                const migratedData = {
+                  ...savedData,
+                  lifetimeTotal: savedData.lifetimeTotal || savedData.totalCoffeeProduced || 0
+                };
+                
+                setGameState(prev => ({
+                  ...prev,
+                  ...migratedData,
+                  lastSave: Date.now(),
+                  isAuthenticated: true,
+                  username: user.username
+                }));
+                
+                // Calculate offline progress
+                const offlineTime = Math.min(
+                  (Date.now() - savedData.lastSave) / 1000,
+                  12 * 3600
+                );
+                
+                if (offlineTime > 60) {
+                  const offlineProduction = calculateProductionPerSecond(savedData) * offlineTime;
+                  const offlineBeans = Math.floor(offlineProduction);
+                  
+                  setGameState(prev => ({
+                    ...prev,
+                    coffeeBeans: prev.coffeeBeans + offlineBeans,
+                    totalCoffeeProduced: prev.totalCoffeeProduced + offlineBeans,
+                    lifetimeTotal: prev.lifetimeTotal + offlineBeans
+                  }));
+                }
+              }
+            } else {
+              // Load from localStorage if no Supabase data
+              const saved = localStorage.getItem('coffeeBrewSave');
+              if (saved) {
+                const savedState = JSON.parse(saved);
+                const migratedState = {
+                  ...savedState,
+                  lifetimeTotal: savedState.lifetimeTotal || savedState.totalCoffeeProduced || 0
+                };
+                
+                setGameState(prev => ({
+                  ...prev,
+                  ...migratedState,
+                  lastSave: Date.now(),
+                  isAuthenticated: true,
+                  username: user.username
+                }));
+              }
+            }
+          } catch (error) {
+            console.error('Failed to load from Supabase:', error);
+            // Fallback to localStorage
+            const saved = localStorage.getItem('coffeeBrewSave');
+            if (saved) {
+              const savedState = JSON.parse(saved);
+              setGameState(prev => ({
+                ...prev,
+                ...savedState,
+                isAuthenticated: true,
+                username: user.username
+              }));
+            }
+          }
         } else {
-          await loadFromLocalStorage();
+          // Load from localStorage for non-authenticated users
+          try {
+            const saved = localStorage.getItem('coffeeBrewSave');
+            if (saved) {
+              const savedState = JSON.parse(saved);
+              const migratedState = {
+                ...savedState,
+                lifetimeTotal: savedState.lifetimeTotal || savedState.totalCoffeeProduced || 0
+              };
+              
+              setGameState(prev => ({
+                ...prev,
+                ...migratedState,
+                lastSave: Date.now(),
+                isAuthenticated: false,
+                username: null
+              }));
+            }
+          } catch (error) {
+            console.error('Failed to load from localStorage:', error);
+          }
         }
+
+        // Mark as initialized
+        isInitializedRef.current = true;
 
         // Start game systems
         startGameLoop();
@@ -379,7 +414,7 @@ export const useCoffeeGame = () => {
 
     initializeGame();
 
-    // Cleanup on unmount or re-initialization
+    // Cleanup on unmount
     return () => {
       if (gameLoopRef.current) {
         clearInterval(gameLoopRef.current);
@@ -390,9 +425,9 @@ export const useCoffeeGame = () => {
         autoSaveIntervalRef.current = null;
       }
     };
-  }, [user, authLoading, loadFromLocalStorage, loadGameProgress, startAutoSave, startGameLoop]);
+  }, [authLoading, user?.username]); // Minimal dependencies
 
-  // Calculate stats with loading state consideration
+  // Calculate stats separately
   useEffect(() => {
     if (loadingStates.initializing) return;
 
@@ -458,7 +493,7 @@ export const useCoffeeGame = () => {
   };
 
   const canPrestige = (): boolean => {
-    return gameState.lifetimeTotal >= (gameState.prestigeLevel + 1) * 1000000; // Next million threshold
+    return gameState.lifetimeTotal >= (gameState.prestigeLevel + 1) * 1000000;
   };
 
   const getPrestigeProgress = () => {
@@ -484,7 +519,6 @@ export const useCoffeeGame = () => {
       ...prev,
       coffeeBeans: 0,
       totalCoffeeProduced: 0,
-      // lifetimeTotal stays the same!
       prestigePoints: prev.prestigePoints + (newPrestigeLevel - prev.prestigeLevel),
       prestigeLevel: newPrestigeLevel,
       equipment: {
