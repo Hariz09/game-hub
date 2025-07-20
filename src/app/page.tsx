@@ -72,7 +72,7 @@ const games: GameLink[] = [
   },
   {
     id: 'minesweeper',
-    title: 'Mine Sweeper',
+    title: 'Minesweeper',
     description: 'WIP',
     icon: Shapes,
     href: '/games/minesweeper',
