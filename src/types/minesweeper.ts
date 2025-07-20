@@ -125,3 +125,10 @@ export const DIFFICULTY_CONFIG = {
     color: 'red'
   }
 } as const;
+
+// Extend the Window interface to include webkitAudioContext
+declare global {
+  interface Window {
+    webkitAudioContext?: typeof AudioContext;
+  }
+}
