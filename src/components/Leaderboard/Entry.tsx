@@ -1,6 +1,6 @@
 import React from 'react';
 import { LeaderboardEntry as LeaderboardEntryType } from '@/hooks/useLeaderboard';
-import { Trophy, GamepadIcon, Sparkles, Target, Clock, Crown, Star } from 'lucide-react';
+import { Trophy, GamepadIcon, Sparkles, Target, Crown, Star } from 'lucide-react';
 
 interface LeaderboardEntryProps {
   player: LeaderboardEntryType;
@@ -152,13 +152,6 @@ export const LeaderboardEntry: React.FC<LeaderboardEntryProps> = ({ player }) =>
               <span>{player.games_played}</span>
             </div>
           </div>
-          <div className="flex flex-col space-y-0.5">
-            <span className="text-gray-500 dark:text-gray-400 text-xs font-medium">Moves</span>
-            <div className="flex items-center space-x-1 text-gray-700 dark:text-gray-200">
-              <Clock className="h-3 w-3 text-gray-500 shrink-0" />
-              <span>{formatNumber(player.total_moves)}</span>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -204,11 +197,6 @@ export const LeaderboardEntry: React.FC<LeaderboardEntryProps> = ({ player }) =>
             <Target className="h-3 w-3 text-green-500" />
             <span className="font-medium">{formatNumber(player.best_single_score)}</span>
             <span className="hidden lg:inline text-xs">best</span>
-          </span>
-          <span className="flex items-center space-x-1">
-            <Clock className="h-3 w-3" />
-            <span>{formatNumber(player.total_moves)}</span>
-            <span className="hidden lg:inline text-xs">moves</span>
           </span>
         </div>
       </div>
