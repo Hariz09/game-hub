@@ -1,4 +1,5 @@
 import React from 'react';
+import { Icon } from '@iconify/react';
 
 interface LeaderboardEntry {
   rank: number;
@@ -36,37 +37,63 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({
     });
   };
 
-  const getRankIcon = (index: number) => {
+  const getRankConfig = (index: number) => {
     switch (index) {
-      case 0: return { icon: '🥇', bg: 'bg-gradient-to-br from-yellow-400 to-yellow-600' };
-      case 1: return { icon: '🥈', bg: 'bg-gradient-to-br from-gray-400 to-gray-600' };
-      case 2: return { icon: '🥉', bg: 'bg-gradient-to-br from-amber-600 to-amber-800' };
-      default: return { icon: index + 1, bg: 'bg-gradient-to-br from-purple-500 to-cyan-600' };
+      case 0: return { 
+        bg: 'bg-gradient-to-br from-yellow-500 to-amber-600',
+        border: 'border-yellow-200/40 dark:border-amber-700/40',
+        glow: 'shadow-yellow-500/20',
+        textColor: 'text-white'
+      };
+      case 1: return { 
+        bg: 'bg-gradient-to-br from-slate-400 to-slate-600',
+        border: 'border-slate-200/40 dark:border-slate-700/40',
+        glow: 'shadow-slate-500/20',
+        textColor: 'text-white'
+      };
+      case 2: return { 
+        bg: 'bg-gradient-to-br from-amber-600 to-orange-700',
+        border: 'border-amber-200/40 dark:border-orange-700/40',
+        glow: 'shadow-amber-500/20',
+        textColor: 'text-white'
+      };
+      default: return { 
+        bg: 'bg-gradient-to-br from-indigo-500 to-purple-600',
+        border: 'border-indigo-200/40 dark:border-purple-700/40',
+        glow: 'shadow-indigo-500/15',
+        textColor: 'text-white'
+      };
     }
   };
 
   if (!isAuthenticated) {
     return (
-      <div className="w-full max-w-sm mx-auto">
-        {/* Compact Header */}
-        <div className="flex items-center gap-2 mb-4">
-          <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-cyan-500 rounded-lg flex items-center justify-center">
-            <span className="text-white text-sm">🏆</span>
+      <div className="space-y-6 max-w-sm mx-auto">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 bg-gradient-to-br from-indigo-500/10 to-purple-600/10 dark:from-indigo-500/20 dark:to-purple-600/20 backdrop-blur-xl rounded-2xl border border-indigo-200/40 dark:border-purple-700/40 flex items-center justify-center shadow-lg shadow-indigo-500/5">
+              <Icon icon="tabler:trophy" className="w-6 h-6 text-indigo-600 dark:text-purple-400" />
+            </div>
+            <div>
+              <h2 className="text-lg font-bold bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 bg-clip-text text-transparent">
+                Leaderboard
+              </h2>
+              <p className="text-xs text-gray-600 dark:text-gray-400">Top Players</p>
+            </div>
           </div>
-          <h3 className="font-bold bg-gradient-to-r from-purple-600 to-cyan-600 dark:from-purple-400 dark:to-cyan-400 bg-clip-text text-transparent">
-            Leaderboard
-          </h3>
         </div>
         
-        <div className="text-center py-12 bg-white/10 dark:bg-gray-800/20 rounded-xl border border-white/20 dark:border-gray-600/20">
-          <div className="w-16 h-16 bg-gradient-to-br from-purple-200 to-cyan-200 dark:from-purple-800/30 dark:to-cyan-800/30 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-2xl">🔐</span>
+        {/* Auth Required State */}
+        <div className="backdrop-blur-xl bg-gradient-to-br from-indigo-500/10 to-purple-600/10 dark:from-indigo-500/20 dark:to-purple-600/20 rounded-2xl border border-indigo-200/40 dark:border-purple-700/40 p-8 text-center shadow-xl shadow-purple-500/10">
+          <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+            <Icon icon="tabler:lock" className="w-8 h-8 text-white" />
           </div>
-          <h4 className="font-semibold text-gray-800 dark:text-gray-200 mb-2">
-            Sign In Required
-          </h4>
-          <p className="text-gray-600 dark:text-gray-400 text-sm px-4">
-            Join to compete globally!
+          <h3 className="text-lg font-bold text-indigo-700 dark:text-purple-300 mb-2">
+            Join the Competition
+          </h3>
+          <p className="text-indigo-600 dark:text-purple-400 text-sm">
+            Sign in to see global rankings and compete for the top spot
           </p>
         </div>
       </div>
@@ -74,17 +101,17 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({
   }
 
   return (
-    <div className="w-full max-w-sm mx-auto space-y-4">
-      {/* Compact Header */}
+    <div className="space-y-6 max-w-sm mx-auto">
+      {/* Header */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-cyan-500 rounded-lg flex items-center justify-center">
-            <span className="text-white text-sm">🏆</span>
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 bg-gradient-to-br from-indigo-500/10 to-purple-600/10 dark:from-indigo-500/20 dark:to-purple-600/20 backdrop-blur-xl rounded-2xl border border-indigo-200/40 dark:border-purple-700/40 flex items-center justify-center shadow-lg shadow-indigo-500/5">
+            <Icon icon="tabler:trophy" className="w-6 h-6 text-indigo-600 dark:text-purple-400" />
           </div>
           <div>
-            <h3 className="font-bold bg-gradient-to-r from-purple-600 to-cyan-600 dark:from-purple-400 dark:to-cyan-400 bg-clip-text text-transparent">
+            <h2 className="text-lg font-bold bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 bg-clip-text text-transparent">
               Leaderboard
-            </h3>
+            </h2>
             <p className="text-xs text-gray-600 dark:text-gray-400">Top Players</p>
           </div>
         </div>
@@ -92,120 +119,153 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({
         <button
           onClick={onRefresh}
           disabled={isLoading}
-          className="p-2 bg-gradient-to-r from-purple-500/10 to-cyan-500/10 hover:from-purple-500/20 hover:to-cyan-500/20 border border-purple-300/30 dark:border-purple-700/30 rounded-lg transition-all duration-300 disabled:opacity-50"
-          title="Refresh"
+          className="group p-3 backdrop-blur-xl bg-gradient-to-br from-indigo-500/10 to-purple-600/10 dark:from-indigo-500/20 dark:to-purple-600/20 hover:from-indigo-500/20 hover:to-purple-600/20 dark:hover:from-indigo-500/30 dark:hover:to-purple-600/30 border border-indigo-200/40 dark:border-purple-700/40 hover:border-indigo-300/60 dark:hover:border-purple-600/60 rounded-2xl transition-all duration-300 disabled:opacity-50 shadow-lg shadow-indigo-500/5"
+          title="Refresh leaderboard"
         >
-          <span className={`text-sm transition-transform duration-500 ${
-            isLoading ? 'animate-spin' : 'hover:rotate-180'
-          }`}>
-            🔄
-          </span>
+          <Icon 
+            icon="tabler:refresh" 
+            className={`w-4 h-4 transition-all duration-500 ${
+              isLoading 
+                ? 'animate-spin text-indigo-600 dark:text-purple-400' 
+                : 'group-hover:rotate-180 text-indigo-700 dark:text-purple-300 group-hover:text-indigo-800 dark:group-hover:text-purple-200'
+            }`}
+          />
         </button>
       </div>
 
       {/* Content */}
       {isLoading ? (
-        <div className="text-center py-12 bg-white/10 dark:bg-gray-800/20 rounded-xl border border-white/20 dark:border-gray-600/20">
-          <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
-            <span className="text-xl animate-spin">⚡</span>
+        <div className="backdrop-blur-xl bg-gradient-to-br from-indigo-500/10 to-purple-600/10 dark:from-indigo-500/20 dark:to-purple-600/20 rounded-2xl border border-indigo-200/40 dark:border-purple-700/40 p-12 text-center shadow-xl shadow-purple-500/10">
+          <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+            <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
           </div>
-          <p className="text-gray-600 dark:text-gray-400 text-sm">Loading...</p>
+          <p className="text-indigo-600 dark:text-purple-400 text-sm font-medium">Loading rankings...</p>
         </div>
       ) : leaderboard.length === 0 ? (
-        <div className="text-center py-12 bg-white/10 dark:bg-gray-800/20 rounded-xl border border-white/20 dark:border-gray-600/20">
-          <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-xl">🎯</span>
+        <div className="backdrop-blur-xl bg-gradient-to-br from-indigo-500/10 to-purple-600/10 dark:from-indigo-500/20 dark:to-purple-600/20 rounded-2xl border border-indigo-200/40 dark:border-purple-700/40 p-12 text-center shadow-xl shadow-purple-500/10">
+          <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+            <Icon icon="tabler:bolt" className="w-8 h-8 text-white" />
           </div>
-          <h4 className="font-semibold text-gray-800 dark:text-gray-200 mb-2">
-            Be First!
-          </h4>
-          <p className="text-gray-600 dark:text-gray-400 text-sm px-4">
-            Start playing to claim the top spot!
+          <h3 className="text-lg font-bold text-indigo-700 dark:text-purple-300 mb-2">
+            No Rankings Yet
+          </h3>
+          <p className="text-indigo-600 dark:text-purple-400 text-sm">
+            Be the first to complete a game and claim the top spot!
           </p>
         </div>
       ) : (
-        <div className="space-y-2 max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-purple-300/50 dark:scrollbar-thumb-purple-700/50 scrollbar-track-transparent">
+        <div className="space-y-4 max-h-96 overflow-y-auto">
+          <style jsx>{`
+            /* Custom scrollbar */
+            .scrollbar-custom::-webkit-scrollbar {
+              width: 6px;
+            }
+            .scrollbar-custom::-webkit-scrollbar-track {
+              background: rgba(99, 102, 241, 0.1);
+              border-radius: 10px;
+            }
+            .scrollbar-custom::-webkit-scrollbar-thumb {
+              background: linear-gradient(to bottom, rgba(99, 102, 241, 0.5), rgba(147, 51, 234, 0.5));
+              border-radius: 10px;
+              backdrop-filter: blur(10px);
+            }
+            .scrollbar-custom::-webkit-scrollbar-thumb:hover {
+              background: linear-gradient(to bottom, rgba(99, 102, 241, 0.7), rgba(147, 51, 234, 0.7));
+            }
+          `}</style>
+          <div className="space-y-4 max-h-96 overflow-y-auto scrollbar-custom">
           {leaderboard.map((entry, index) => {
-            const rank = getRankIcon(index);
+            const rank = getRankConfig(index);
             const isTopThree = index < 3;
             
             return (
               <div
-                key={entry.rank}
-                className={`relative overflow-hidden rounded-xl border transition-all duration-300 hover:scale-[1.01] ${
+                key={`${entry.rank}-${entry.username}-${entry.created_at}`}
+                className={`group relative overflow-hidden backdrop-blur-xl rounded-2xl border transition-all duration-300 hover:scale-[1.02] hover:-translate-y-0.5 shadow-lg ${
                   isTopThree 
-                    ? 'bg-gradient-to-r from-yellow-50/50 to-orange-50/50 dark:from-yellow-900/20 dark:to-orange-900/20 border-yellow-300/50 dark:border-yellow-700/50 shadow-md shadow-yellow-500/20' 
-                    : 'bg-white/20 dark:bg-gray-800/20 border-white/30 dark:border-gray-600/30 hover:bg-white/30 dark:hover:bg-gray-700/30'
-                }`}
+                    ? `bg-gradient-to-br from-white/15 to-white/10 dark:from-white/10 dark:to-white/5 ${rank.border} ${rank.glow}` 
+                    : 'bg-gradient-to-br from-gray-500/10 to-slate-500/10 dark:from-gray-500/20 dark:to-slate-500/20 border-gray-200/40 dark:border-slate-700/40 hover:from-gray-500/15 hover:to-slate-500/15 dark:hover:from-gray-500/25 dark:hover:to-slate-500/25 hover:border-gray-300/60 dark:hover:border-slate-600/60'
+                } shadow-purple-500/5`}
               >
-                <div className="p-3">
-                  {/* Top Row: Rank + Username + Score */}
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2 flex-1 min-w-0">
-                      {/* Compact Rank Badge */}
-                      <div className={`w-7 h-7 ${rank.bg} rounded-lg flex items-center justify-center text-white text-xs font-bold shadow-sm flex-shrink-0`}>
-                        {rank.icon}
-                      </div>
-                      
-                      {/* Username */}
-                      <div className="font-medium text-sm text-gray-900 dark:text-gray-100 truncate">
-                        {entry.username || 'Anonymous'}
-                      </div>
+                <div className="p-4">
+                  {/* Top Section */}
+                  <div className="flex items-center gap-3 mb-3">
+                    {/* Rank Badge */}
+                    <div className={`w-12 h-12 ${rank.bg} rounded-2xl flex items-center justify-center ${rank.textColor} shadow-lg border border-white/20 flex-shrink-0`}>
+                      <span className="text-lg font-black">
+                        {index + 1}
+                      </span>
                     </div>
                     
-                    {/* Score */}
-                    <div className="text-sm font-bold bg-gradient-to-r from-purple-600 to-cyan-600 dark:from-purple-400 dark:to-cyan-400 bg-clip-text text-transparent">
-                      {(entry.score || 0).toLocaleString()}
+                    {/* User Info */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <h3 className="font-bold text-gray-800 dark:text-gray-200 truncate text-base">
+                          {entry.username || 'Anonymous'}
+                        </h3>
+                        <div className="text-right">
+                          <div className="text-xl font-black bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 bg-clip-text text-transparent">
+                            {(entry.score || 0).toLocaleString()}
+                          </div>
+                          <div className="text-xs text-gray-600 dark:text-gray-400 font-medium">points</div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   
-                  {/* Bottom Row: Stats + Status */}
-                  <div className="flex items-center justify-between text-xs">
+                  {/* Stats Row */}
+                  <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       {/* Time */}
-                      <div className="flex items-center gap-1 bg-blue-100/60 dark:bg-blue-900/40 px-2 py-0.5 rounded-md">
-                        <span>⏱️</span>
-                        <span className="font-medium">{formatTime(entry.duration_seconds || 0)}</span>
+                      <div className="flex items-center gap-1.5 bg-gradient-to-br from-blue-500/10 to-cyan-500/10 dark:from-blue-500/20 dark:to-cyan-500/20 backdrop-blur-xl px-3 py-1.5 rounded-xl border border-blue-200/40 dark:border-cyan-700/40 shadow-lg shadow-blue-500/5">
+                        <Icon icon="tabler:clock" className="w-3 h-3 text-blue-600 dark:text-cyan-400" />
+                        <span className="text-xs font-bold text-blue-700 dark:text-cyan-300">
+                          {formatTime(entry.duration_seconds || 0)}
+                        </span>
                       </div>
                       
                       {/* Moves */}
-                      <div className="flex items-center gap-1 bg-purple-100/60 dark:bg-purple-900/40 px-2 py-0.5 rounded-md">
-                        <span>🎯</span>
-                        <span className="font-medium">{entry.moves || 0}</span>
+                      <div className="flex items-center gap-1.5 bg-gradient-to-br from-purple-500/10 to-pink-500/10 dark:from-purple-500/20 dark:to-pink-500/20 backdrop-blur-xl px-3 py-1.5 rounded-xl border border-purple-200/40 dark:border-pink-700/40 shadow-lg shadow-purple-500/5">
+                        <Icon icon="tabler:click" className="w-3 h-3 text-purple-600 dark:text-pink-400" />
+                        <span className="text-xs font-bold text-purple-700 dark:text-pink-300">
+                          {entry.moves || 0}
+                        </span>
                       </div>
                     </div>
                     
-                    {/* Status + Date */}
+                    {/* Status & Date */}
                     <div className="flex items-center gap-2">
-                      <span className={`text-xs ${
+                      <div className={`px-2 py-1 rounded-lg flex items-center gap-1.5 text-xs font-bold backdrop-blur-xl border shadow-lg ${
                         entry.status === 'won' 
-                          ? 'text-green-600 dark:text-green-400' 
-                          : 'text-red-600 dark:text-red-400'
+                          ? 'bg-gradient-to-br from-emerald-500/10 to-green-500/10 dark:from-emerald-500/20 dark:to-green-500/20 border-emerald-200/40 dark:border-green-700/40 text-emerald-700 dark:text-green-300 shadow-emerald-500/5' 
+                          : 'bg-gradient-to-br from-red-500/10 to-rose-500/10 dark:from-red-500/20 dark:to-rose-500/20 border-red-200/40 dark:border-rose-700/40 text-red-700 dark:text-rose-300 shadow-red-500/5'
                       }`}>
-                        {entry.status === 'won' ? '✅' : '❌'}
-                      </span>
-                      <span className="text-gray-500 dark:text-gray-400 text-xs">
+                        <span>{entry.status === 'won' ? 'Won' : 'Lost'}</span>
+                      </div>
+                      <span className="text-xs text-gray-600 dark:text-gray-400 font-medium">
                         {formatDate(entry.created_at)}
                       </span>
                     </div>
                   </div>
                 </div>
                 
-                {/* Top 3 Shimmer Effect */}
-                {isTopThree && (
-                  <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/10 via-orange-400/10 to-pink-400/10 pointer-events-none" />
-                )}
+                {/* Hover Glow Effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/5 via-purple-500/5 to-indigo-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl" />
               </div>
             );
           })}
         </div>
+      </div>
       )}
 
-      {/* Compact Footer */}
-      <div className="pt-3 border-t border-white/20 dark:border-gray-600/30 text-center">
-        <p className="text-xs text-gray-500 dark:text-gray-400 bg-gradient-to-r from-purple-100/30 to-cyan-100/30 dark:from-purple-900/20 dark:to-cyan-900/20 rounded-md px-2 py-1 border border-purple-200/30 dark:border-purple-700/30">
-          🚀 Live • Top 10
-        </p>
+      {/* Footer */}
+      <div className="flex items-center justify-center pt-4 border-t border-gray-200/40 dark:border-gray-700/40">
+        <div className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-indigo-500/10 to-purple-600/10 dark:from-indigo-500/20 dark:to-purple-600/20 backdrop-blur-xl rounded-2xl border border-indigo-200/40 dark:border-purple-700/40 shadow-lg shadow-indigo-500/5">
+          <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-lg shadow-emerald-500/50"></div>
+          <span className="text-xs font-bold text-indigo-700 dark:text-purple-300">
+            Live • Top {Math.min(leaderboard.length, 10)}
+          </span>
+        </div>
       </div>
     </div>
   );
