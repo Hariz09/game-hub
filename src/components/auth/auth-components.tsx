@@ -1,10 +1,11 @@
 'use client';
 
-import { Eye, EyeOff, Gamepad2, Trophy, Users, Zap, Shield, Star } from "lucide-react";
+import { Eye, EyeOff, Gamepad2, Trophy, Users } from "lucide-react";
 import { forwardRef, ReactNode, useState, useTransition, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import CleanBackground from "../CleanBackground";
 
 // Input field dengan styling gaming theme
 interface AuthInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -330,8 +331,8 @@ export function AuthLayout({
   useEffect(() => {
     if (!isClient) return;
 
-    const targetPlayers = 1234567;
-    const targetGames = 25000;
+    const targetPlayers = 5;
+    const targetGames = 5;
     const duration = 2000;
     const steps = 60;
     
@@ -383,23 +384,7 @@ export function AuthLayout({
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-gray-900 via-purple-900 to-indigo-900">
       {/* Gaming background elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-10 left-10 opacity-20 animate-pulse">
-          <Gamepad2 size={120} className="text-purple-400" />
-        </div>
-        <div className="absolute bottom-20 right-20 opacity-20 animate-bounce">
-          <Trophy size={80} className="text-cyan-400" />
-        </div>
-        <div className="absolute top-1/3 right-10 opacity-10">
-          <Zap size={200} className="text-yellow-500" />
-        </div>
-        <div className="absolute bottom-1/4 left-20 opacity-15">
-          <Shield size={100} className="text-blue-400" />
-        </div>
-        <div className="absolute top-20 right-1/4 opacity-10">
-          <Star size={60} className="text-pink-400" />
-        </div>
-      </div>
+      <CleanBackground />
 
       {/* Animated background particles with fixed positions */}
       {isClient && (
