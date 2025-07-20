@@ -49,7 +49,7 @@ export default function TetrisGame() {
     moves: 0,
     linesCleared: 0
   })
-  
+
   // User profile and authentication
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -83,11 +83,11 @@ export default function TetrisGame() {
     const initAuth = async () => {
       const authenticated = await gameScoreService.isUserAuthenticated()
       setIsAuthenticated(authenticated)
-      
+
       if (authenticated) {
         const profile = await gameScoreService.getUserProfile()
         setUserProfile(profile)
-        
+
         if (!profile) {
           setShowUsernameDialog(true)
         }
@@ -103,11 +103,11 @@ export default function TetrisGame() {
         gameScoreService.getLeaderboard('tetris', 10),
         gameScoreService.getUserBestScore('tetris')
       ])
-      
+
       setLeaderboard(leaderboardData)
       setUserBestScore(userBest)
     }
-    
+
     if (isAuthenticated) {
       loadScoreData()
     }
@@ -146,10 +146,10 @@ export default function TetrisGame() {
 
   const handleCreateProfile = async () => {
     if (!username.trim()) return
-    
+
     setIsLoading(true)
     const result = await gameScoreService.createOrUpdateProfile(username.trim())
-    
+
     if (result.success) {
       const profile = await gameScoreService.getUserProfile()
       setUserProfile(profile)
@@ -163,11 +163,11 @@ export default function TetrisGame() {
 
   const handleSubmitScore = async () => {
     if (!userProfile || scoreSubmitted) return
-    
+
     setIsLoading(true)
     const gameEndTime = Date.now()
     const duration = Math.floor((gameEndTime - gameStats.startTime) / 1000)
-    
+
     const result = await gameScoreService.saveScore(
       'tetris',
       score,
@@ -180,17 +180,17 @@ export default function TetrisGame() {
         finalScore: score
       }
     )
-    
+
     if (result.success) {
       setScoreSubmitted(true)
       setShowScoreDialog(false)
-      
+
       // Refresh leaderboard and user best score
       const [leaderboardData, userBest] = await Promise.all([
         gameScoreService.getLeaderboard('tetris', 10),
         gameScoreService.getUserBestScore('tetris')
       ])
-      
+
       setLeaderboard(leaderboardData)
       setUserBestScore(userBest)
     } else {
@@ -250,7 +250,7 @@ export default function TetrisGame() {
     setTouchStartX(touch.clientX)
     setTouchStartY(touch.clientY)
     setTouchStartTime(Date.now())
-    
+
     e.preventDefault()
   }, [gameOver])
 
@@ -297,13 +297,14 @@ export default function TetrisGame() {
     e.preventDefault()
   }, [gameOver, touchStartX, touchStartY, touchStartTime, movePiece, rotatePiece, dropPiece, incrementMoves])
 
+  // FIXED VERSION - Add game reset after saving
   const handleEndGame = async () => {
     if (!isAuthenticated || !userProfile || scoreSubmitted) return
-    
+
     setIsLoading(true)
     const gameEndTime = Date.now()
     const duration = Math.floor((gameEndTime - gameStats.startTime) / 1000)
-    
+
     const result = await gameScoreService.saveScore(
       'tetris',
       score,
@@ -316,18 +317,26 @@ export default function TetrisGame() {
         finalScore: score
       }
     )
-    
+
     if (result.success) {
       setScoreSubmitted(true)
-      
+
       // Refresh leaderboard and user best score
       const [leaderboardData, userBest] = await Promise.all([
         gameScoreService.getLeaderboard('tetris', 10),
         gameScoreService.getUserBestScore('tetris')
       ])
-      
+
       setLeaderboard(leaderboardData)
       setUserBestScore(userBest)
+
+      // ADD THIS: Reset the game after saving
+      resetGame() // This will trigger game over state
+      setGameStats({
+        startTime: Date.now(),
+        moves: 0,
+        linesCleared: 0
+      })
     } else {
       alert(result.error || 'Failed to save score')
     }
