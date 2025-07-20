@@ -1,5 +1,6 @@
 import React from 'react';
 import { Icon } from '@iconify/react';
+import { UserBestScore } from '@/hooks/useGameScore';
 
 interface ScoreDisplayProps {
   currentProgress: {
@@ -12,7 +13,7 @@ interface ScoreDisplayProps {
   timer: number;
   difficulty: 'easy' | 'medium' | 'hard';
   isAuthenticated: boolean;
-  userBestScore: any;
+  userBestScore?: UserBestScore;
 }
 
 export const ScoreDisplay: React.FC<ScoreDisplayProps> = ({

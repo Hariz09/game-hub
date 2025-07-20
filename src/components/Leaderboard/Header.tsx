@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent } from '@/components/ui/card';
-import { Trophy, Users, Crown, Sparkles, Star, Zap, Medal, Target } from 'lucide-react';
+import { Trophy, Crown, Sparkles, Star, Zap, Medal } from 'lucide-react';
 
 interface LeaderboardHeaderProps {
   limit: number;

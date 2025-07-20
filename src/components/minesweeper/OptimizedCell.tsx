@@ -3,7 +3,7 @@
 
 import React, { memo, useMemo, useCallback } from 'react';
 import { Cell } from '@/types/minesweeper';
-import { getCellContent, getCellClasses, getAriaLabel } from '@/utils/minesweeper';
+import { getCellContent, getAriaLabel } from '@/utils/minesweeper';
 
 interface OptimizedCellProps {
   cell: Cell;
@@ -32,9 +32,6 @@ export const OptimizedCell = memo<OptimizedCellProps>(({
   cellSize,
   fontSize,
   isFocused,
-  isAnimating,
-  shakeGrid,
-  celebrateGrid,
   gridConfig,
   remainingMines,
   onCellClick,
@@ -44,20 +41,6 @@ export const OptimizedCell = memo<OptimizedCellProps>(({
   onFocus,
   gameState
 }) => {
-  // Memoize expensive calculations
-  const cellClasses = useMemo(() => {
-    const focusedCell = isFocused ? { row: rowIndex, col: colIndex } : null;
-    return getCellClasses(
-      cell,
-      rowIndex,
-      colIndex,
-      focusedCell,
-      isAnimating,
-      shakeGrid,
-      celebrateGrid
-    );
-  }, [cell, rowIndex, colIndex, isFocused, isAnimating, shakeGrid, celebrateGrid]);
-
   const ariaLabel = useMemo(() => {
     return getAriaLabel(
       cell,
@@ -70,7 +53,7 @@ export const OptimizedCell = memo<OptimizedCellProps>(({
   }, [cell, rowIndex, colIndex, gridConfig.rows, gridConfig.cols, remainingMines]);
 
   // Precompute corner/edge status
-  const { isCornerCell, isEdgeCell } = useMemo(() => {
+  const { isCornerCell } = useMemo(() => {
     const isCorner = (rowIndex === 0 || rowIndex === gridConfig.rows - 1) &&
       (colIndex === 0 || colIndex === gridConfig.cols - 1);
     const isEdge = rowIndex === 0 || rowIndex === gridConfig.rows - 1 ||

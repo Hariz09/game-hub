@@ -43,28 +43,6 @@ export const OptimizedGrid = memo<OptimizedGridProps>(({
     setIsMounted(true);
   }, []);
 
-  // Calculate default dimensions (server-side safe)
-  const getDefaultDimensions = useCallback(() => {
-    // Use conservative defaults for SSR
-    const defaultWidth = 800;
-    const defaultHeight = 600;
-    const paddingTotal = 48;
-    const gap = Math.max(1, Math.min(4, 200 / Math.max(config.cols, config.rows)));
-    const gapTotal = gap * (config.cols - 1);
-
-    const maxCellWidth = Math.floor((defaultWidth - paddingTotal - gapTotal) / config.cols);
-    const maxCellHeight = Math.floor((defaultHeight - paddingTotal - (gap * (config.rows - 1))) / config.rows);
-
-    const size = Math.max(20, Math.min(48, Math.min(maxCellWidth, maxCellHeight)));
-    const font = Math.max(8, Math.min(16, size * 0.35));
-
-    return {
-      cellSize: size,
-      fontSize: font,
-      gapSize: gap,
-    };
-  }, [config.cols, config.rows]);
-
   // Helper function to detect screen size
   const getScreenBreakpoint = useCallback(() => {
     if (!isMounted || typeof window === 'undefined') {
@@ -80,7 +58,7 @@ export const OptimizedGrid = memo<OptimizedGridProps>(({
   }, [isMounted]);
 
   // Memoize grid calculations with enhanced small screen support
-  const { cellSize, fontSize, gridStyle, gapSize } = useMemo(() => {
+  const { cellSize, fontSize, gridStyle } = useMemo(() => {
     // Use container width (matching the upper components)
     let containerWidth = 800; // Default for SSR
     const screenSize = getScreenBreakpoint();
