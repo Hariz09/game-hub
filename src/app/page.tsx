@@ -45,7 +45,7 @@ const games: GameLink[] = [
     players: '1',
     duration: '∞',
     isNew: true,
-    thumbnail: '/images/coffee-brew-idle-thumbnail.png',
+    thumbnail: '/images/thumbnails/coffee-brew-idle.png',
     tags: ['Idle', 'Strategy', 'Business', 'Simulation']
   },
   {
@@ -56,7 +56,7 @@ const games: GameLink[] = [
     href: '/games/2048',
     players: '1',
     duration: '10-20m',
-    thumbnail: '/images/2048-thumbnail.png',
+    thumbnail: '/images/thumbnails/2048.png',
     tags: ['Puzzle', 'Logic', 'Numbers', 'Brain Teaser']
   },
   {
@@ -67,7 +67,7 @@ const games: GameLink[] = [
     href: '/games/tetris',
     players: '1',
     duration: '5-∞',
-    thumbnail: '/images/tetris-thumbnail.png',
+    thumbnail: '/images/thumbnails/tetris.png',
     tags: ['Arcade', 'Puzzle', 'Classic', 'Fast-paced']
   },
   {
@@ -78,7 +78,7 @@ const games: GameLink[] = [
     href: '/games/minesweeper',
     players: '1',
     duration: '5-∞',
-    thumbnail: '/placeholder.png',
+    thumbnail: '/images/thumbnails/minesweeper.png',
     tags: ['']
   },
   {
@@ -89,7 +89,7 @@ const games: GameLink[] = [
     href: '/games/uno',
     players: '2-4',
     duration: '15-30m',
-    thumbnail: '/images/uno-thumbnail.png',
+    thumbnail: '/images/thumbnails/uno.png',
     tags: ['Card Game', 'Party', 'Classic', 'Fast-paced']
   },
 ];
