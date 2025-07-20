@@ -4,7 +4,7 @@ import Sidebar from '@/components/sidebar/Sidebar';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Dice1, PuzzleIcon, Shapes, Play, Star, Users, Clock, Loader2, Zap, Coffee, Tag, Gamepad2, Fish, Sparkles } from 'lucide-react';
+import { Dice1, PuzzleIcon, Shapes, Play, Star, Users, Clock, Loader2, Zap, Coffee, Tag, Gamepad2, Fish, Sparkles, Bomb } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
 import CleanBackground from '@/components/CleanBackground';
@@ -73,13 +73,13 @@ const games: GameLink[] = [
   {
     id: 'minesweeper',
     title: 'Minesweeper',
-    description: 'WIP',
-    icon: Shapes,
+    description: 'Classic puzzle game where you clear a grid without triggering hidden mines.',
+    icon: Bomb,
     href: '/games/minesweeper',
     players: '1',
-    duration: '5-∞',
+    duration: '5–∞',
     thumbnail: '/images/thumbnails/minesweeper.png',
-    tags: ['']
+    tags: ['Puzzle', 'Logic', 'Singleplayer']
   },
   {
     id: 'uno',
