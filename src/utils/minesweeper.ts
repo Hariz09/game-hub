@@ -220,14 +220,12 @@ export const getGameStats = (
 } => {
   let revealedCells = 0;
   let flaggedCells = 0;
-  let mineCells = 0;
   
   for (let row = 0; row < rows; row++) {
     for (let col = 0; col < cols; col++) {
       const cell = grid[row][col];
       if (cell.isRevealed) revealedCells++;
       if (cell.isFlagged) flaggedCells++;
-      if (cell.isMine) mineCells++;
     }
   }
   
@@ -292,14 +290,12 @@ export const validateGameState = (
   
   // Count mines
   let actualMines = 0;
-  let revealedMines = 0;
   
   for (let row = 0; row < Math.min(grid.length, rows); row++) {
     for (let col = 0; col < Math.min(grid[row]?.length || 0, cols); col++) {
       const cell = grid[row][col];
       if (cell.isMine) {
         actualMines++;
-        if (cell.isRevealed) revealedMines++;
       }
     }
   }

@@ -1,8 +1,8 @@
 // optimized-page.tsx
 'use client';
 
-import React, { useReducer, useMemo, useCallback, memo, useEffect, useState } from 'react';
-import { DIFFICULTIES } from '@/types/minesweeper';
+import React, { useReducer, useMemo, useCallback } from 'react';
+import { DIFFICULTIES, Difficulty } from '@/types/minesweeper';
 import {
   useAnnouncements,
   useFocusedCell,
@@ -18,7 +18,6 @@ import {
   useGameScoring
 } from '@/hooks/minesweeper';
 import { initialState, minesweeperReducer } from '@/lib/reducer/minesweeper';
-import { getCellContent, getCellClasses, getAriaLabel } from '@/utils/minesweeper';
 import { GameControls } from '@/components/minesweeper/GameControl';
 import { GameInstructions } from '@/components/minesweeper/GameInstruction';
 import { GameMessages } from '@/components/minesweeper/GameMessages';
@@ -68,7 +67,7 @@ export default function OptimizedMinesweeperPage() {
   useGridInitialization(state, dispatch, focusedCell, setFocusedCell);
 
   // Memoize difficulty change handler
-  const onDifficultyChange = useCallback((newDifficulty: any) => {
+  const onDifficultyChange = useCallback((newDifficulty: Difficulty) => {
     changeDifficulty(newDifficulty, setFocusedCell);
   }, [changeDifficulty, setFocusedCell]);
 
@@ -111,6 +110,16 @@ export default function OptimizedMinesweeperPage() {
       ))}
     </div>
   ), [particles.particles]);
+
+  // Filter leaderboard entries to ensure duration_seconds is defined
+  const filteredLeaderboard = useMemo(() => 
+    scoring.leaderboard.filter(entry => entry.duration_seconds !== undefined)
+      .map(entry => ({
+        ...entry,
+        duration_seconds: entry.duration_seconds as number
+      })),
+    [scoring.leaderboard]
+  );
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -204,13 +213,13 @@ export default function OptimizedMinesweeperPage() {
                   timer={state.timer}
                   difficulty={state.difficulty}
                   isAuthenticated={scoring.isAuthenticated}
-                  userBestScore={scoring.userBestScore}
+                  userBestScore={scoring.userBestScore ?? undefined}
                 />
               </div>
 
               <div className="backdrop-blur-xl bg-gradient-to-br from-white/15 via-white/10 to-white/15 dark:from-black/15 dark:via-black/10 dark:to-black/15 rounded-3xl p-6 border border-white/25 dark:border-white/10 shadow-2xl">
                 <Leaderboard
-                  leaderboard={scoring.leaderboard}
+                  leaderboard={filteredLeaderboard}
                   isLoading={scoring.isLoading}
                   isAuthenticated={scoring.isAuthenticated}
                   onRefresh={scoring.loadLeaderboard}

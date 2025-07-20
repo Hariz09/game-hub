@@ -112,7 +112,7 @@ export const useGameActions = (
       const gameData = {
         difficulty: state.difficulty,
         gridSize: `${config.rows}x${config.cols}`,
-        mines: config.mines,
+        mineCount: config.mines, // Changed from 'mines' to 'mineCount'
         ...gameStats
       };
       
@@ -160,7 +160,7 @@ export const useGameActions = (
         const gameData = {
           difficulty: state.difficulty,
           gridSize: `${config.rows}x${config.cols}`,
-          mines: config.mines,
+          mineCount: config.mines, // Changed from 'mines' to 'mineCount'
           ...gameStats
         };
         

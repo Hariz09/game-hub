@@ -216,7 +216,7 @@ export const GameSelector: React.FC<GameSelectorProps> = ({
                 No Games Available
               </h3>
               <p className="text-gray-400 max-w-md mx-auto">
-                Your game library is empty. Games will appear here when they're loaded into the hub.
+                Your game library is empty. Games will appear here when they&apos;re loaded into the hub.
               </p>
               
               <div className="flex items-center justify-center space-x-2 pt-4">
