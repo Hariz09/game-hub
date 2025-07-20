@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { Cell, MinesweeperState, MinesweeperAction, DIFFICULTIES } from '@/types/minesweeper';
+import { Cell, MinesweeperState, MinesweeperAction, DIFFICULTIES, Difficulty } from '@/types/minesweeper';
 import { 
   placeMines, 
   calculateAdjacentMines, 
@@ -176,7 +176,21 @@ export const useGameActions = (
         announce(`Congratulations! You won in ${state.timer} seconds! Score: ${gameStats.score}`);
       }
     }
-  }, [state.gameState, state.grid, state.firstClick, state.timer, config, announce, sounds, particles, animations, scoring, calculateGameStats, state.difficulty]);
+  }, [
+    state.gameState, 
+    state.grid, 
+    state.firstClick, 
+    state.timer, 
+    state.difficulty,
+    config, 
+    announce, 
+    sounds, 
+    particles, 
+    animations, 
+    scoring, 
+    calculateGameStats,
+    dispatch
+  ]);
 
   const handleFlag = useCallback((row: number, col: number, cellElement?: HTMLElement) => {
     if (state.gameState !== 'playing' || state.grid[row][col].isRevealed) {
@@ -205,7 +219,7 @@ export const useGameActions = (
     } else {
       announce('Flag placed');
     }
-  }, [state.gameState, state.grid, announce, sounds, animations, particles]);
+  }, [state.gameState, state.grid, announce, sounds, animations, particles, dispatch]);
 
   const resetGame = useCallback(() => {
     const newGrid = createEmptyGrid(config.rows, config.cols);
@@ -213,15 +227,18 @@ export const useGameActions = (
     animations.clearAnimations();
     particles.clearParticles();
     announce('New game started');
-  }, [config.rows, config.cols, state.difficulty, announce, animations, particles]);
+  }, [config.rows, config.cols, state.difficulty, announce, animations, particles, dispatch]);
 
-  const changeDifficulty = useCallback((newDifficulty: any, setFocusedCell: any) => {
+  const changeDifficulty = useCallback((
+    newDifficulty: Difficulty, 
+    setFocusedCell: React.Dispatch<React.SetStateAction<{ row: number; col: number } | null>>
+  ) => {
     dispatch({ type: 'SET_DIFFICULTY', payload: newDifficulty });
     setFocusedCell(null);
     animations.clearAnimations();
     particles.clearParticles();
     announce(`Difficulty changed to ${newDifficulty}`);
-  }, [announce, animations, particles]);
+  }, [announce, animations, particles, dispatch]);
 
   return {
     handleCellClick,
