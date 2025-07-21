@@ -1,0 +1,86 @@
+import type { DungeonStage } from "@/types/medieval"
+import { ALL_CARDS, createDeckFromCards } from "./medieval-cards"
+
+export const DUNGEON_STAGES: DungeonStage[] = [
+  {
+    id: "dungeon_1",
+    name: "The Forgotten Crypt",
+    description: "Explore ancient crypts filled with undead guardians. Defeat them to claim their treasure.",
+    difficulty: "easy",
+    goldReward: 75,
+    unlocked: true,
+    completed: false,
+    enemyDeck: createDeckFromCards(
+      [
+        ALL_CARDS.find((c) => c.name === "Foot Soldier")!,
+        ALL_CARDS.find((c) => c.name === "Militia")!,
+        ALL_CARDS.find((c) => c.name === "Peasant Levy")!,
+        ALL_CARDS.find((c) => c.name === "Village Blacksmith")!,
+        ALL_CARDS.find((c) => c.name === "Crossbow Squad")!,
+        ALL_CARDS.find((c) => c.name === "Royal Guard")!,
+        ALL_CARDS.find((c) => c.name === "Castle Priest")!,
+        ALL_CARDS.find((c) => c.name === "Battle Strategist")!,
+        ALL_CARDS.find((c) => c.name === "Baron of York")!,
+        ALL_CARDS.find((c) => c.name === "Royal Merchant")!,
+      ],
+      "dungeon_enemy",
+    ),
+  },
+  {
+    id: "dungeon_2",
+    name: "The Crystal Caverns",
+    description:
+      "Navigate treacherous crystal caves guarded by magical constructs. Rich veins of gold await the brave.",
+    difficulty: "medium",
+    goldReward: 125,
+    unlocked: false,
+    completed: false,
+    enemyDeck: createDeckFromCards(
+      [
+        ALL_CARDS.find((c) => c.name === "Knight Templar")!,
+        ALL_CARDS.find((c) => c.name === "Elite Archer")!,
+        ALL_CARDS.find((c) => c.name === "Heavy Cavalry")!,
+        ALL_CARDS.find((c) => c.name === "Court Wizard")!,
+        ALL_CARDS.find((c) => c.name === "Royal Healer")!,
+        ALL_CARDS.find((c) => c.name === "Duke of Lancaster")!,
+        ALL_CARDS.find((c) => c.name === "Earl of Warwick")!,
+        ALL_CARDS.find((c) => c.name === "Prince of Wales")!,
+        ALL_CARDS.find((c) => c.name === "Battle Cleric")!,
+        ALL_CARDS.find((c) => c.name === "Siege Engineer")!,
+        ALL_CARDS.find((c) => c.name === "War Engineer")!,
+        ALL_CARDS.find((c) => c.name === "Court Assassin")!,
+      ],
+      "dungeon_enemy",
+    ),
+  },
+  {
+    id: "dungeon_3",
+    name: "The Dragon's Hoard",
+    description:
+      "Face the ancient dragon and its most powerful minions. The greatest treasure lies within the dragon's lair.",
+    difficulty: "hard",
+    goldReward: 200,
+    unlocked: false,
+    completed: false,
+    enemyDeck: createDeckFromCards(
+      [
+        ALL_CARDS.find((c) => c.name === "The Black Knight")!,
+        ALL_CARDS.find((c) => c.name === "Morgan le Fay")!,
+        ALL_CARDS.find((c) => c.name === "Merlin the Wise")!,
+        ALL_CARDS.find((c) => c.name === "Knight Templar")!,
+        ALL_CARDS.find((c) => c.name === "Elite Archer")!,
+        ALL_CARDS.find((c) => c.name === "Court Assassin")!,
+        ALL_CARDS.find((c) => c.name === "Siege Engineer")!,
+        ALL_CARDS.find((c) => c.name === "War Engineer")!,
+        ALL_CARDS.find((c) => c.name === "Court Wizard")!,
+        ALL_CARDS.find((c) => c.name === "Royal Healer")!,
+        ALL_CARDS.find((c) => c.name === "Queen Guinevere")!,
+        ALL_CARDS.find((c) => c.name === "Master Economist")!,
+        ALL_CARDS.find((c) => c.name === "Royal Diplomat")!,
+        ALL_CARDS.find((c) => c.name === "Battle Cleric")!,
+        ALL_CARDS.find((c) => c.name === "Royal Treasurer")!,
+      ],
+      "dungeon_enemy",
+    ),
+  },
+]

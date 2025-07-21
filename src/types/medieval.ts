@@ -1,5 +1,5 @@
 export type CardType = "nobility" | "support" | "commoner" | "legendary"
-export type CardRarity = "common" | "rare" | "legendary"
+export type CardRarity = "common" | "rare" | "epic" | "legendary"
 export type AbilityType = "heal" | "boost" | "direct_damage" | "shield" | "rally" | "assassinate" | "resource_gain"
 export type GamePhase = "enemySelection" | "playerTurn" | "battle" | "gameOver"
 
@@ -52,4 +52,54 @@ export interface PlayerProgress {
   ownedCards: GameCard[]
   completedStages: string[]
   currentStage: number
+  gold: number
+  completedDungeons: string[]
+  bannerProgress: { [bannerId: string]: string[] } // Track obtained cards per banner
+}
+
+export interface GachaBanner {
+  id: string
+  name: string
+  description: string
+  theme: string
+  cards: GameCard[]
+  baseRates: {
+    legendary: number
+    epic: number
+    rare: number
+    common: number
+  }
+  isActive: boolean
+  singlePullCost: number
+  multiPullCost: number
+  totalCards: number
+  rarityDistribution: {
+    legendary: number
+    epic: number
+    rare: number
+    common: number
+  }
+}
+
+export interface DungeonStage {
+  id: string
+  name: string
+  description: string
+  difficulty: "easy" | "medium" | "hard"
+  goldReward: number
+  enemyDeck: GameCard[]
+  unlocked: boolean
+  completed: boolean
+}
+
+export interface GachaPull {
+  card: GameCard
+  isNew: boolean
+}
+
+export interface BannerRates {
+  legendary: number
+  epic: number
+  rare: number
+  common: number
 }

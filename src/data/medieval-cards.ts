@@ -15,7 +15,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   {
     name: "Queen Guinevere",
     type: "nobility",
-    rarity: "rare",
+    rarity: "epic",
     strength: 6,
     cost: 5,
     loyalty: 4,
@@ -25,7 +25,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   {
     name: "Duke of Lancaster",
     type: "nobility",
-    rarity: "common",
+    rarity: "rare",
     strength: 5,
     cost: 4,
     loyalty: 3,
@@ -35,7 +35,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   {
     name: "Earl of Warwick",
     type: "nobility",
-    rarity: "common",
+    rarity: "rare",
     strength: 4,
     cost: 3,
     loyalty: 2,
@@ -55,7 +55,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   {
     name: "Prince of Wales",
     type: "nobility",
-    rarity: "rare",
+    rarity: "epic",
     strength: 5,
     cost: 4,
     loyalty: 3,
@@ -67,7 +67,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   {
     name: "Royal Healer",
     type: "support",
-    rarity: "rare",
+    rarity: "epic",
     strength: 1,
     cost: 3,
     loyalty: 4,
@@ -77,7 +77,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   {
     name: "Court Wizard",
     type: "support",
-    rarity: "rare",
+    rarity: "epic",
     strength: 2,
     cost: 4,
     loyalty: 3,
@@ -87,7 +87,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   {
     name: "Royal Guard",
     type: "support",
-    rarity: "common",
+    rarity: "rare",
     strength: 2,
     cost: 2,
     loyalty: 3,
@@ -97,7 +97,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   {
     name: "Battle Strategist",
     type: "support",
-    rarity: "common",
+    rarity: "rare",
     strength: 1,
     cost: 2,
     loyalty: 2,
@@ -117,7 +117,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   {
     name: "Royal Treasurer",
     type: "support",
-    rarity: "rare",
+    rarity: "epic",
     strength: 1,
     cost: 3,
     loyalty: 4,
@@ -129,7 +129,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   {
     name: "Knight Templar",
     type: "commoner",
-    rarity: "rare",
+    rarity: "epic",
     strength: 6,
     cost: 4,
     loyalty: 3,
@@ -139,7 +139,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   {
     name: "Elite Archer",
     type: "commoner",
-    rarity: "rare",
+    rarity: "epic",
     strength: 5,
     cost: 3,
     loyalty: 2,
@@ -149,7 +149,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   {
     name: "Heavy Cavalry",
     type: "commoner",
-    rarity: "common",
+    rarity: "rare",
     strength: 4,
     cost: 3,
     loyalty: 2,
@@ -159,7 +159,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   {
     name: "Crossbow Squad",
     type: "commoner",
-    rarity: "common",
+    rarity: "rare",
     strength: 3,
     cost: 2,
     loyalty: 2,
@@ -263,7 +263,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   {
     name: "Court Assassin",
     type: "commoner",
-    rarity: "rare",
+    rarity: "epic",
     strength: 3,
     cost: 4,
     loyalty: 1,
@@ -273,7 +273,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   {
     name: "Battle Cleric",
     type: "support",
-    rarity: "rare",
+    rarity: "epic",
     strength: 2,
     cost: 3,
     loyalty: 3,
@@ -293,7 +293,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   {
     name: "Siege Engineer",
     type: "commoner",
-    rarity: "rare",
+    rarity: "epic",
     strength: 3,
     cost: 3,
     loyalty: 2,
@@ -303,7 +303,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   {
     name: "Royal Diplomat",
     type: "nobility",
-    rarity: "rare",
+    rarity: "epic",
     strength: 2,
     cost: 4,
     loyalty: 5,
@@ -322,10 +322,228 @@ const baseCards: Omit<GameCard, "id">[] = [
   },
 ]
 
+const grandTournamentCards: Omit<GameCard, "id">[] = [
+  // 1 Legendary
+  {
+    name: "King Theron",
+    type: "nobility",
+    rarity: "legendary",
+    strength: 10,
+    cost: 8,
+    loyalty: 6,
+    ability: "Rally all units (+3 strength each)",
+    abilityType: "rally",
+  },
+
+  // 2 Epic
+  {
+    name: "Lady Isolde",
+    type: "legendary",
+    rarity: "epic",
+    strength: 8,
+    cost: 7,
+    loyalty: 5,
+    ability: "Boost all units (+4 strength) and heal 3 HP",
+    abilityType: "boost",
+  },
+  {
+    name: "Sir Kael",
+    type: "nobility",
+    rarity: "epic",
+    strength: 7,
+    cost: 5,
+    loyalty: 4,
+    ability: "Grant 4 shield and boost self (+2 strength)",
+    abilityType: "shield",
+  },
+
+  // 6 Rare
+  {
+    name: "Elara",
+    type: "commoner",
+    rarity: "rare",
+    strength: 6,
+    cost: 4,
+    loyalty: 3,
+    ability: "Deal 6 direct damage",
+    abilityType: "direct_damage",
+  },
+  {
+    name: "Gareth",
+    type: "commoner",
+    rarity: "rare",
+    strength: 5,
+    cost: 4,
+    loyalty: 3,
+    ability: "Deal 4 direct damage and boost self (+1 strength)",
+    abilityType: "direct_damage",
+  },
+  {
+    name: "Bronn",
+    type: "commoner",
+    rarity: "rare",
+    strength: 6,
+    cost: 3,
+    loyalty: 2,
+    ability: "Boost self (+2 strength per turn)",
+    abilityType: "boost",
+  },
+  {
+    name: "Lynette",
+    type: "support",
+    rarity: "rare",
+    strength: 2,
+    cost: 3,
+    loyalty: 4,
+    ability: "Grant 3 shield to all allies",
+    abilityType: "shield",
+  },
+  {
+    name: "Finnian",
+    type: "support",
+    rarity: "rare",
+    strength: 1,
+    cost: 2,
+    loyalty: 3,
+    ability: "Boost all units (+2 strength)",
+    abilityType: "boost",
+  },
+  {
+    name: "Marcus",
+    type: "nobility",
+    rarity: "rare",
+    strength: 5,
+    cost: 4,
+    loyalty: 3,
+    ability: "Rally nearby units (+2 strength)",
+    abilityType: "rally",
+  },
+
+  // 11 Common
+  {
+    name: "City Guard",
+    type: "commoner",
+    rarity: "common",
+    strength: 3,
+    cost: 2,
+    loyalty: 2,
+    ability: "Grant 2 shield to self",
+    abilityType: "shield",
+  },
+  {
+    name: "Court Mage",
+    type: "support",
+    rarity: "common",
+    strength: 1,
+    cost: 2,
+    loyalty: 3,
+    ability: "Heal 2 HP when played",
+    abilityType: "heal",
+  },
+  {
+    name: "Arena Fighter",
+    type: "commoner",
+    rarity: "common",
+    strength: 4,
+    cost: 3,
+    loyalty: 2,
+    ability: "Boost self (+1 strength)",
+    abilityType: "boost",
+  },
+  {
+    name: "Tournament Scout",
+    type: "commoner",
+    rarity: "common",
+    strength: 2,
+    cost: 1,
+    loyalty: 2,
+    ability: "Deal 2 direct damage",
+    abilityType: "direct_damage",
+  },
+  {
+    name: "Royal Page",
+    type: "support",
+    rarity: "common",
+    strength: 1,
+    cost: 1,
+    loyalty: 3,
+    ability: "Heal 1 HP each turn",
+    abilityType: "heal",
+  },
+  {
+    name: "Squire",
+    type: "commoner",
+    rarity: "common",
+    strength: 2,
+    cost: 1,
+    loyalty: 2,
+    ability: "Grant 1 shield to self",
+    abilityType: "shield",
+  },
+  {
+    name: "Herald",
+    type: "support",
+    rarity: "common",
+    strength: 1,
+    cost: 2,
+    loyalty: 3,
+    ability: "Boost all units (+1 strength)",
+    abilityType: "boost",
+  },
+  {
+    name: "Stable Boy",
+    type: "commoner",
+    rarity: "common",
+    strength: 1,
+    cost: 1,
+    loyalty: 1,
+    ability: "Gain +1 resource when played",
+    abilityType: "resource_gain",
+  },
+  {
+    name: "Apprentice",
+    type: "support",
+    rarity: "common",
+    strength: 1,
+    cost: 1,
+    loyalty: 2,
+    ability: "Heal 1 HP when played",
+    abilityType: "heal",
+  },
+  {
+    name: "Guard Captain",
+    type: "commoner",
+    rarity: "common",
+    strength: 3,
+    cost: 2,
+    loyalty: 2,
+    ability: "Rally nearby units (+1 strength)",
+    abilityType: "rally",
+  },
+  {
+    name: "Merchant",
+    type: "commoner",
+    rarity: "common",
+    strength: 1,
+    cost: 2,
+    loyalty: 2,
+    ability: "Gain +1 resource per turn",
+    abilityType: "resource_gain",
+  },
+]
+
 export const ALL_CARDS = baseCards.map((card, index) => ({
   ...card,
   id: `card_${card.name.replace(/\s+/g, "_").toLowerCase()}_${index}`,
 }))
+
+export const GRAND_TOURNAMENT_CARDS = grandTournamentCards.map((card, index) => ({
+  ...card,
+  id: `gt_${card.name.replace(/\s+/g, "_").toLowerCase()}_${index}`,
+}))
+
+// Add all cards together
+export const ALL_CARDS_WITH_BANNERS = [...ALL_CARDS, ...GRAND_TOURNAMENT_CARDS]
 
 // Update the createDeckFromCards function to ensure unique cards
 export const createDeckFromCards = (cards: GameCard[], playerId: string): GameCard[] => {
