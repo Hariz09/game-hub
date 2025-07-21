@@ -4,7 +4,7 @@ import type React from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { X, Crown, Shield, Users, Heart, Sword, Zap, Target, Gem, Swords, Star } from "lucide-react"
+import { X, Crown, Shield, Users, Heart, Sword, Zap, Target, Gem, Star } from "lucide-react"
 
 interface HelpModalProps {
   isOpen: boolean
@@ -66,7 +66,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                         <Sword className="w-5 h-5 text-amber-100" />
                       </div>
                       <div>
-                        <strong>Ability Icon:</strong> The central icon represents the card's primary ability type,
+                        <strong>Ability Icon:</strong> The central icon represents the card&apos;s primary ability type,
                         making it easy to identify at a glance.
                       </div>
                     </div>
@@ -116,7 +116,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                       <div className="text-center text-white font-bold text-sm">8</div>
                     </div>
                     <div>
-                      <strong>Strength (STR):</strong> The card's attack power and contribution to army strength
+                      <strong>Strength (STR):</strong> The card&apos;s attack power and contribution to army strength
                     </div>
                   </div>
 
@@ -147,7 +147,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
               <p>
                 Enhanced Medieval Card Battle is a strategic turn-based card game where you command armies, deploy kings
                 and support units, and battle for supremacy. Each player starts with 60 HP and must reduce their
-                opponent's HP to 0 to win.
+                opponent&apos;s HP to 0 to win.
               </p>
               <p>
                 The game follows a unique turn structure:{" "}

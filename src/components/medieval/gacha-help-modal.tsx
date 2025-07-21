@@ -42,7 +42,7 @@ export const GachaHelpModal: React.FC<GachaHelpModalProps> = ({ isOpen, onClose 
                 <h4 className="font-semibold text-green-800 mb-2">How it works:</h4>
                 <ul className="text-green-700 text-sm space-y-1">
                   <li>• Each banner contains exactly 20 unique cards</li>
-                  <li>• Once you pull a card, it's removed from the pool</li>
+                  <li>• Once you pull a card, it&apos;s removed from the pool</li>
                   <li>• Pull rates automatically adjust as cards are obtained</li>
                   <li>• Complete the banner to collect all 20 cards!</li>
                 </ul>
@@ -185,13 +185,13 @@ export const GachaHelpModal: React.FC<GachaHelpModalProps> = ({ isOpen, onClose 
             <CardContent>
               <div className="space-y-2 text-amber-700">
                 <p>
-                  • <strong>Complete banners:</strong> You're guaranteed to get all cards eventually!
+                  • <strong>Complete banners:</strong> You&apos;re guaranteed to get all cards eventually!
                 </p>
                 <p>
                   • <strong>Save gold:</strong> 10x pulls offer better value with the discount
                 </p>
                 <p>
-                  • <strong>Check progress:</strong> Use "Show Probabilities" to see what cards you still need
+                  • <strong>Check progress:</strong> Use &quot;Show Probabilities&quot; to see what cards you still need
                 </p>
                 <p>
                   • <strong>Earn gold:</strong> Complete dungeon stages to earn more gold for pulls
@@ -213,7 +213,7 @@ export const GachaHelpModal: React.FC<GachaHelpModalProps> = ({ isOpen, onClose 
               <div className="bg-gray-50 p-3 rounded">
                 <div className="text-sm space-y-1">
                   <p>
-                    • <strong>Progress Bar:</strong> Shows how many cards you've collected
+                    • <strong>Progress Bar:</strong> Shows how many cards you&apos;ve collected
                   </p>
                   <p>
                     • <strong>Obtained/Total:</strong> Exact count of your collection
@@ -229,7 +229,7 @@ export const GachaHelpModal: React.FC<GachaHelpModalProps> = ({ isOpen, onClose 
 
         <div className="sticky bottom-0 bg-gray-50 border-t p-4">
           <Button onClick={onClose} className="w-full" size="lg">
-            Got it! Let's Pull Some Cards!
+            Got it! Let&apos;s Pull Some Cards!
           </Button>
         </div>
       </div>

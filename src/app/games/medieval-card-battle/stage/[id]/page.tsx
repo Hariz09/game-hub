@@ -59,7 +59,6 @@ export default function StageBattlePage() {
     setBattleLog,
     turn,
     setTurn,
-    isInitialized,
     playerEnergyBonus,
     setPlayerEnergyBonus,
     enemyEnergyBonus,
@@ -164,7 +163,7 @@ export default function StageBattlePage() {
   }
 
   // Game logic functions (same as before)
-  const handleCardSelect = (card: any, role: "normal" | "king" | "support") => {
+  const handleCardSelect = (card: GameCard, role: "normal" | "king" | "support") => {
     if (!canPlayCard(card, player)) return
 
     if (role === "king" && canPlayAsKing(card) && !player.king && !selectedKing) {
@@ -180,7 +179,7 @@ export default function StageBattlePage() {
     }
   }
 
-  const discardCard = (card: any) => {
+  const discardCard = (card: GameCard) => {
     setPlayer((prev) => ({
       ...prev,
       hand: prev.hand.filter((c) => c.id !== card.id),
@@ -270,7 +269,7 @@ export default function StageBattlePage() {
     setBattleLog((prev) => [...prev, `Player retrieves Support ${supportCard.name} back to hand`])
   }
 
-  const retrieveFromArmy = (card: any, index: number) => {
+  const retrieveFromArmy = (card: GameCard, index: number) => {
     setPlayer((prev) => ({
       ...prev,
       playedCards: prev.playedCards.filter((_, i) => i !== index),

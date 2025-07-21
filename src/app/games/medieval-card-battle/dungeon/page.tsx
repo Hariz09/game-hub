@@ -144,7 +144,7 @@ export default function DungeonPage() {
           <h2 className="text-2xl font-bold text-gray-100">Dungeon Stages</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {stages.map((stage, index) => (
+            {stages.map((stage) => (
               <Card
                 key={stage.id}
                 className={`relative transition-all hover:shadow-lg ${
