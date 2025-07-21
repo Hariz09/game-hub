@@ -13,12 +13,9 @@ export const STAGE_CONFIGS: StageConfig[] = [
     completed: false,
     enemyDeck: createDeckFromCards(
       [
-        // Weaker deck for first stage
-        ALL_CARDS.find((c) => c.name === "Foot Soldier")!,
+        // Unique cards for first stage - no duplicates
         ALL_CARDS.find((c) => c.name === "Foot Soldier")!,
         ALL_CARDS.find((c) => c.name === "Militia")!,
-        ALL_CARDS.find((c) => c.name === "Militia")!,
-        ALL_CARDS.find((c) => c.name === "Peasant Levy")!,
         ALL_CARDS.find((c) => c.name === "Peasant Levy")!,
         ALL_CARDS.find((c) => c.name === "Village Blacksmith")!,
         ALL_CARDS.find((c) => c.name === "Crossbow Squad")!,
@@ -33,7 +30,7 @@ export const STAGE_CONFIGS: StageConfig[] = [
       "enemy",
     ),
     rewards: createDeckFromCards(
-      [ALL_CARDS.find((c) => c.name === "Elite Archer")!, ALL_CARDS.find((c) => c.name === "Royal Healer")!],
+      [ALL_CARDS.find((c) => c.name === "Court Wizard")!, ALL_CARDS.find((c) => c.name === "Duke of Lancaster")!],
       "reward",
     ),
   },
@@ -48,10 +45,9 @@ export const STAGE_CONFIGS: StageConfig[] = [
     completed: false,
     enemyDeck: createDeckFromCards(
       [
-        // Medium difficulty deck
+        // Medium difficulty unique deck
         ALL_CARDS.find((c) => c.name === "Knight Templar")!,
         ALL_CARDS.find((c) => c.name === "Elite Archer")!,
-        ALL_CARDS.find((c) => c.name === "Heavy Cavalry")!,
         ALL_CARDS.find((c) => c.name === "Heavy Cavalry")!,
         ALL_CARDS.find((c) => c.name === "Crossbow Squad")!,
         ALL_CARDS.find((c) => c.name === "Foot Soldier")!,
@@ -64,14 +60,15 @@ export const STAGE_CONFIGS: StageConfig[] = [
         ALL_CARDS.find((c) => c.name === "Royal Treasurer")!,
         ALL_CARDS.find((c) => c.name === "Court Assassin")!,
         ALL_CARDS.find((c) => c.name === "Battle Cleric")!,
+        ALL_CARDS.find((c) => c.name === "Siege Engineer")!,
       ],
       "enemy",
     ),
     rewards: createDeckFromCards(
       [
         ALL_CARDS.find((c) => c.name === "Queen Guinevere")!,
-        ALL_CARDS.find((c) => c.name === "Court Wizard")!,
-        ALL_CARDS.find((c) => c.name === "Knight Templar")!,
+        ALL_CARDS.find((c) => c.name === "Royal Diplomat")!,
+        ALL_CARDS.find((c) => c.name === "War Engineer")!,
       ],
       "reward",
     ),
@@ -87,12 +84,10 @@ export const STAGE_CONFIGS: StageConfig[] = [
     completed: false,
     enemyDeck: createDeckFromCards(
       [
-        // Hard difficulty deck with legendaries
+        // Hard difficulty deck with legendaries - all unique
         ALL_CARDS.find((c) => c.name === "The Black Knight")!,
         ALL_CARDS.find((c) => c.name === "Morgan le Fay")!,
         ALL_CARDS.find((c) => c.name === "Knight Templar")!,
-        ALL_CARDS.find((c) => c.name === "Knight Templar")!,
-        ALL_CARDS.find((c) => c.name === "Elite Archer")!,
         ALL_CARDS.find((c) => c.name === "Elite Archer")!,
         ALL_CARDS.find((c) => c.name === "Court Assassin")!,
         ALL_CARDS.find((c) => c.name === "Siege Engineer")!,
@@ -103,6 +98,8 @@ export const STAGE_CONFIGS: StageConfig[] = [
         ALL_CARDS.find((c) => c.name === "Prince of Wales")!,
         ALL_CARDS.find((c) => c.name === "Master Economist")!,
         ALL_CARDS.find((c) => c.name === "Royal Diplomat")!,
+        ALL_CARDS.find((c) => c.name === "Battle Cleric")!,
+        ALL_CARDS.find((c) => c.name === "Royal Treasurer")!,
       ],
       "enemy",
     ),

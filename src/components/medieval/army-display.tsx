@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ArrowUp } from "lucide-react"
 import type { GameCard, Player } from "@/types/medieval"
-import { EnhancedCardComponent } from "./card-component"
+import { EnhancedCard } from "./enhanced-card"
 import { generateCardKey } from "@/utils/medieval"
 
 interface ArmyDisplayProps {
@@ -45,7 +45,9 @@ export const ArmyDisplay: React.FC<ArmyDisplayProps> = ({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {player.playedCards.map((card, index) => (
                   <div key={generateCardKey(card, "deployed", index)} className="space-y-2">
-                    <EnhancedCardComponent card={card} />
+                    <div className="h-[240px]">
+                      <EnhancedCard card={card} size="small" />
+                    </div>
                     {isPlayer && gamePhase === "playerTurn" && onRetrieveFromArmy && (
                       <Button
                         size="sm"
@@ -70,7 +72,9 @@ export const ArmyDisplay: React.FC<ArmyDisplayProps> = ({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {selectedCards.map((card, index) => (
                   <div key={`selected-${card.id}-${index}`} className="space-y-2">
-                    <EnhancedCardComponent card={card} isSelected={true} />
+                    <div className="h-[240px]">
+                      <EnhancedCard card={card} isSelected={true} size="small" />
+                    </div>
                     <div className="text-xs text-center text-blue-600 font-medium">Selected for deployment</div>
                   </div>
                 ))}

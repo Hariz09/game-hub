@@ -6,15 +6,19 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
-import { Star, Lock, CheckCircle, Trophy, RotateCcw } from "lucide-react"
+import { Star, Lock, CheckCircle, Trophy, RotateCcw, BookOpen } from "lucide-react"
 import { STAGE_CONFIGS } from "@/data/stage-configs"
 import { getPlayerProgress, resetProgress } from "@/utils/player-progress"
 import type { PlayerProgress, StageConfig } from "@/types/medieval"
+import { EnhancedCard } from "@/components/medieval/enhanced-card"
+import { CardGallery } from "@/components/medieval/card-gallery"
+import Sidebar from "@/components/sidebar/Sidebar"
 
 export default function CampaignPage() {
   const router = useRouter()
   const [progress, setProgress] = useState<PlayerProgress | null>(null)
   const [stages, setStages] = useState<StageConfig[]>(STAGE_CONFIGS)
+  const [showCardGallery, setShowCardGallery] = useState(false)
 
   useEffect(() => {
     const playerProgress = getPlayerProgress()
@@ -30,7 +34,7 @@ export default function CampaignPage() {
   }, [])
 
   const handleStageSelect = (stageId: string) => {
-    router.push(`/medieval-card-battle/stage/${stageId}`)
+    router.push(`medieval-card-battle/stage/${stageId}`)
   }
 
   const handleResetProgress = () => {
@@ -82,6 +86,7 @@ export default function CampaignPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-amber-50 to-amber-100 p-4">
       <div className="max-w-6xl mx-auto">
+        <Sidebar />
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-amber-800 mb-2">Medieval Card Battle Campaign</h1>
@@ -137,6 +142,10 @@ export default function CampaignPage() {
                     <div className="text-gray-500">Legendary</div>
                   </div>
                 </div>
+                <Button onClick={() => setShowCardGallery(true)} variant="outline" size="sm" className="w-full mt-2">
+                  <BookOpen className="w-4 h-4 mr-2" />
+                  View Full Collection
+                </Button>
               </div>
             </CardContent>
           </Card>
@@ -225,24 +234,32 @@ export default function CampaignPage() {
         <div className="mt-12">
           <Card>
             <CardHeader>
-              <CardTitle className="text-amber-800">Your Card Collection</CardTitle>
+              <CardTitle className="text-amber-800 flex justify-between items-center">
+                <span>Your Card Collection</span>
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline" className="font-normal">
+                    {progress.ownedCards.length} cards
+                  </Badge>
+                  <Button onClick={() => setShowCardGallery(true)} variant="outline" size="sm">
+                    <BookOpen className="w-4 h-4 mr-2" />
+                    View All
+                  </Button>
+                </div>
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
-                {progress.ownedCards.slice(0, 16).map((card, index) => (
-                  <div
-                    key={`${card.id}-${index}`}
-                    className="aspect-[3/4] bg-gray-100 rounded border flex items-center justify-center text-xs text-center p-1"
-                  >
-                    <div>
-                      <div className="font-medium">{card.name}</div>
-                      <div className="text-gray-500">{card.type}</div>
-                    </div>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                {progress.ownedCards.slice(0, 12).map((card, index) => (
+                  <div key={`${card.id}-${index}`} className="h-[240px]">
+                    <EnhancedCard card={card} size="small" />
                   </div>
                 ))}
-                {progress.ownedCards.length > 16 && (
-                  <div className="aspect-[3/4] bg-gray-200 rounded border flex items-center justify-center text-xs text-gray-600">
-                    +{progress.ownedCards.length - 16} more
+                {progress.ownedCards.length > 12 && (
+                  <div
+                    className="h-[240px] bg-gray-200 rounded border flex items-center justify-center text-sm text-gray-600 cursor-pointer hover:bg-gray-300 transition-colors"
+                    onClick={() => setShowCardGallery(true)}
+                  >
+                    +{progress.ownedCards.length - 12} more
                   </div>
                 )}
               </div>
@@ -250,6 +267,13 @@ export default function CampaignPage() {
           </Card>
         </div>
       </div>
+
+      {/* Card Gallery Modal */}
+      <CardGallery
+        ownedCards={progress.ownedCards}
+        isOpen={showCardGallery}
+        onClose={() => setShowCardGallery(false)}
+      />
     </div>
   )
 }

@@ -40,8 +40,16 @@ export const savePlayerProgress = (progress: PlayerProgress) => {
 
 export const addCardsToCollection = (newCards: GameCard[]) => {
   const progress = getPlayerProgress()
-  progress.ownedCards = [...progress.ownedCards, ...newCards]
-  savePlayerProgress(progress)
+
+  // Filter out cards that are already owned (by name)
+  const uniqueNewCards = newCards.filter(
+    (newCard) => !progress.ownedCards.some((ownedCard) => ownedCard.name === newCard.name),
+  )
+
+  if (uniqueNewCards.length > 0) {
+    progress.ownedCards = [...progress.ownedCards, ...uniqueNewCards]
+    savePlayerProgress(progress)
+  }
 }
 
 export const completeStage = (stageId: string) => {

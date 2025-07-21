@@ -15,6 +15,12 @@ export const isCardDeployed = (card: GameCard, targetPlayer: Player): boolean =>
   return deployedCardIds.includes(card.id)
 }
 
+export const isCardActive = (card: GameCard, targetPlayer: Player): boolean => {
+  const inHand = targetPlayer.hand.some((c) => c.id === card.id)
+  const deployed = isCardDeployed(card, targetPlayer)
+  return inHand || deployed
+}
+
 export const getAvailableHandCards = (targetPlayer: Player): GameCard[] => {
   return targetPlayer.hand.filter((card) => !isCardDeployed(card, targetPlayer))
 }

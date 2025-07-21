@@ -15,7 +15,7 @@ import { BattleLog } from "@/components/medieval/battle-log"
 import { DeckViewer } from "@/components/medieval/deck-viewer"
 import { HelpModal } from "@/components/medieval/help-modal"
 import { DeckBuilder } from "@/components/medieval/deck-builder"
-import { EnhancedCardComponent } from "@/components/medieval/card-component"
+import { EnhancedCard } from "@/components/medieval/enhanced-card"
 import {
   getAvailableHandCards,
   canPlayCard,
@@ -26,6 +26,7 @@ import {
 import { STAGE_CONFIGS } from "@/data/stage-configs"
 import { getPlayerProgress, addCardsToCollection, completeStage } from "@/utils/player-progress"
 import type { StageConfig, PlayerProgress, GameCard } from "@/types/medieval"
+import Sidebar from "@/components/sidebar/Sidebar"
 
 export default function StageBattlePage() {
   const router = useRouter()
@@ -80,7 +81,7 @@ export default function StageBattlePage() {
     const playerProgress = getPlayerProgress()
 
     if (!foundStage) {
-      router.push("/medieval-card-battle")
+      router.push("/games/medieval-card-battle")
       return
     }
 
@@ -92,14 +93,14 @@ export default function StageBattlePage() {
     const isUnlocked = stageIndex === 0 || playerProgress.completedStages.includes(stageIndex.toString())
 
     if (!isUnlocked) {
-      router.push("/medieval-card-battle")
+      router.push("/games/medieval-card-battle")
       return
     }
   }, [stageId, router])
 
   const handleStartBattle = () => {
-    if (selectedDeck.length < 15) {
-      alert("You need at least 15 cards in your deck!")
+    if (selectedDeck.length < 10) {
+      alert("You need at least 10 unique cards in your deck!")
       return
     }
 
@@ -159,7 +160,7 @@ export default function StageBattlePage() {
   }
 
   const handleReturnToCampaign = () => {
-    router.push("/medieval-card-battle")
+    router.push("/games/medieval-card-battle")
   }
 
   // Game logic functions (same as before)
@@ -328,27 +329,10 @@ export default function StageBattlePage() {
   const processBattle = () => {
     const newBattleLog: string[] = []
 
-    const playerStrength = calculateStrength(player)
-    const enemyStrength = calculateStrength(enemy)
+    // 1. FIRST: Trigger abilities (healing, boosts, etc.)
+    newBattleLog.push(`--- Turn ${turn}: Abilities Phase ---`)
 
-    const playerDamage = Math.max(0, enemyStrength - player.shield)
-    const enemyDamage = Math.max(0, playerStrength - enemy.shield)
-
-    newBattleLog.push(`Player army deals ${playerStrength} damage (${enemyDamage} after shield)`)
-    newBattleLog.push(`Enemy army deals ${enemyStrength} damage (${playerDamage} after shield)`)
-
-    setPlayer((prev) => ({
-      ...prev,
-      hp: Math.max(0, prev.hp - playerDamage),
-      shield: Math.max(0, prev.shield - enemyStrength),
-    }))
-
-    setEnemy((prev) => ({
-      ...prev,
-      hp: Math.max(0, prev.hp - enemyDamage),
-      shield: Math.max(0, prev.shield - playerStrength),
-    }))
-
+    // Player support abilities
     if (player.support?.abilityType === "heal") {
       const healAmount = player.support.name.includes("5") ? 5 : player.support.name.includes("3") ? 3 : 2
       setPlayer((prev) => ({
@@ -358,6 +342,7 @@ export default function StageBattlePage() {
       newBattleLog.push(`${player.support.name} heals player for ${healAmount} HP`)
     }
 
+    // Enemy support abilities
     if (enemy.support?.abilityType === "heal") {
       const healAmount = enemy.support.name.includes("5") ? 5 : enemy.support.name.includes("3") ? 3 : 2
       setEnemy((prev) => ({
@@ -367,39 +352,93 @@ export default function StageBattlePage() {
       newBattleLog.push(`${enemy.support.name} heals enemy for ${healAmount} HP`)
     }
 
+    // 2. Calculate strengths after abilities have been applied
+    const playerStrength = calculateStrength(player)
+    const enemyStrength = calculateStrength(enemy)
+
+    // 3. Player attacks enemy
+    newBattleLog.push(`--- Attack Phase ---`)
+    newBattleLog.push(`Player army deals ${playerStrength} damage to enemy`)
+
+    const enemyDamage = Math.max(0, playerStrength - enemy.shield)
+    if (enemy.shield > 0) {
+      newBattleLog.push(`Enemy shield blocks ${Math.min(playerStrength, enemy.shield)} damage`)
+    }
+    newBattleLog.push(`Enemy takes ${enemyDamage} damage`)
+
+    setEnemy((prev) => ({
+      ...prev,
+      hp: Math.max(0, prev.hp - enemyDamage),
+      shield: Math.max(0, prev.shield - playerStrength),
+    }))
+
+    // 4. Check if enemy is defeated
+    if (enemy.hp - enemyDamage <= 0) {
+      newBattleLog.push(`Enemy has been defeated!`)
+      setBattleLog((prev) => [...prev, ...newBattleLog])
+
+      setTimeout(() => {
+        setGamePhase("gameOver")
+        setBattleLog((prev) => [...prev, "Player wins!"])
+        handleBattleWin()
+      }, 1000)
+      return
+    }
+
+    // 5. Enemy attacks player
+    newBattleLog.push(`Enemy army deals ${enemyStrength} damage to player`)
+
+    const playerDamage = Math.max(0, enemyStrength - player.shield)
+    if (player.shield > 0) {
+      newBattleLog.push(`Player shield blocks ${Math.min(enemyStrength, player.shield)} damage`)
+    }
+    newBattleLog.push(`Player takes ${playerDamage} damage`)
+
+    setPlayer((prev) => ({
+      ...prev,
+      hp: Math.max(0, prev.hp - playerDamage),
+      shield: Math.max(0, prev.shield - enemyStrength),
+    }))
+
+    // 6. Check if player is defeated
+    if (player.hp - playerDamage <= 0) {
+      newBattleLog.push(`Player has been defeated!`)
+      setBattleLog((prev) => [...prev, ...newBattleLog])
+
+      setTimeout(() => {
+        setGamePhase("gameOver")
+        setBattleLog((prev) => [...prev, "Enemy wins!"])
+      }, 1000)
+      return
+    }
+
+    // 7. Process loyalty
+    newBattleLog.push(`--- Loyalty Phase ---`)
     const playerLoyaltyLog = processLoyalty(player, setPlayer, enemy, setEnemy)
     const enemyLoyaltyLog = processLoyalty(enemy, setEnemy, player, setPlayer)
 
     setBattleLog((prev) => [...prev, ...newBattleLog, ...playerLoyaltyLog, ...enemyLoyaltyLog])
 
+    // 8. Prepare for next turn
     setTimeout(() => {
-      if (player.hp <= 0) {
-        setGamePhase("gameOver")
-        setBattleLog((prev) => [...prev, "Enemy wins!"])
-      } else if (enemy.hp <= 0) {
-        setGamePhase("gameOver")
-        setBattleLog((prev) => [...prev, "Player wins!"])
-        handleBattleWin()
-      } else {
-        setTurn((prev) => prev + 1)
+      setTurn((prev) => prev + 1)
 
-        setPlayer((prev) => ({
-          ...prev,
-          resources: Math.min(10, prev.resources + 3 + playerEnergyBonus),
-        }))
-        setEnemy((prev) => ({
-          ...prev,
-          resources: Math.min(10, prev.resources + 3 + enemyEnergyBonus),
-        }))
+      setPlayer((prev) => ({
+        ...prev,
+        resources: Math.min(10, prev.resources + 3 + playerEnergyBonus),
+      }))
+      setEnemy((prev) => ({
+        ...prev,
+        resources: Math.min(10, prev.resources + 3 + enemyEnergyBonus),
+      }))
 
-        const playerHandSize = getAvailableHandCards(player).length
-        const enemyHandSize = getAvailableHandCards(enemy).length
+      const playerHandSize = getAvailableHandCards(player).length
+      const enemyHandSize = getAvailableHandCards(enemy).length
 
-        if (playerHandSize < 5) drawCards(Math.min(2, 5 - playerHandSize), "player")
-        if (enemyHandSize < 5) drawCards(Math.min(2, 5 - enemyHandSize), "enemy")
+      if (playerHandSize < 5) drawCards(Math.min(2, 5 - playerHandSize), "player")
+      if (enemyHandSize < 5) drawCards(Math.min(2, 5 - enemyHandSize), "enemy")
 
-        setGamePhase("enemySelection")
-      }
+      setGamePhase("enemySelection")
     }, 3000)
   }
 
@@ -426,6 +465,7 @@ export default function StageBattlePage() {
   if (!battleStarted) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-amber-50 to-amber-100 p-4">
+        <Sidebar />
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center mb-6">
             <Button onClick={handleReturnToCampaign} variant="outline" size="sm" className="mr-4 bg-transparent">
@@ -527,9 +567,9 @@ export default function StageBattlePage() {
                   </div>
                 )}
 
-                <Button onClick={handleStartBattle} disabled={selectedDeck.length < 15} className="w-full" size="lg">
+                <Button onClick={handleStartBattle} disabled={selectedDeck.length < 10} className="w-full" size="lg">
                   <Swords className="w-4 h-4 mr-2" />
-                  {selectedDeck.length < 15 ? `Need ${15 - selectedDeck.length} more cards` : "Start Battle!"}
+                  {selectedDeck.length < 10 ? `Need ${10 - selectedDeck.length} more unique cards` : "Start Battle!"}
                 </Button>
               </CardContent>
             </Card>
@@ -554,6 +594,7 @@ export default function StageBattlePage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-amber-50 to-amber-100 p-4">
       <div className="max-w-7xl mx-auto">
+        <Sidebar />
         {/* Header with stage info */}
         <div className="text-center mb-6">
           <div className="flex justify-between items-start mb-4">
@@ -660,7 +701,9 @@ export default function StageBattlePage() {
                     <h4 className="font-semibold mb-2">Normal Cards</h4>
                     <div className="space-y-2">
                       {enemySelectedCards.normalCards.map((card, index) => (
-                        <EnhancedCardComponent key={`enemy-selected-${card.id}-${index}`} card={card} />
+                        <div key={`enemy-selected-${card.id}-${index}`} className="h-[240px]">
+                          <EnhancedCard key={`enemy-selected-${card.id}-${index}`} card={card} size="small" />
+                        </div>
                       ))}
                       {enemySelectedCards.normalCards.length === 0 && (
                         <div className="p-2 text-center text-gray-500 text-sm">None</div>
@@ -671,18 +714,26 @@ export default function StageBattlePage() {
                   <div>
                     <h4 className="font-semibold mb-2">King</h4>
                     {enemySelectedCards.kingCard ? (
-                      <EnhancedCardComponent card={enemySelectedCards.kingCard} />
+                      <div className="h-[240px]">
+                        <EnhancedCard card={enemySelectedCards.kingCard} size="small" />
+                      </div>
                     ) : (
-                      <div className="p-2 text-center text-gray-500 text-sm">None</div>
+                      <div className="p-2 text-center text-gray-500 text-sm h-[240px] flex items-center justify-center">
+                        None
+                      </div>
                     )}
                   </div>
 
                   <div>
                     <h4 className="font-semibold mb-2">Support</h4>
                     {enemySelectedCards.supportCard ? (
-                      <EnhancedCardComponent card={enemySelectedCards.supportCard} />
+                      <div className="h-[240px]">
+                        <EnhancedCard card={enemySelectedCards.supportCard} size="small" />
+                      </div>
                     ) : (
-                      <div className="p-2 text-center text-gray-500 text-sm">None</div>
+                      <div className="p-2 text-center text-gray-500 text-sm h-[240px] flex items-center justify-center">
+                        None
+                      </div>
                     )}
                   </div>
                 </div>
