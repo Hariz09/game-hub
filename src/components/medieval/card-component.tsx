@@ -25,28 +25,28 @@ export const EnhancedCardComponent: React.FC<EnhancedCardComponentProps> = ({
 }) => {
   const getTypeIcon = () => {
     switch (card.type) {
-      case "nobility":
-        return <Crown className="w-4 h-4" />
-      case "support":
-        return <Shield className="w-4 h-4" />
-      case "commoner":
-        return <Users className="w-4 h-4" />
-      case "legendary":
-        return <Star className="w-4 h-4" />
-    }
+     case "soldier":
+       return <Users className="w-4 h-4" />
+     case "minister":
+       return <Shield className="w-4 h-4" />
+     case "royalty":
+       return <Crown className="w-4 h-4" />
+     case "champion":
+       return <Star className="w-4 h-4" />
+   }
   }
 
   const getTypeColor = () => {
     switch (card.type) {
-      case "nobility":
-        return "bg-yellow-100 text-yellow-800"
-      case "support":
-        return "bg-blue-100 text-blue-800"
-      case "commoner":
-        return "bg-green-100 text-green-800"
-      case "legendary":
-        return "bg-purple-100 text-purple-800"
-    }
+     case "soldier":
+       return "bg-green-100 text-green-800"
+     case "minister":
+       return "bg-blue-100 text-blue-800"
+     case "royalty":
+       return "bg-yellow-100 text-yellow-800"
+     case "champion":
+       return "bg-purple-100 text-purple-800"
+   }
   }
 
   const getRarityBorder = () => {

@@ -1,4 +1,4 @@
-export type CardType = "nobility" | "support" | "commoner" | "legendary"
+export type CardType = "soldier" | "minister" | "royalty" | "champion"
 export type CardRarity = "common" | "rare" | "epic" | "legendary"
 export type AbilityType = "heal" | "boost" | "direct_damage" | "shield" | "rally" | "assassinate" | "resource_gain"
 export type GamePhase = "enemySelection" | "playerTurn" | "battle" | "gameOver"

@@ -59,7 +59,7 @@ export const DeckBuilder: React.FC<DeckBuilderProps> = ({
   const getDeckStats = () => {
     const stats = {
       total: selectedDeck.length,
-      types: { nobility: 0, support: 0, commoner: 0, legendary: 0 },
+      types: { soldier: 0, minister: 0, royalty: 0, champion: 0 },
       rarities: { common: 0, rare: 0, epic:0, legendary: 0 },
       avgCost: 0,
     }
@@ -85,7 +85,7 @@ export const DeckBuilder: React.FC<DeckBuilderProps> = ({
       if (rarityDiff !== 0) return rarityDiff
 
       // If same rarity, sort by type
-      const typeOrder = { legendary: 4, nobility: 3, support: 2, commoner: 1 }
+      const typeOrder = { champion: 4, royalty: 3, minister: 2, soldier: 1 }
       return typeOrder[b.type] - typeOrder[a.type]
     })
 
@@ -222,10 +222,10 @@ export const DeckBuilder: React.FC<DeckBuilderProps> = ({
                   <span>{stats.avgCost.toFixed(1)}</span>
                 </div>
                 <div className="grid grid-cols-2 gap-2 text-xs">
-                  <div>Nobility: {stats.types.nobility}</div>
-                  <div>Support: {stats.types.support}</div>
-                  <div>Commoner: {stats.types.commoner}</div>
-                  <div>Legendary: {stats.types.legendary}</div>
+                  <div>Soldier: {stats.types.soldier} </div>
+                  <div>Minister: {stats.types.minister} </div>
+                  <div>Royalty: {stats.types.royalty} </div>
+                  <div>Champion: {stats.types.champion} </div>
                 </div>
               </div>
             </div>

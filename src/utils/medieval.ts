@@ -30,11 +30,11 @@ export const canPlayCard = (card: GameCard, targetPlayer: Player): boolean => {
   return (card.cost || 0) <= targetPlayer.resources
 }
 
-export const canPlayAsKing = (card: GameCard): boolean => card.type === "nobility" || card.type === "legendary"
+export const canPlayAsKing = (card: GameCard): boolean => card.type === "royalty" || card.type === "champion"
 
-export const canPlayAsSupport = (card: GameCard): boolean => card.type === "support" || card.type === "legendary"
+export const canPlayAsSupport = (card: GameCard): boolean => card.type === "minister" || card.type === "champion"
 
-export const canPlayAsNormal = (card: GameCard): boolean => card.type !== "support"
+export const canPlayAsNormal = (card: GameCard): boolean => card.type !== "minister"
 
 export const calculateStrength = (targetPlayer: Player): number => {
   let totalStrength = 0

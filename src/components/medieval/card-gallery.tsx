@@ -70,21 +70,21 @@ export const CardGallery: React.FC<CardGalleryProps> = ({ ownedCards, isOpen, on
     }
 
     const typeStats = {
-      nobility: {
-        total: ALL_CARDS_WITH_BANNERS.filter((card) => card.type === "nobility").length,
-        owned: ALL_CARDS_WITH_BANNERS.filter((card) => card.type === "nobility" && isCardOwned(card)).length,
+      soldier: {
+        total: ALL_CARDS_WITH_BANNERS.filter((card) => card.type === "soldier").length,
+        owned: ALL_CARDS_WITH_BANNERS.filter((card) => card.type === "soldier" && isCardOwned(card)).length,
       },
-      support: {
-        total: ALL_CARDS_WITH_BANNERS.filter((card) => card.type === "support").length,
-        owned: ALL_CARDS_WITH_BANNERS.filter((card) => card.type === "support" && isCardOwned(card)).length,
+      minister: {
+        total: ALL_CARDS_WITH_BANNERS.filter((card) => card.type === "minister").length,
+        owned: ALL_CARDS_WITH_BANNERS.filter((card) => card.type === "minister" && isCardOwned(card)).length,
       },
-      commoner: {
-        total: ALL_CARDS_WITH_BANNERS.filter((card) => card.type === "commoner").length,
-        owned: ALL_CARDS_WITH_BANNERS.filter((card) => card.type === "commoner" && isCardOwned(card)).length,
+      royalty: {
+        total: ALL_CARDS_WITH_BANNERS.filter((card) => card.type === "royalty").length,
+        owned: ALL_CARDS_WITH_BANNERS.filter((card) => card.type === "royalty" && isCardOwned(card)).length,
       },
-      legendary: {
-        total: ALL_CARDS_WITH_BANNERS.filter((card) => card.type === "legendary").length,
-        owned: ALL_CARDS_WITH_BANNERS.filter((card) => card.type === "legendary" && isCardOwned(card)).length,
+      champion: {
+        total: ALL_CARDS_WITH_BANNERS.filter((card) => card.type === "champion").length,
+        owned: ALL_CARDS_WITH_BANNERS.filter((card) => card.type === "champion" && isCardOwned(card)).length,
       },
     }
 
@@ -163,27 +163,27 @@ export const CardGallery: React.FC<CardGalleryProps> = ({ ownedCards, isOpen, on
                   <h4 className="font-medium mb-1">By Type</h4>
                   <div className="space-y-1 text-sm">
                     <div className="flex justify-between">
-                      <span>Nobility:</span>
+                      <span>Champion:</span>
                       <span>
-                        {stats.typeStats.nobility.owned}/{stats.typeStats.nobility.total}
+                        {stats.typeStats.champion.owned}/{stats.typeStats.champion.total}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span>Support:</span>
+                      <span>Royalty:</span>
                       <span>
-                        {stats.typeStats.support.owned}/{stats.typeStats.support.total}
+                        {stats.typeStats.royalty.owned}/{stats.typeStats.royalty.total}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span>Commoner:</span>
+                      <span>Minister:</span>
                       <span>
-                        {stats.typeStats.commoner.owned}/{stats.typeStats.commoner.total}
+                        {stats.typeStats.minister.owned}/{stats.typeStats.minister.total}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span>Legendary:</span>
+                      <span>Soldier:</span>
                       <span>
-                        {stats.typeStats.legendary.owned}/{stats.typeStats.legendary.total}
+                        {stats.typeStats.soldier.owned}/{stats.typeStats.soldier.total}
                       </span>
                     </div>
                   </div>
@@ -210,7 +210,7 @@ export const CardGallery: React.FC<CardGalleryProps> = ({ ownedCards, isOpen, on
               className="px-3 py-2 border rounded-md"
             >
               <option value="all">All Types</option>
-              <option value="nobility">Nobility</option>
+              <option value="royalty">royalty</option>
               <option value="support">Support</option>
               <option value="commoner">Commoner</option>
               <option value="legendary">Legendary</option>

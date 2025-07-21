@@ -185,13 +185,13 @@ export const useMedievalGame = () => {
     for (const card of sortedCards) {
       const cost = card.cost || 0
       if (cost <= remainingResources) {
-        if (!selectedKingCard && (card.type === "nobility" || card.type === "legendary") && !enemy.king) {
+        if (!selectedKingCard && (card.type === "royalty" || card.type === "champion") && !enemy.king) {
           selectedKingCard = card
           remainingResources -= cost
-        } else if (!selectedSupportCard && (card.type === "support" || card.type === "legendary") && !enemy.support) {
+        } else if (!selectedSupportCard && (card.type === "minister" || card.type === "champion") && !enemy.support) {
           selectedSupportCard = card
           remainingResources -= cost
-        } else if (card.type !== "support" && selectedNormalCards.length < 4) {
+        } else if (card.type !== "minister" && selectedNormalCards.length < 4) {
           selectedNormalCards.push(card)
           remainingResources -= cost
         }

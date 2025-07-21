@@ -61,37 +61,37 @@ export const EnhancedCard: React.FC<EnhancedCardProps> = ({
 
   const getTypeInfo = (type: string) => {
     switch (type) {
-      case "nobility":
+      case "royalty":
         return {
           icon: Crown,
           color: "bg-purple-600",
           textColor: "text-purple-200",
           borderColor: "border-purple-400",
-          name: "Nobility",
+          name: "royalty",
         }
-      case "support":
+      case "minister":
         return {
           icon: Users,
           color: "bg-green-600",
           textColor: "text-green-200",
           borderColor: "border-green-400",
-          name: "Support",
+          name: "minister",
         }
-      case "commoner":
+      case "soldier":
         return {
           icon: Swords,
           color: "bg-amber-700",
           textColor: "text-amber-200",
           borderColor: "border-amber-500",
-          name: "Commoner",
+          name: "soldier",
         }
-      case "legendary":
+      case "champion":
         return {
           icon: Gem,
           color: "bg-gradient-to-r from-yellow-500 to-orange-500",
           textColor: "text-yellow-100",
           borderColor: "border-yellow-400",
-          name: "Legendary",
+          name: "champion",
         }
       default:
         return {

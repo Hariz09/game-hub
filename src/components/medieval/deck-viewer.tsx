@@ -20,10 +20,10 @@ export const DeckViewer: React.FC<DeckViewerProps> = ({ player, enemy, isOpen, o
 
   const getTypeStats = (deck: GameCard[]) => {
     const stats = {
-      nobility: 0,
-      support: 0,
-      commoner: 0,
-      legendary: 0,
+      soldier: 0,
+      minister: 0,
+      royalty: 0,
+      champion: 0,
     }
 
     deck.forEach((card) => {
@@ -82,20 +82,20 @@ export const DeckViewer: React.FC<DeckViewerProps> = ({ player, enemy, isOpen, o
               <h3 className="text-xl font-semibold text-blue-800">Player Deck ({player.deck.length} cards)</h3>
               <div className="flex space-x-4 text-sm">
                 <div className="flex items-center space-x-2">
+                  <Star className="w-4 h-4 text-purple-600" />
+                  <span>Champion: {playerTypeStats.champion}</span>
+                </div>
+                <div className="flex items-center space-x-2">
                   <Crown className="w-4 h-4 text-yellow-600" />
-                  <span>Nobility: {playerTypeStats.nobility}</span>
+                  <span>Royalty: {playerTypeStats.royalty}</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Shield className="w-4 h-4 text-blue-600" />
-                  <span>Support: {playerTypeStats.support}</span>
+                  <span>Minister: {playerTypeStats.minister}</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Users className="w-4 h-4 text-green-600" />
-                  <span>Commoner: {playerTypeStats.commoner}</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Star className="w-4 h-4 text-purple-600" />
-                  <span>Legendary: {playerTypeStats.legendary}</span>
+                  <span>Soldier: {playerTypeStats.soldier}</span>
                 </div>
               </div>
             </div>
@@ -175,19 +175,19 @@ export const DeckViewer: React.FC<DeckViewerProps> = ({ player, enemy, isOpen, o
               <div className="flex space-x-4 text-sm">
                 <div className="flex items-center space-x-2">
                   <Crown className="w-4 h-4 text-yellow-600" />
-                  <span>Nobility: {enemyTypeStats.nobility}</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Shield className="w-4 h-4 text-blue-600" />
-                  <span>Support: {enemyTypeStats.support}</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Users className="w-4 h-4 text-green-600" />
-                  <span>Commoner: {enemyTypeStats.commoner}</span>
+                  <span>Champion: {enemyTypeStats.champion}</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Star className="w-4 h-4 text-purple-600" />
-                  <span>Legendary: {enemyTypeStats.legendary}</span>
+                  <span>Royalty: {enemyTypeStats.royalty}</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Shield className="w-4 h-4 text-blue-600" />
+                  <span>Minister: {enemyTypeStats.minister}</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Users className="w-4 h-4 text-green-600" />
+                  <span>Soldier: {enemyTypeStats.soldier}</span>
                 </div>
               </div>
             </div>

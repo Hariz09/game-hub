@@ -1,10 +1,10 @@
 import type { GameCard } from "@/types/medieval"
 
 const baseCards: Omit<GameCard, "id">[] = [
-  // Nobility Cards
+  // royalty Cards
   {
     name: "King Arthur",
-    type: "nobility",
+    type: "royalty",
     rarity: "legendary",
     strength: 8,
     cost: 6,
@@ -14,7 +14,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   },
   {
     name: "Queen Guinevere",
-    type: "nobility",
+    type: "royalty",
     rarity: "epic",
     strength: 6,
     cost: 5,
@@ -24,7 +24,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   },
   {
     name: "Duke of Lancaster",
-    type: "nobility",
+    type: "royalty",
     rarity: "rare",
     strength: 5,
     cost: 4,
@@ -34,7 +34,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   },
   {
     name: "Earl of Warwick",
-    type: "nobility",
+    type: "royalty",
     rarity: "rare",
     strength: 4,
     cost: 3,
@@ -44,7 +44,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   },
   {
     name: "Baron of York",
-    type: "nobility",
+    type: "royalty",
     rarity: "common",
     strength: 3,
     cost: 2,
@@ -54,7 +54,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   },
   {
     name: "Prince of Wales",
-    type: "nobility",
+    type: "royalty",
     rarity: "epic",
     strength: 5,
     cost: 4,
@@ -63,10 +63,10 @@ const baseCards: Omit<GameCard, "id">[] = [
     abilityType: "rally",
   },
 
-  // Support Cards
+  // minister Cards
   {
     name: "Royal Healer",
-    type: "support",
+    type: "minister",
     rarity: "epic",
     strength: 1,
     cost: 3,
@@ -76,7 +76,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   },
   {
     name: "Court Wizard",
-    type: "support",
+    type: "minister",
     rarity: "epic",
     strength: 2,
     cost: 4,
@@ -86,7 +86,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   },
   {
     name: "Royal Guard",
-    type: "support",
+    type: "minister",
     rarity: "rare",
     strength: 2,
     cost: 2,
@@ -96,7 +96,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   },
   {
     name: "Battle Strategist",
-    type: "support",
+    type: "minister",
     rarity: "rare",
     strength: 1,
     cost: 2,
@@ -106,7 +106,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   },
   {
     name: "Castle Priest",
-    type: "support",
+    type: "minister",
     rarity: "common",
     strength: 1,
     cost: 2,
@@ -116,7 +116,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   },
   {
     name: "Royal Treasurer",
-    type: "support",
+    type: "minister",
     rarity: "epic",
     strength: 1,
     cost: 3,
@@ -125,10 +125,10 @@ const baseCards: Omit<GameCard, "id">[] = [
     abilityType: "resource_gain",
   },
 
-  // Commoner Cards
+  // soldier Cards
   {
     name: "Knight Templar",
-    type: "commoner",
+    type: "soldier",
     rarity: "epic",
     strength: 6,
     cost: 4,
@@ -138,7 +138,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   },
   {
     name: "Elite Archer",
-    type: "commoner",
+    type: "soldier",
     rarity: "epic",
     strength: 5,
     cost: 3,
@@ -148,7 +148,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   },
   {
     name: "Heavy Cavalry",
-    type: "commoner",
+    type: "soldier",
     rarity: "rare",
     strength: 4,
     cost: 3,
@@ -158,7 +158,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   },
   {
     name: "Crossbow Squad",
-    type: "commoner",
+    type: "soldier",
     rarity: "rare",
     strength: 3,
     cost: 2,
@@ -168,7 +168,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   },
   {
     name: "Foot Soldier",
-    type: "commoner",
+    type: "soldier",
     rarity: "common",
     strength: 2,
     cost: 1,
@@ -178,7 +178,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   },
   {
     name: "Militia",
-    type: "commoner",
+    type: "soldier",
     rarity: "common",
     strength: 1,
     cost: 1,
@@ -188,7 +188,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   },
   {
     name: "Peasant Levy",
-    type: "commoner",
+    type: "soldier",
     rarity: "common",
     strength: 1,
     cost: 0,
@@ -198,7 +198,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   },
   {
     name: "Village Blacksmith",
-    type: "commoner",
+    type: "soldier",
     rarity: "common",
     strength: 2,
     cost: 2,
@@ -210,7 +210,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   // Legendary Cards
   {
     name: "Merlin the Wise",
-    type: "legendary",
+    type: "champion",
     rarity: "legendary",
     strength: 4,
     cost: 7,
@@ -220,7 +220,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   },
   {
     name: "Lancelot du Lac",
-    type: "legendary",
+    type: "champion",
     rarity: "legendary",
     strength: 9,
     cost: 7,
@@ -230,7 +230,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   },
   {
     name: "The Black Knight",
-    type: "legendary",
+    type: "champion",
     rarity: "legendary",
     strength: 7,
     cost: 6,
@@ -240,7 +240,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   },
   {
     name: "Morgan le Fay",
-    type: "legendary",
+    type: "champion",
     rarity: "legendary",
     strength: 5,
     cost: 6,
@@ -252,7 +252,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   // Additional variety cards
   {
     name: "Royal Merchant",
-    type: "commoner",
+    type: "soldier",
     rarity: "common",
     strength: 1,
     cost: 2,
@@ -262,7 +262,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   },
   {
     name: "Court Assassin",
-    type: "commoner",
+    type: "soldier",
     rarity: "epic",
     strength: 3,
     cost: 4,
@@ -272,7 +272,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   },
   {
     name: "Battle Cleric",
-    type: "support",
+    type: "minister",
     rarity: "epic",
     strength: 2,
     cost: 3,
@@ -282,7 +282,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   },
   {
     name: "Master Economist",
-    type: "support",
+    type: "minister",
     rarity: "legendary",
     strength: 2,
     cost: 5,
@@ -292,7 +292,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   },
   {
     name: "Siege Engineer",
-    type: "commoner",
+    type: "soldier",
     rarity: "epic",
     strength: 3,
     cost: 3,
@@ -302,7 +302,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   },
   {
     name: "Royal Diplomat",
-    type: "nobility",
+    type: "royalty",
     rarity: "epic",
     strength: 2,
     cost: 4,
@@ -312,7 +312,7 @@ const baseCards: Omit<GameCard, "id">[] = [
   },
   {
     name: "War Engineer",
-    type: "commoner",
+    type: "soldier",
     rarity: "rare",
     strength: 4,
     cost: 4,
@@ -326,7 +326,7 @@ const grandTournamentCards: Omit<GameCard, "id">[] = [
   // 1 Legendary
   {
     name: "King Theron",
-    type: "nobility",
+    type: "royalty",
     rarity: "legendary",
     strength: 10,
     cost: 8,
@@ -338,7 +338,7 @@ const grandTournamentCards: Omit<GameCard, "id">[] = [
   // 2 Epic
   {
     name: "Lady Isolde",
-    type: "legendary",
+    type: "champion",
     rarity: "epic",
     strength: 8,
     cost: 7,
@@ -348,7 +348,7 @@ const grandTournamentCards: Omit<GameCard, "id">[] = [
   },
   {
     name: "Sir Kael",
-    type: "nobility",
+    type: "royalty",
     rarity: "epic",
     strength: 7,
     cost: 5,
@@ -360,7 +360,7 @@ const grandTournamentCards: Omit<GameCard, "id">[] = [
   // 6 Rare
   {
     name: "Elara",
-    type: "commoner",
+    type: "soldier",
     rarity: "rare",
     strength: 6,
     cost: 4,
@@ -370,7 +370,7 @@ const grandTournamentCards: Omit<GameCard, "id">[] = [
   },
   {
     name: "Gareth",
-    type: "commoner",
+    type: "soldier",
     rarity: "rare",
     strength: 5,
     cost: 4,
@@ -380,7 +380,7 @@ const grandTournamentCards: Omit<GameCard, "id">[] = [
   },
   {
     name: "Bronn",
-    type: "commoner",
+    type: "soldier",
     rarity: "rare",
     strength: 6,
     cost: 3,
@@ -390,7 +390,7 @@ const grandTournamentCards: Omit<GameCard, "id">[] = [
   },
   {
     name: "Lynette",
-    type: "support",
+    type: "minister",
     rarity: "rare",
     strength: 2,
     cost: 3,
@@ -400,7 +400,7 @@ const grandTournamentCards: Omit<GameCard, "id">[] = [
   },
   {
     name: "Finnian",
-    type: "support",
+    type: "minister",
     rarity: "rare",
     strength: 1,
     cost: 2,
@@ -410,7 +410,7 @@ const grandTournamentCards: Omit<GameCard, "id">[] = [
   },
   {
     name: "Marcus",
-    type: "nobility",
+    type: "royalty",
     rarity: "rare",
     strength: 5,
     cost: 4,
@@ -422,7 +422,7 @@ const grandTournamentCards: Omit<GameCard, "id">[] = [
   // 11 Common
   {
     name: "City Guard",
-    type: "commoner",
+    type: "soldier",
     rarity: "common",
     strength: 3,
     cost: 2,
@@ -432,7 +432,7 @@ const grandTournamentCards: Omit<GameCard, "id">[] = [
   },
   {
     name: "Court Mage",
-    type: "support",
+    type: "minister",
     rarity: "common",
     strength: 1,
     cost: 2,
@@ -442,7 +442,7 @@ const grandTournamentCards: Omit<GameCard, "id">[] = [
   },
   {
     name: "Arena Fighter",
-    type: "commoner",
+    type: "soldier",
     rarity: "common",
     strength: 4,
     cost: 3,
@@ -452,7 +452,7 @@ const grandTournamentCards: Omit<GameCard, "id">[] = [
   },
   {
     name: "Tournament Scout",
-    type: "commoner",
+    type: "soldier",
     rarity: "common",
     strength: 2,
     cost: 1,
@@ -462,7 +462,7 @@ const grandTournamentCards: Omit<GameCard, "id">[] = [
   },
   {
     name: "Royal Page",
-    type: "support",
+    type: "minister",
     rarity: "common",
     strength: 1,
     cost: 1,
@@ -472,7 +472,7 @@ const grandTournamentCards: Omit<GameCard, "id">[] = [
   },
   {
     name: "Squire",
-    type: "commoner",
+    type: "soldier",
     rarity: "common",
     strength: 2,
     cost: 1,
@@ -482,7 +482,7 @@ const grandTournamentCards: Omit<GameCard, "id">[] = [
   },
   {
     name: "Herald",
-    type: "support",
+    type: "minister",
     rarity: "common",
     strength: 1,
     cost: 2,
@@ -492,7 +492,7 @@ const grandTournamentCards: Omit<GameCard, "id">[] = [
   },
   {
     name: "Stable Boy",
-    type: "commoner",
+    type: "soldier",
     rarity: "common",
     strength: 1,
     cost: 1,
@@ -502,7 +502,7 @@ const grandTournamentCards: Omit<GameCard, "id">[] = [
   },
   {
     name: "Apprentice",
-    type: "support",
+    type: "minister",
     rarity: "common",
     strength: 1,
     cost: 1,
@@ -512,7 +512,7 @@ const grandTournamentCards: Omit<GameCard, "id">[] = [
   },
   {
     name: "Guard Captain",
-    type: "commoner",
+    type: "soldier",
     rarity: "common",
     strength: 3,
     cost: 2,
@@ -522,7 +522,7 @@ const grandTournamentCards: Omit<GameCard, "id">[] = [
   },
   {
     name: "Merchant",
-    type: "commoner",
+    type: "soldier",
     rarity: "common",
     strength: 1,
     cost: 2,

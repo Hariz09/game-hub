@@ -4,7 +4,7 @@ import type React from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { X, Crown, Shield, Users, Heart, Sword, Zap, Target, Gem, Swords } from "lucide-react"
+import { X, Crown, Shield, Users, Heart, Sword, Zap, Target, Gem, Swords, Star } from "lucide-react"
 
 interface HelpModalProps {
   isOpen: boolean
@@ -74,26 +74,32 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                 </div>
 
                 <div className="space-y-4">
-                  <h4 className="font-semibold text-amber-700">Rarity & Quality</h4>
+                  <h4 className="font-semibold text-amber-700">Rarity Colors</h4>
                   <div className="space-y-3">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-4 h-4 bg-gradient-to-r from-yellow-400 to-amber-500 rounded border border-yellow-600 flex-shrink-0"></div>
-                      <div>
-                        <strong>Legendary:</strong> Golden gradient with ornate decorations and powerful effects
-                      </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-4 h-4 bg-gradient-to-r from-yellow-400 to-amber-500 rounded border border-yellow-600 flex-shrink-0"></div>
+                    <div>
+                    <strong>Legendary</strong> - The most revered champions of the realm, wielding unmatched power among their noble bloodlines and warrior orders.
                     </div>
-                    <div className="flex items-center space-x-3">
-                      <div className="w-4 h-4 bg-gradient-to-r from-blue-400 to-cyan-500 rounded border border-blue-600 flex-shrink-0"></div>
-                      <div>
-                        <strong>Rare:</strong> Blue-cyan gradient with enhanced visual effects
-                      </div>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-4 h-4 bg-gradient-to-r from-purple-500 to-fuchsia-600 rounded border border-purple-700 flex-shrink-0"></div>
+                    <div>
+                    <strong>Epic</strong> - Though not the mightiest in pure strength, these legendary figures bestow mighty enchantments and tactical prowess upon your forces.
                     </div>
-                    <div className="flex items-center space-x-3">
-                      <div className="w-4 h-4 bg-gradient-to-r from-gray-400 to-slate-500 rounded border border-gray-600 flex-shrink-0"></div>
-                      <div>
-                        <strong>Common:</strong> Gray gradient with simple but elegant design
-                      </div>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-4 h-4 bg-gradient-to-r from-blue-400 to-cyan-500 rounded border border-blue-600 flex-shrink-0"></div>
+                    <div>
+                    <strong>Rare</strong> - Formidable allies with mysterious abilities and considerable might, yet their allegiance wavers more easily than their betters.
                     </div>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-4 h-4 bg-gradient-to-r from-gray-400 to-slate-500 rounded border border-gray-600 flex-shrink-0"></div>
+                    <div>
+                    <strong>Common</strong> - Simple folk and humble warriors, yet even the lowliest peasant can turn the tide of battle when wielded with cunning.
+                    </div>
+                  </div>
                   </div>
                 </div>
               </div>
@@ -193,26 +199,26 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-3">
-                  <div className="flex items-center space-x-2">
-                    <Crown className="w-5 h-5 text-purple-600" />
-                    <Badge className="bg-purple-100 text-purple-800">Nobility</Badge>
-                    <span className="text-sm">Can be played as Kings. High power, moderate loyalty.</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Users className="w-5 h-5 text-green-600" />
-                    <Badge className="bg-green-100 text-green-800">Support</Badge>
-                    <span className="text-sm">Can be played as Support units. Provide ongoing benefits.</span>
-                  </div>
-                </div>
                 <div className="space-y-3">
                   <div className="flex items-center space-x-2">
-                    <Swords className="w-5 h-5 text-amber-700" />
-                    <Badge className="bg-amber-100 text-amber-800">Commoner</Badge>
+                    <Users className="w-5 h-5 text-green-600" />
+                    <Badge className="bg-green-100 text-green-800">Soldier</Badge>
                     <span className="text-sm">Regular army units. Cannot be played as Support.</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Gem className="w-5 h-5 text-yellow-600" />
-                    <Badge className="bg-yellow-100 text-yellow-800">Legendary</Badge>
+                    <Shield className="w-5 h-5 text-blue-600" />
+                    <Badge className="bg-blue-100 text-blue-800">Minister</Badge>
+                    <span className="text-sm">Can be played as Support units. Provide ongoing benefits.</span>
+                  </div>
+                </div>
+                  <div className="flex items-center space-x-2">
+                    <Crown className="w-5 h-5 text-yellow-600" />
+                    <Badge className="bg-yellow-100 text-yellow-800">Royalty</Badge>
+                    <span className="text-sm">Can be played as Kings. High power, moderate loyalty.</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Star className="w-5 h-5 text-purple-600" />
+                    <Badge className="bg-purple-100 text-purple-800">Champion</Badge>
                     <span className="text-sm">Can be played in any role. Powerful but expensive.</span>
                   </div>
                 </div>
