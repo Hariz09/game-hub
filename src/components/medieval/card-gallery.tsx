@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Search, X } from "lucide-react"
 import type { GameCard } from "@/types/medieval"
 import { EnhancedCard } from "./enhanced-card"
-import { ALL_CARDS } from "@/data/medieval-cards"
+import { ALL_CARDS_WITH_BANNERS } from "@/data/medieval-cards"
 
 interface CardGalleryProps {
   ownedCards: GameCard[]
@@ -32,7 +32,7 @@ export const CardGallery: React.FC<CardGalleryProps> = ({ ownedCards, isOpen, on
   }
 
   // Filter cards based on search, type, rarity, and ownership
-  const filteredCards = ALL_CARDS.filter((card) => {
+  const filteredCards = ALL_CARDS_WITH_BANNERS.filter((card) => {
     const matchesSearch = card.name.toLowerCase().includes(searchTerm.toLowerCase())
     const matchesType = filterType === "all" || card.type === filterType
     const matchesRarity = filterRarity === "all" || card.rarity === filterRarity
@@ -46,41 +46,41 @@ export const CardGallery: React.FC<CardGalleryProps> = ({ ownedCards, isOpen, on
 
   // Get collection stats
   const getCollectionStats = () => {
-    const total = ALL_CARDS.length
-    const owned = ALL_CARDS.filter((card) => isCardOwned(card)).length
+    const total = ALL_CARDS_WITH_BANNERS.length
+    const owned = ALL_CARDS_WITH_BANNERS.filter((card) => isCardOwned(card)).length
     const completion = Math.round((owned / total) * 100)
 
     const rarityStats = {
       common: {
-        total: ALL_CARDS.filter((card) => card.rarity === "common").length,
-        owned: ALL_CARDS.filter((card) => card.rarity === "common" && isCardOwned(card)).length,
+        total: ALL_CARDS_WITH_BANNERS.filter((card) => card.rarity === "common").length,
+        owned: ALL_CARDS_WITH_BANNERS.filter((card) => card.rarity === "common" && isCardOwned(card)).length,
       },
       rare: {
-        total: ALL_CARDS.filter((card) => card.rarity === "rare").length,
-        owned: ALL_CARDS.filter((card) => card.rarity === "rare" && isCardOwned(card)).length,
+        total: ALL_CARDS_WITH_BANNERS.filter((card) => card.rarity === "rare").length,
+        owned: ALL_CARDS_WITH_BANNERS.filter((card) => card.rarity === "rare" && isCardOwned(card)).length,
       },
       legendary: {
-        total: ALL_CARDS.filter((card) => card.rarity === "legendary").length,
-        owned: ALL_CARDS.filter((card) => card.rarity === "legendary" && isCardOwned(card)).length,
+        total: ALL_CARDS_WITH_BANNERS.filter((card) => card.rarity === "legendary").length,
+        owned: ALL_CARDS_WITH_BANNERS.filter((card) => card.rarity === "legendary" && isCardOwned(card)).length,
       },
     }
 
     const typeStats = {
       nobility: {
-        total: ALL_CARDS.filter((card) => card.type === "nobility").length,
-        owned: ALL_CARDS.filter((card) => card.type === "nobility" && isCardOwned(card)).length,
+        total: ALL_CARDS_WITH_BANNERS.filter((card) => card.type === "nobility").length,
+        owned: ALL_CARDS_WITH_BANNERS.filter((card) => card.type === "nobility" && isCardOwned(card)).length,
       },
       support: {
-        total: ALL_CARDS.filter((card) => card.type === "support").length,
-        owned: ALL_CARDS.filter((card) => card.type === "support" && isCardOwned(card)).length,
+        total: ALL_CARDS_WITH_BANNERS.filter((card) => card.type === "support").length,
+        owned: ALL_CARDS_WITH_BANNERS.filter((card) => card.type === "support" && isCardOwned(card)).length,
       },
       commoner: {
-        total: ALL_CARDS.filter((card) => card.type === "commoner").length,
-        owned: ALL_CARDS.filter((card) => card.type === "commoner" && isCardOwned(card)).length,
+        total: ALL_CARDS_WITH_BANNERS.filter((card) => card.type === "commoner").length,
+        owned: ALL_CARDS_WITH_BANNERS.filter((card) => card.type === "commoner" && isCardOwned(card)).length,
       },
       legendary: {
-        total: ALL_CARDS.filter((card) => card.type === "legendary").length,
-        owned: ALL_CARDS.filter((card) => card.type === "legendary" && isCardOwned(card)).length,
+        total: ALL_CARDS_WITH_BANNERS.filter((card) => card.type === "legendary").length,
+        owned: ALL_CARDS_WITH_BANNERS.filter((card) => card.type === "legendary" && isCardOwned(card)).length,
       },
     }
 

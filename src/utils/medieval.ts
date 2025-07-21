@@ -15,6 +15,7 @@ export const isCardDeployed = (card: GameCard, targetPlayer: Player): boolean =>
   return deployedCardIds.includes(card.id)
 }
 
+// New utility function to check if a card is currently in hand or deployed
 export const isCardActive = (card: GameCard, targetPlayer: Player): boolean => {
   const inHand = targetPlayer.hand.some((c) => c.id === card.id)
   const deployed = isCardDeployed(card, targetPlayer)

@@ -60,7 +60,7 @@ export const DeckBuilder: React.FC<DeckBuilderProps> = ({
     const stats = {
       total: selectedDeck.length,
       types: { nobility: 0, support: 0, commoner: 0, legendary: 0 },
-      rarities: { common: 0, rare: 0, legendary: 0 },
+      rarities: { common: 0, rare: 0, epic:0, legendary: 0 },
       avgCost: 0,
     }
 
@@ -79,7 +79,7 @@ export const DeckBuilder: React.FC<DeckBuilderProps> = ({
     // Sort cards by rarity (legendary > rare > common) and then by type
     const sortedCards = [...ownedCards].sort((a, b) => {
       // First sort by rarity
-      const rarityOrder = { legendary: 3, rare: 2, common: 1 }
+      const rarityOrder = { legendary: 4, epic:3, rare: 2, common: 1 }
       const rarityDiff = rarityOrder[b.rarity] - rarityOrder[a.rarity]
 
       if (rarityDiff !== 0) return rarityDiff

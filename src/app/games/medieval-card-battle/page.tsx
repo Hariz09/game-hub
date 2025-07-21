@@ -6,9 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
-import { Star, Lock, CheckCircle, Trophy, RotateCcw, BookOpen } from "lucide-react"
+import { Lock, CheckCircle, Trophy, RotateCcw, BookOpen, Coins, Sparkles, Swords } from "lucide-react"
 import { STAGE_CONFIGS } from "@/data/stage-configs"
-import { getPlayerProgress, resetProgress } from "@/utils/player-progress"
+import { getPlayerProgress, resetProgress } from "@/lib/medieval/player-progress"
 import type { PlayerProgress, StageConfig } from "@/types/medieval"
 import { EnhancedCard } from "@/components/medieval/enhanced-card"
 import { CardGallery } from "@/components/medieval/card-gallery"
@@ -34,7 +34,7 @@ export default function CampaignPage() {
   }, [])
 
   const handleStageSelect = (stageId: string) => {
-    router.push(`medieval-card-battle/stage/${stageId}`)
+    router.push(`/games/medieval-card-battle/stage/${stageId}`)
   }
 
   const handleResetProgress = () => {
@@ -62,7 +62,7 @@ export default function CampaignPage() {
 
     const stats = {
       total: progress.ownedCards.length,
-      byRarity: { common: 0, rare: 0, legendary: 0 },
+      byRarity: { common: 0, rare: 0, epic: 0, legendary: 0 },
     }
 
     progress.ownedCards.forEach((card) => {
@@ -118,12 +118,16 @@ export default function CampaignPage() {
           <Card className="bg-purple-50 border-purple-200">
             <CardHeader className="pb-3">
               <CardTitle className="text-purple-800 flex items-center">
-                <Star className="w-5 h-5 mr-2" />
-                Card Collection
+                <Coins className="w-5 h-5 mr-2" />
+                Resources
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span>Gold:</span>
+                  <span className="font-bold text-amber-600">{progress.gold}</span>
+                </div>
                 <div className="flex justify-between text-sm">
                   <span>Total Cards:</span>
                   <span className="font-bold">{collectionStats.total}</span>
@@ -156,6 +160,20 @@ export default function CampaignPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
+                <Button
+                  onClick={() => router.push("/games/medieval-card-battle/dungeon")}
+                  className="w-full bg-gray-700 hover:bg-gray-800 text-white"
+                >
+                  <Swords className="w-4 h-4 mr-2" />
+                  Explore Dungeons
+                </Button>
+                <Button
+                  onClick={() => router.push("/games/medieval-card-battle/gacha")}
+                  className="w-full bg-purple-600 hover:bg-purple-700 text-white"
+                >
+                  <Sparkles className="w-4 h-4 mr-2" />
+                  Card Gacha
+                </Button>
                 <Button
                   onClick={handleResetProgress}
                   variant="outline"

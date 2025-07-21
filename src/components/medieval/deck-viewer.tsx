@@ -37,6 +37,7 @@ export const DeckViewer: React.FC<DeckViewerProps> = ({ player, enemy, isOpen, o
     const stats = {
       common: 0,
       rare: 0,
+      epic: 0,
       legendary: 0,
     }
 

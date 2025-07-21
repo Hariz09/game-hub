@@ -24,7 +24,7 @@ import {
   canPlayAsNormal,
 } from "@/utils/medieval"
 import { STAGE_CONFIGS } from "@/data/stage-configs"
-import { getPlayerProgress, addCardsToCollection, completeStage } from "@/utils/player-progress"
+import { getPlayerProgress, addCardsToCollection, completeStage } from "@/lib/medieval/player-progress"
 import type { StageConfig, PlayerProgress, GameCard } from "@/types/medieval"
 import Sidebar from "@/components/sidebar/Sidebar"
 
@@ -593,8 +593,8 @@ export default function StageBattlePage() {
   // Battle screen (same as original but with stage context)
   return (
     <div className="min-h-screen bg-gradient-to-b from-amber-50 to-amber-100 p-4">
+      <Sidebar />
       <div className="max-w-7xl mx-auto">
-        <Sidebar />
         {/* Header with stage info */}
         <div className="text-center mb-6">
           <div className="flex justify-between items-start mb-4">

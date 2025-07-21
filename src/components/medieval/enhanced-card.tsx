@@ -254,7 +254,7 @@ export const EnhancedCard: React.FC<EnhancedCardProps> = ({
         </CardContent>
 
         {/* Texture overlays */}
-        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/30 rounded-lg pointer-events-none"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-black/5 to-black/30 rounded-lg pointer-events-none"></div>
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent rounded-lg pointer-events-none"></div>
 
         {/* Pattern overlay */}
@@ -364,7 +364,7 @@ export const EnhancedCard: React.FC<EnhancedCardProps> = ({
         </CardContent>
 
         {/* Texture overlays */}
-        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/30 rounded-lg pointer-events-none"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-black/5 to-black/30 rounded-lg pointer-events-none"></div>
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent rounded-lg pointer-events-none"></div>
 
         {/* Pattern overlay */}
