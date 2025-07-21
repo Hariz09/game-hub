@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { X, Users, Crown, Shield, Star } from "lucide-react"
 import type { GameCard, Player } from "@/types/medieval"
-import { EnhancedCardComponent } from "./card-component"
+import { EnhancedCard } from "./enhanced-card"
 
 interface DeckViewerProps {
   player: Player
@@ -156,7 +156,9 @@ export const DeckViewer: React.FC<DeckViewerProps> = ({ player, enemy, isOpen, o
             {/* Player Cards Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
               {player.deck.map((card, index) => (
-                <EnhancedCardComponent key={`player-deck-${card.id}-${index}`} card={card} />
+                <div key={`player-deck-${card.id}-${index}`} className="h-[280px]">
+                  <EnhancedCard card={card} />
+                </div>
               ))}
             </div>
           </div>
@@ -242,7 +244,9 @@ export const DeckViewer: React.FC<DeckViewerProps> = ({ player, enemy, isOpen, o
             {/* Enemy Cards Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
               {enemy.deck.map((card, index) => (
-                <EnhancedCardComponent key={`enemy-deck-${card.id}-${index}`} card={card} />
+                <div key={`enemy-deck-${card.id}-${index}`} className="h-[280px]">
+                  <EnhancedCard card={card} />
+                </div>
               ))}
             </div>
           </div>

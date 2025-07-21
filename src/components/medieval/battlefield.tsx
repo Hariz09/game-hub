@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Crown, Shield, ArrowUp } from "lucide-react"
 import type { GameCard, Player } from "@/types/medieval"
-import { EnhancedCardComponent } from "./card-component"
+import { EnhancedCard } from "./enhanced-card"
 
 interface BattlefieldProps {
   player: Player
@@ -50,12 +50,16 @@ export const Battlefield: React.FC<BattlefieldProps> = ({
             </h4>
             {selectedKing ? (
               <div className="space-y-2">
-                <EnhancedCardComponent card={selectedKing} isSelected={true} onClick={onDeselectKing} />
+                <div className="h-[240px]">
+                  <EnhancedCard card={selectedKing} isSelected={true} onClick={onDeselectKing} size="small" />
+                </div>
                 <div className="text-xs text-center text-blue-600 font-medium">Selected for deployment</div>
               </div>
             ) : player.king ? (
               <div className="space-y-2">
-                <EnhancedCardComponent card={player.king} />
+                <div className="h-[240px]">
+                  <EnhancedCard card={player.king} size="small" />
+                </div>
                 {isPlayer && gamePhase === "playerTurn" && onRetrieveKing && (
                   <Button
                     size="sm"
@@ -69,7 +73,9 @@ export const Battlefield: React.FC<BattlefieldProps> = ({
                 )}
               </div>
             ) : (
-              <div className={`p-4 border-2 border-dashed ${borderColor} rounded text-center ${emptyTextColor}`}>
+              <div
+                className={`p-4 border-2 border-dashed ${borderColor} rounded text-center ${emptyTextColor} h-[240px] flex items-center justify-center`}
+              >
                 No King
               </div>
             )}
@@ -83,12 +89,16 @@ export const Battlefield: React.FC<BattlefieldProps> = ({
             </h4>
             {selectedSupport ? (
               <div className="space-y-2">
-                <EnhancedCardComponent card={selectedSupport} isSelected={true} onClick={onDeselectSupport} />
+                <div className="h-[240px]">
+                  <EnhancedCard card={selectedSupport} isSelected={true} onClick={onDeselectSupport} size="small" />
+                </div>
                 <div className="text-xs text-center text-blue-600 font-medium">Selected for deployment</div>
               </div>
             ) : player.support ? (
               <div className="space-y-2">
-                <EnhancedCardComponent card={player.support} />
+                <div className="h-[240px]">
+                  <EnhancedCard card={player.support} size="small" />
+                </div>
                 {isPlayer && gamePhase === "playerTurn" && onRetrieveSupport && (
                   <Button
                     size="sm"
@@ -102,7 +112,9 @@ export const Battlefield: React.FC<BattlefieldProps> = ({
                 )}
               </div>
             ) : (
-              <div className={`p-4 border-2 border-dashed ${borderColor} rounded text-center ${emptyTextColor}`}>
+              <div
+                className={`p-4 border-2 border-dashed ${borderColor} rounded text-center ${emptyTextColor} h-[240px] flex items-center justify-center`}
+              >
                 No Support
               </div>
             )}

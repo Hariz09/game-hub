@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Crown, Shield, Trash2, SkipForward } from "lucide-react"
 import type { GameCard, Player } from "@/types/medieval"
-import { EnhancedCardComponent } from "./card-component"
+import { EnhancedCard } from "./enhanced-card"
 import { getAvailableHandCards, canPlayCard, canPlayAsKing, canPlayAsSupport } from "@/utils/medieval"
 
 interface PlayerHandProps {
@@ -61,12 +61,14 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
 
               return (
                 <div key={card.id} className="space-y-2">
-                  <EnhancedCardComponent
-                    card={card}
-                    isSelected={isSelected}
-                    canAfford={canAfford}
-                    onClick={() => onCardSelect(card, "normal")}
-                  />
+                  <div className="h-[280px]">
+                    <EnhancedCard
+                      card={card}
+                      isSelected={isSelected}
+                      canAfford={canAfford}
+                      onClick={() => onCardSelect(card, "normal")}
+                    />
+                  </div>
                   <div className="flex space-x-1">
                     {canPlayAsKing(card) && !player.king && !selectedKing && (
                       <Button
