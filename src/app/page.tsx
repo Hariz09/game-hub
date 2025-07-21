@@ -92,6 +92,18 @@ const games: GameLink[] = [
     thumbnail: '/images/thumbnails/uno.png',
     tags: ['Card Game', 'Party', 'Classic', 'Fast-paced']
   },
+  
+  {
+    id: 'medieval-card-battle',
+    title: 'Medieval Card Battle',
+    description: 'WIP',
+    icon: Dice1,
+    href: '/games/medieval-card-battle',
+    players: '1',
+    duration: '15-30m',
+    thumbnail: '/placeholder.png',
+    tags: ['Card Game']
+  },
 ];
 
 const comingSoonGames: ComingSoonGame[] = [
