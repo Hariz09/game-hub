@@ -327,19 +327,21 @@ export const ALL_CARDS = baseCards.map((card, index) => ({
   id: `card_${card.name.replace(/\s+/g, "_").toLowerCase()}_${index}`,
 }))
 
+// Update the createDeckFromCards function to ensure unique cards
 export const createDeckFromCards = (cards: GameCard[], playerId: string): GameCard[] => {
-  return cards.map((card, index) => ({
+  // Remove duplicates by name and create unique IDs
+  const uniqueCards = cards.filter((card, index, self) => index === self.findIndex((c) => c.name === card.name))
+
+  return uniqueCards.map((card, index) => ({
     ...card,
     id: `${playerId}_${card.name.replace(/\s+/g, "_").toLowerCase()}_${index}`,
   }))
 }
 
+// Update STARTER_CARDS to remove duplicates
 export const STARTER_CARDS = [
   ALL_CARDS.find((c) => c.name === "Foot Soldier")!,
-  ALL_CARDS.find((c) => c.name === "Foot Soldier")!,
   ALL_CARDS.find((c) => c.name === "Militia")!,
-  ALL_CARDS.find((c) => c.name === "Militia")!,
-  ALL_CARDS.find((c) => c.name === "Peasant Levy")!,
   ALL_CARDS.find((c) => c.name === "Peasant Levy")!,
   ALL_CARDS.find((c) => c.name === "Village Blacksmith")!,
   ALL_CARDS.find((c) => c.name === "Castle Priest")!,
@@ -350,6 +352,9 @@ export const STARTER_CARDS = [
   ALL_CARDS.find((c) => c.name === "Royal Merchant")!,
   ALL_CARDS.find((c) => c.name === "Battle Strategist")!,
   ALL_CARDS.find((c) => c.name === "Earl of Warwick")!,
+  ALL_CARDS.find((c) => c.name === "Royal Healer")!,
+  ALL_CARDS.find((c) => c.name === "Elite Archer")!,
+  ALL_CARDS.find((c) => c.name === "Knight Templar")!,
 ]
 
 export const createEnhancedDeck = (playerId: string): GameCard[] => {

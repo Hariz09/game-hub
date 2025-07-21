@@ -2,10 +2,10 @@
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react" // Import useRef
 import type { Player, GamePhase, GameCard, EnemySelection } from "@/types/medieval"
 import { createEnhancedDeck } from "@/data/medieval-cards"
-import { getAvailableHandCards, canPlayCard, calculateStrength } from "@/utils/medieval"
+import { getAvailableHandCards, canPlayCard, calculateStrength, isCardActive } from "@/utils/medieval"
 
 export const useMedievalGame = () => {
   const [gamePhase, setGamePhase] = useState<GamePhase>("enemySelection")
@@ -54,34 +54,46 @@ export const useMedievalGame = () => {
   })
   const [showEnemySelection, setShowEnemySelection] = useState(false)
 
-  // Initialize game
+  // Use a ref to ensure initial setup runs only once
+  const initialSetupRef = useRef(false)
+
+  // Initialize game and draw initial cards
   useEffect(() => {
-    if (!isInitialized) {
+    if (!initialSetupRef.current) {
+      initialSetupRef.current = true // Mark as run
+
       const playerDeck = createEnhancedDeck("player")
       const enemyDeck = createEnhancedDeck("enemy")
 
       setPlayer((prev) => ({ ...prev, deck: playerDeck }))
       setEnemy((prev) => ({ ...prev, deck: enemyDeck }))
-      setIsInitialized(true)
-    }
-  }, [isInitialized])
 
-  useEffect(() => {
-    if (isInitialized && player.deck.length > 0 && enemy.deck.length > 0 && player.hand.length === 0) {
-      drawCards(4, "player")
-      drawCards(4, "enemy")
-    }
-  }, [isInitialized, player.deck, enemy.deck, player.hand.length])
+      // Draw initial cards directly here using functional updates
+      // This ensures the state is updated within the same render cycle for initial setup
+      setPlayer((prev) => {
+        const drawableCards = prev.deck.filter((card) => !isCardActive(card, prev))
+        const cardsToDraw = drawableCards.slice(0, 4)
+        return { ...prev, hand: [...prev.hand, ...cardsToDraw] }
+      })
 
+      setEnemy((prev) => {
+        const drawableCards = prev.deck.filter((card) => !isCardActive(card, prev))
+        const cardsToDraw = drawableCards.slice(0, 4)
+        return { ...prev, hand: [...prev.hand, ...cardsToDraw] }
+      })
+
+      setIsInitialized(true) // Set initialized to true after all initial setup
+    }
+  }, []) // Empty dependency array ensures this runs only once on mount
+
+  // The drawCards function is now only used for in-game draws (e.g., start of turn)
   const drawCards = (count: number, playerId: string) => {
     const targetPlayer = playerId === "player" ? player : enemy
     const setTargetPlayer = playerId === "player" ? setPlayer : setEnemy
 
-    const availableCards = targetPlayer.deck.filter(
-      (card) => !targetPlayer.hand.some((handCard) => handCard.id === card.id),
-    )
+    const drawableCardsInDeck = targetPlayer.deck.filter((card) => !isCardActive(card, targetPlayer))
 
-    const cardsToDraw = availableCards.slice(0, count)
+    const cardsToDraw = drawableCardsInDeck.slice(0, count)
 
     setTargetPlayer((prev) => ({
       ...prev,
@@ -275,7 +287,7 @@ export const useMedievalGame = () => {
     setShowEnemySelection,
 
     // Functions
-    drawCards,
+    drawCards, // This drawCards is now for subsequent draws, not initial
     calculateResourceCost,
     applyCardAbilities,
     enemyAI,
