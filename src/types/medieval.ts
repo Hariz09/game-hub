@@ -1,32 +1,55 @@
-// Enhanced Types
-export type CardType = 'nobility' | 'support' | 'commoner' | 'legendary';
-export type AbilityType = 'heal' | 'boost' | 'direct_damage' | 'shield' | 'rally' | 'assassinate';
+export type CardType = "nobility" | "support" | "commoner" | "legendary"
+export type CardRarity = "common" | "rare" | "legendary"
+export type AbilityType = "heal" | "boost" | "direct_damage" | "shield" | "rally" | "assassinate" | "resource_gain"
+export type GamePhase = "enemySelection" | "playerTurn" | "battle" | "gameOver"
 
 export interface GameCard {
-  id: string;
-  name: string;
-  strength: number;
-  loyalty?: number;
-  type: CardType;
-  ability?: string;
-  abilityType?: AbilityType;
-  cost?: number; // Resource cost to play
-  rarity?: 'common' | 'rare' | 'legendary';
+  id: string
+  name: string
+  type: CardType
+  rarity: CardRarity
+  strength: number
+  cost?: number
+  loyalty: number
+  ability: string
+  abilityType: AbilityType
 }
 
 export interface Player {
-  id: string;
-  name: string;
-  hp: number;
-  maxHp: number;
-  resources: number; // For playing cards
-  deck: GameCard[];
-  hand: GameCard[];
-  playedCards: GameCard[];
-  king: GameCard | null;
-  support: GameCard | null;
-  shield: number; // Temporary protection
-  effects: string[]; // Active status effects
+  id: string
+  name: string
+  hp: number
+  maxHp: number
+  resources: number
+  deck: GameCard[]
+  hand: GameCard[]
+  playedCards: GameCard[]
+  king: GameCard | null
+  support: GameCard | null
+  shield: number
+  effects: string[]
 }
 
-export type GamePhase = 'playerTurn' | 'enemyTurn' | 'battle' | 'gameOver';
+export interface EnemySelection {
+  normalCards: GameCard[]
+  kingCard: GameCard | null
+  supportCard: GameCard | null
+}
+
+export interface StageConfig {
+  id: string
+  name: string
+  description: string
+  enemyName: string
+  enemyDeck: GameCard[]
+  difficulty: "easy" | "medium" | "hard"
+  rewards: GameCard[]
+  unlocked: boolean
+  completed: boolean
+}
+
+export interface PlayerProgress {
+  ownedCards: GameCard[]
+  completedStages: string[]
+  currentStage: number
+}
