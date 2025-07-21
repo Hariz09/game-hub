@@ -4,7 +4,7 @@ import type React from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { X, Crown, Shield, Users, Star, Heart, Sword, Zap, Target } from "lucide-react"
+import { X, Crown, Shield, Users, Heart, Sword, Zap, Target, Gem, Swords } from "lucide-react"
 
 interface HelpModalProps {
   isOpen: boolean
@@ -16,7 +16,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-lg max-w-5xl w-full max-h-[90vh] overflow-y-auto">
         <div className="sticky top-0 bg-white border-b p-4 flex items-center justify-between">
           <h2 className="text-2xl font-bold text-amber-800">Game Help & Mechanics</h2>
           <Button onClick={onClose} variant="outline" size="sm">
@@ -25,6 +25,113 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
         </div>
 
         <div className="p-6 space-y-6">
+          {/* Card Design Explanation */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-amber-800">Card Design & Elements</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-sm text-gray-600 mb-4">
+                Each card is a masterpiece of medieval artistry, designed to convey power, rarity, and tactical
+                information at a glance.
+              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <h4 className="font-semibold text-amber-700">Visual Elements</h4>
+                  <div className="space-y-3">
+                    <div className="flex items-start space-x-3">
+                      <div className="w-6 h-6 bg-gradient-to-br from-amber-600 to-amber-800 border-2 border-amber-200 rounded-full flex items-center justify-center shadow-md flex-shrink-0">
+                        <span className="text-white font-bold text-xs">5</span>
+                      </div>
+                      <div>
+                        <strong>Cost Indicator:</strong> The golden orb in the top-right shows the resource cost to play
+                        the card.
+                      </div>
+                    </div>
+
+                    <div className="flex items-start space-x-3">
+                      <div className="bg-purple-600 rounded-full px-2 py-1 border border-purple-400 shadow-sm flex items-center gap-1 flex-shrink-0">
+                        <Crown className="w-2.5 h-2.5 text-purple-200" />
+                        <span className="text-purple-200 text-[8px] font-semibold uppercase">Nobility</span>
+                      </div>
+                      <div>
+                        <strong>Type Badge:</strong> Shows the card type with distinctive colors and icons for quick
+                        identification.
+                      </div>
+                    </div>
+
+                    <div className="flex items-start space-x-3">
+                      <div className="w-10 h-10 bg-gradient-to-br from-black/50 via-black/30 to-black/50 rounded-full border-2 border-amber-200/60 flex items-center justify-center backdrop-blur-sm flex-shrink-0">
+                        <Sword className="w-5 h-5 text-amber-100" />
+                      </div>
+                      <div>
+                        <strong>Ability Icon:</strong> The central icon represents the card's primary ability type,
+                        making it easy to identify at a glance.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <h4 className="font-semibold text-amber-700">Rarity & Quality</h4>
+                  <div className="space-y-3">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-4 h-4 bg-gradient-to-r from-yellow-400 to-amber-500 rounded border border-yellow-600 flex-shrink-0"></div>
+                      <div>
+                        <strong>Legendary:</strong> Golden gradient with ornate decorations and powerful effects
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      <div className="w-4 h-4 bg-gradient-to-r from-blue-400 to-cyan-500 rounded border border-blue-600 flex-shrink-0"></div>
+                      <div>
+                        <strong>Rare:</strong> Blue-cyan gradient with enhanced visual effects
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      <div className="w-4 h-4 bg-gradient-to-r from-gray-400 to-slate-500 rounded border border-gray-600 flex-shrink-0"></div>
+                      <div>
+                        <strong>Common:</strong> Gray gradient with simple but elegant design
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-amber-50 p-4 rounded border border-amber-200">
+                <h4 className="font-semibold text-amber-800 mb-2">Card Statistics</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="flex items-center space-x-3">
+                    <div className="bg-gradient-to-br from-red-800/90 via-red-700/80 to-red-900/90 rounded p-1 border border-red-400/60 backdrop-blur-sm">
+                      <div className="flex items-center justify-center gap-0.5">
+                        <Sword className="w-2.5 h-2.5 text-red-200" />
+                        <span className="text-red-100 font-bold text-[10px]">STR</span>
+                      </div>
+                      <div className="text-center text-white font-bold text-sm">8</div>
+                    </div>
+                    <div>
+                      <strong>Strength (STR):</strong> The card's attack power and contribution to army strength
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-3">
+                    <div className="bg-gradient-to-br from-blue-800/90 via-blue-700/80 to-blue-900/90 rounded p-1 border border-blue-400/60 backdrop-blur-sm">
+                      <div className="flex items-center justify-center gap-0.5">
+                        <Crown className="w-2.5 h-2.5 text-blue-200" />
+                        <span className="text-blue-100 font-bold text-[10px]">LOY</span>
+                      </div>
+                      <div className="text-center text-white font-bold text-sm">5</div>
+                    </div>
+                    <div>
+                      <strong>Loyalty (LOY):</strong> How many turns the card remains faithful before potentially
+                      betraying you
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Game Overview */}
           <Card>
             <CardHeader>
@@ -64,10 +171,15 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                 </div>
                 <div className="bg-amber-50 p-3 rounded">
                   <h4 className="font-semibold text-amber-800 mb-2">3. Battle Phase</h4>
-                  <p className="text-sm">
-                    Both armies clash, abilities trigger, and loyalty is tested. Damage is dealt based on total army
-                    strength.
-                  </p>
+                  <p className="text-sm mb-2">Battle follows this exact sequence:</p>
+                  <ol className="text-sm space-y-1 list-decimal pl-4">
+                    <li>Card abilities trigger (healing, boosts, shields, etc.)</li>
+                    <li>Player army attacks enemy (damage based on total strength)</li>
+                    <li>Check if enemy HP reaches 0 (player wins)</li>
+                    <li>Enemy army attacks player (damage based on total strength)</li>
+                    <li>Check if player HP reaches 0 (enemy wins)</li>
+                    <li>Loyalty is tested for all cards</li>
+                  </ol>
                 </div>
               </div>
             </CardContent>
@@ -76,31 +188,31 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
           {/* Card Types */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-amber-800">Card Types</CardTitle>
+              <CardTitle className="text-amber-800">Card Types & Roles</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-3">
                   <div className="flex items-center space-x-2">
-                    <Crown className="w-5 h-5 text-yellow-600" />
-                    <Badge className="bg-yellow-100 text-yellow-800">Nobility</Badge>
+                    <Crown className="w-5 h-5 text-purple-600" />
+                    <Badge className="bg-purple-100 text-purple-800">Nobility</Badge>
                     <span className="text-sm">Can be played as Kings. High power, moderate loyalty.</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Shield className="w-5 h-5 text-blue-600" />
-                    <Badge className="bg-blue-100 text-blue-800">Support</Badge>
+                    <Users className="w-5 h-5 text-green-600" />
+                    <Badge className="bg-green-100 text-green-800">Support</Badge>
                     <span className="text-sm">Can be played as Support units. Provide ongoing benefits.</span>
                   </div>
                 </div>
                 <div className="space-y-3">
                   <div className="flex items-center space-x-2">
-                    <Users className="w-5 h-5 text-green-600" />
-                    <Badge className="bg-green-100 text-green-800">Commoner</Badge>
+                    <Swords className="w-5 h-5 text-amber-700" />
+                    <Badge className="bg-amber-100 text-amber-800">Commoner</Badge>
                     <span className="text-sm">Regular army units. Cannot be played as Support.</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Star className="w-5 h-5 text-purple-600" />
-                    <Badge className="bg-purple-100 text-purple-800">Legendary</Badge>
+                    <Gem className="w-5 h-5 text-yellow-600" />
+                    <Badge className="bg-yellow-100 text-yellow-800">Legendary</Badge>
                     <span className="text-sm">Can be played in any role. Powerful but expensive.</span>
                   </div>
                 </div>
@@ -198,11 +310,29 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                     <span className="text-sm">Removes enemy units from play</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Zap className="w-4 h-4 text-amber-500" />
+                    <Gem className="w-4 h-4 text-amber-500" />
                     <strong>Resource Gain:</strong>
                     <span className="text-sm">Provides extra resources per turn</span>
                   </div>
                 </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Unique Cards System */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-amber-800">Unique Cards System</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="bg-blue-50 p-4 rounded border border-blue-200">
+                <h4 className="font-semibold text-blue-800 mb-2">No Duplicates Rule</h4>
+                <ul className="space-y-1 text-sm">
+                  <li>• Each player can only own one copy of each card</li>
+                  <li>• Decks must contain only unique cards (no duplicates)</li>
+                  <li>• During battle, each card can only be deployed once</li>
+                  <li>• This creates more strategic deck building and tactical decisions</li>
+                </ul>
               </div>
             </CardContent>
           </Card>
@@ -231,26 +361,6 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
             </CardContent>
           </Card>
 
-          {/* Resources */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-amber-800">Resource Management</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <p>Resources are used to play cards. You gain 3 resources per turn, plus any bonuses from cards.</p>
-              <div className="bg-green-50 p-3 rounded">
-                <h4 className="font-semibold mb-2">Resource Tips:</h4>
-                <ul className="space-y-1 text-sm">
-                  <li>• Maximum resources: 10</li>
-                  <li>• Base gain: 3 per turn</li>
-                  <li>• Resource gain cards provide permanent bonuses</li>
-                  <li>• Plan your resource curve carefully</li>
-                  <li>• Some powerful cards cost 6-7 resources</li>
-                </ul>
-              </div>
-            </CardContent>
-          </Card>
-
           {/* Strategy Tips */}
           <Card>
             <CardHeader>
@@ -259,35 +369,21 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <h4 className="font-semibold">Early Game:</h4>
+                  <h4 className="font-semibold">Deck Building:</h4>
                   <ul className="text-sm space-y-1">
-                    <li>• Play low-cost units to build board presence</li>
-                    <li>• Consider resource-generating cards</li>
-                    <li>• Don't rush to play your King</li>
+                    <li>• Balance cost curve (mix of low and high cost cards)</li>
+                    <li>• Include cards for different roles (King, Support, Army)</li>
+                    <li>• Consider ability synergies</li>
+                    <li>• Plan for loyalty management</li>
                   </ul>
                 </div>
                 <div className="space-y-2">
-                  <h4 className="font-semibold">Mid Game:</h4>
+                  <h4 className="font-semibold">Battle Tactics:</h4>
                   <ul className="text-sm space-y-1">
-                    <li>• Deploy your King for permanent power</li>
-                    <li>• Use Support cards for ongoing benefits</li>
-                    <li>• Watch enemy selections and counter-play</li>
-                  </ul>
-                </div>
-                <div className="space-y-2">
-                  <h4 className="font-semibold">Late Game:</h4>
-                  <ul className="text-sm space-y-1">
-                    <li>• Manage loyalty carefully</li>
-                    <li>• Use direct damage to finish opponents</li>
-                    <li>• Retrieve cards before they betray</li>
-                  </ul>
-                </div>
-                <div className="space-y-2">
-                  <h4 className="font-semibold">Advanced:</h4>
-                  <ul className="text-sm space-y-1">
-                    <li>• React to enemy selections</li>
-                    <li>• Balance aggression with defense</li>
-                    <li>• Use abilities synergistically</li>
+                    <li>• React to enemy selections strategically</li>
+                    <li>• Use abilities before attacks for maximum effect</li>
+                    <li>• Manage loyalty to prevent betrayals</li>
+                    <li>• Retrieve valuable cards when loyalty is low</li>
                   </ul>
                 </div>
               </div>
