@@ -1,6 +1,6 @@
-import Sidebar from '@/components/sidebar/Sidebar'
-import TetrisGame from '@/components/Tetris/TetrisGame'
-import CleanBackground from '@/components/CleanBackground'
+import Sidebar from '@/components/sidebar/sidebar'
+import TetrisGame from '@/components/tetris/tetris-game'
+import CleanBackground from '@/components/clean-background'
 
 export default function Home() {
   return (

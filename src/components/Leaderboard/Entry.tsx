@@ -1,5 +1,5 @@
 import React from 'react';
-import { LeaderboardEntry as LeaderboardEntryType } from '@/hooks/useLeaderboard';
+import { LeaderboardEntry as LeaderboardEntryType } from '@/hooks/games/use-leaderboard';
 import { Trophy, GamepadIcon, Sparkles, Target, Crown, Star } from 'lucide-react';
 
 interface LeaderboardEntryProps {

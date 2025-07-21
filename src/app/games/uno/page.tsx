@@ -1,6 +1,6 @@
 'use client'
-import Sidebar from '@/components/sidebar/Sidebar';
-import { GameBoard } from '@/components/uno/GameBoard';
+import Sidebar from '@/components/sidebar/sidebar';
+import { GameBoard } from '@/components/uno/game-board';
 
 export default function UnoPage() {
 

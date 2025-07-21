@@ -3,12 +3,12 @@
 
 import { useRouter } from 'next/navigation'
 import { Profile } from '@/types/database'
-import { useProfiles, useCurrentUser } from '@/hooks'
-import { UserList } from '@/components/Chat/UserList'
+import { useProfiles, useCurrentUser } from '@/hooks/chat'
+import { UserList } from '@/components/chat'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { MessageCircle } from 'lucide-react'
-import Sidebar from '@/components/sidebar/Sidebar'
+import Sidebar from '@/components/sidebar/sidebar'
 import { useState } from 'react'
 
 export default function ChatPage() {

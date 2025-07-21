@@ -3,15 +3,15 @@ import React from 'react';
 import { MinesweeperState, MinesweeperAction } from '@/types/minesweeper';
 
 // Import all the separated hooks
-import { useSoundSystem } from './useSoundSystem';
-import { useParticleSystem } from './useParticleSystem';
-import { useAnimationSystem } from './useAnimationSystem';
-import { useGameScoring } from './useGameScoring';
-import { useAnnouncements, useFocusedCell, useTouchHandlers } from './useBasicGameHooks';
-import { useGameActions } from './useGameActions';
-import { useKeyboardNavigation } from './useKeyboardNavigation';
-import { useTouchEventHandlers } from './useTouchEventHandlers';
-import { useGameTimer, useGridInitialization } from './useGameTimer';
+import { useSoundSystem } from './use-sound-system';
+import { useParticleSystem } from './use-particle-system';
+import { useAnimationSystem } from './use-animation-system';
+import { useGameScoring } from './use-game-scoring';
+import { useAnnouncements, useFocusedCell, useTouchHandlers } from './use-basic-game-hooks';
+import { useGameActions } from './use-game-actions';
+import { useKeyboardNavigation } from './use-keyboard-navigation';
+import { useTouchEventHandlers } from './use-touch-event-handlers';
+import { useGameTimer, useGridInitialization } from './use-game-timer';
 
 // Main hook that brings everything together
 export const useMinesweeper = (

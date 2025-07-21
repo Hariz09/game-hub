@@ -1,13 +1,13 @@
 // app/page.tsx
 'use client'
-import Sidebar from '@/components/sidebar/Sidebar';
+import Sidebar from '@/components/sidebar/sidebar';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Dice1, PuzzleIcon, Shapes, Play, Star, Users, Clock, Loader2, Zap, Coffee, Tag, Gamepad2, Fish, Sparkles, Bomb } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
-import CleanBackground from '@/components/CleanBackground';
+import CleanBackground from '@/components/clean-background';
 
 interface GameLink {
   id: string;

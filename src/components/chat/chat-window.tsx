@@ -1,10 +1,8 @@
 // components/Chat/ChatWindow.tsx - Enhanced version with improved layout
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { Profile } from '@/types/database'
-import { EnhancedMessage, useTypingIndicator } from '@/hooks'
-import { MessageBubble } from './MessageBubble'
-import { MessageInput } from './MessageInput'
-import { TypingIndicator } from './TypingIndicator'
+import { EnhancedMessage, useTypingIndicator } from '@/hooks/chat'
+import { MessageBubble, MessageInput, TypingIndicator } from './'
 import { AlertCircle, Wifi, WifiOff, RefreshCw, ChevronDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription } from '@/components/ui/alert'

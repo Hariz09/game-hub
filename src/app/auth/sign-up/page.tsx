@@ -2,7 +2,7 @@
 import React from "react";
 import { KeyRound, Mail, User, AlertCircle, UserPlus, CheckCircle, Loader2, XCircle } from "lucide-react";
 import { AuthLayout, AuthInput, AuthPasswordInput, AuthButton, ErrorMessage, SuccessMessage, AuthLink } from "@/components/auth/auth-components";
-import { useSignup } from "@/hooks/useSignup";
+import { useSignup } from "@/hooks/auth/use-signup";
 
 // Type definitions
 interface TokenData {

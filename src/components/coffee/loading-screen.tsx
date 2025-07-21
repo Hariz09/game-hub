@@ -1,6 +1,6 @@
 import React from 'react';
 import { Coffee, Loader2 } from 'lucide-react';
-import CleanBackground from '@/components/CleanBackground';
+import CleanBackground from '@/components/clean-background';
 
 interface LoadingScreenProps {
   authLoading: boolean;

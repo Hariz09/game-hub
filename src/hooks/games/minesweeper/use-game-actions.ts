@@ -7,10 +7,10 @@ import {
   checkWin, 
   createEmptyGrid 
 } from '@/utils/minesweeper';
-import { useSoundSystem } from './useSoundSystem';
-import { useParticleSystem } from './useParticleSystem';
-import { useAnimationSystem } from './useAnimationSystem';
-import { useGameScoring } from './useGameScoring';
+import { useSoundSystem } from './use-sound-system';
+import { useParticleSystem } from './use-particle-system';
+import { useAnimationSystem } from './use-animation-system';
+import { useGameScoring } from './use-game-scoring';
 
 export const useGameActions = (
   state: MinesweeperState,

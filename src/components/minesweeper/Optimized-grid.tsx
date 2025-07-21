@@ -3,7 +3,7 @@
 
 import React, { memo, useMemo, useCallback, useEffect, useState } from 'react';
 import { Cell } from '@/types/minesweeper';
-import { OptimizedCell } from './OptimizedCell';
+import { OptimizedCell } from './optimized-cell';
 
 interface OptimizedGridProps {
   grid: Cell[][];

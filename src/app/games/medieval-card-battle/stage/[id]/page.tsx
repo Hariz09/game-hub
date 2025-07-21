@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Zap, Eye, HelpCircle, ArrowLeft, Swords } from "lucide-react"
-import { useMedievalGame } from "@/hooks/medieval/use-medieval-game"
+import { useMedievalGame } from "@/hooks/games/medieval/use-medieval-game"
 import { PlayerStatus } from "@/components/medieval/player-status"
 import { Battlefield } from "@/components/medieval/battlefield"
 import { ArmyDisplay } from "@/components/medieval/army-display"
@@ -26,7 +26,7 @@ import {
 import { STAGE_CONFIGS } from "@/data/stage-configs"
 import { getPlayerProgress, addCardsToCollection, completeStage } from "@/lib/medieval/player-progress"
 import type { StageConfig, PlayerProgress, GameCard } from "@/types/medieval"
-import Sidebar from "@/components/sidebar/Sidebar"
+import Sidebar from "@/components/sidebar/sidebar"
 
 export default function StageBattlePage() {
   const router = useRouter()

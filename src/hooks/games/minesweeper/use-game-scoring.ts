@@ -1,6 +1,6 @@
 // hooks/minesweeper/useGameScoring.ts
 import { useState, useEffect, useCallback } from 'react';
-import { GameScoreService, UserProfile, LeaderboardEntry, UserBestScore } from '@/hooks/useGameScore';
+import { GameScoreService, UserProfile, LeaderboardEntry, UserBestScore } from '@/hooks/games/use-game-score';
 
 // Define the game data type for minesweeper
 interface MinesweeperGameData {

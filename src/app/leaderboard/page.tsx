@@ -1,20 +1,21 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useLeaderboard } from '@/hooks/useLeaderboard';
-import { useGameLeaderboard, useGames } from '@/hooks/useGameLeaderboard';
-import { LeaderboardHeader } from '@/components/Leaderboard/Header';
-import { LeaderboardEntry } from '@/components/Leaderboard/Entry';
-import { LeaderboardFooter } from '@/components/Leaderboard/Footer';
-import { GameLeaderboardHeader } from '@/components/GameLeaderboard/Header';
-import { GameLeaderboardEntry } from '@/components/GameLeaderboard/Entry';
-import { GameSelector } from '@/components/GameLeaderboard/GameSelector';
-import { LeaderboardTabs } from '@/components/Leaderboard/Tabs';
-import { LoadingState, ErrorState, EmptyState } from '@/components/Leaderboard/States';
+import { useLeaderboard } from '@/hooks/games/use-leaderboard';
+import { useGameLeaderboard, useGames } from '@/hooks/games/use-game-leaderboard';
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import Sidebar from '@/components/sidebar/Sidebar';
-import CleanBackground from '@/components/CleanBackground';
+import Sidebar from '@/components/sidebar/sidebar';
+import CleanBackground from '@/components/clean-background';
+import { GameLeaderboardHeader, GameLeaderboardEntry, GameSelector } from '@/components/game-leaderboard';
+import { 
+    LeaderboardHeader,
+    LeaderboardEntry,
+    LeaderboardFooter,
+    LeaderboardTabs,
+    LoadingState,
+    ErrorState,
+    EmptyState } from '@/components/leaderboard';
 
 export default function LeaderboardPage() {
     const [activeTab, setActiveTab] = useState<'overall' | 'games'>('overall');

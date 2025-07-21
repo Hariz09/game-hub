@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Send, X } from 'lucide-react'
-import { EnhancedMessage } from '@/hooks'
+import { EnhancedMessage } from '@/hooks/chat'
 import { cn } from '@/lib/utils'
 
 interface MessageInputProps {

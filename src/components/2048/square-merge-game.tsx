@@ -6,10 +6,8 @@ import { RotateCcw, Trophy, Zap, ArrowUp, ArrowDown, ArrowLeft, ArrowRight, User
 import { initializeGame, moveTilesInDirection, getGridPositions, getValueColor, addRandomTile, canMove } from '@/utils/2048'
 import { GameState } from '@/types/2048'
 import { TARGET_NUMBER } from '@/lib/constants/2048'
-import { GameScoreService, LeaderboardEntry, UserBestScore } from '@/hooks/useGameScore'
-import UserBestScoreCard from '@/components/GameCards/UserBestScore'
-import LeaderboardCard from '@/components/GameCards/Leaderboard'
-import GameActionsCard from '@/components/GameCards/ActionsCard'
+import { GameScoreService, LeaderboardEntry, UserBestScore } from '@/hooks/games/use-game-score'
+import {LeaderboardCard, GameActionsCard, UserBestScoreCard} from '@/components/game-cards'
 
 const GAME_NAME = '2048'
 

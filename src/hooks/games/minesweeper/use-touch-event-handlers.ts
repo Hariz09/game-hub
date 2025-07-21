@@ -1,5 +1,5 @@
 import React, { useCallback, useRef } from 'react';
-import { useTouchHandlers } from './useBasicGameHooks';
+import { useTouchHandlers } from './use-basic-game-hooks';
 
 export const useTouchEventHandlers = (
   { longPressTimer, setLongPressTimer, touchStartTime, setTouchStartTime }: ReturnType<typeof useTouchHandlers>,

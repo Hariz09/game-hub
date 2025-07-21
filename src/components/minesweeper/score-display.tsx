@@ -1,6 +1,6 @@
 import React from 'react';
 import { Icon } from '@iconify/react';
-import { UserBestScore } from '@/hooks/useGameScore';
+import { UserBestScore } from '@/hooks/games/use-game-score';
 
 interface ScoreDisplayProps {
   currentProgress: {

@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { EquipmentKey, UpgradeKey, GameState, GameStats } from '@/types/coffee';
 import { EQUIPMENT, UPGRADES } from '@/lib/coffee';
-import { GameScoreService } from '@/hooks/useGameScore';
-import { useCurrentUser } from '@/hooks/useAuth';
+import { GameScoreService } from '@/hooks/games/use-game-score';
+import { useCurrentUser } from '@/hooks/auth/use-auth';
 
 interface LoadingStates {
   gameLoading: boolean;

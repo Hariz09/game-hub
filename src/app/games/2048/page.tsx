@@ -1,6 +1,6 @@
-import SquareMergeGame from "@/components/2048/2048Game"
-import CleanBackground from "@/components/CleanBackground"
-import Sidebar from "@/components/sidebar/Sidebar"
+import SquareMergeGame from "@/components/2048/square-merge-game"
+import CleanBackground from "@/components/clean-background"
+import Sidebar from "@/components/sidebar/sidebar"
 
 export default function Home() {
   return (

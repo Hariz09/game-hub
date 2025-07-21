@@ -1,6 +1,6 @@
 'use client'
 
-import Sidebar from "@/components/sidebar/Sidebar";
+import Sidebar from "@/components/sidebar/sidebar";
 import { Clock, GamepadIcon, Sparkles, Zap, Shield, Rocket } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";

@@ -1,16 +1,17 @@
 'use client'
 import React, { useState } from 'react';
-import { useCoffeeGame } from '@/hooks/useCoffeeGame';
+import { useCoffeeGame } from '@/hooks/games/coffee/use-coffee-game';
 
 // Import components
-import { LoadingScreen } from '@/components/coffee/LoadingScreen';
-import { GameHeader } from '@/components/coffee/Header';
-import { BeanClicker } from '@/components/coffee/BeanClicker';
-import { EquipmentSection } from '@/components/coffee/EquipmentSection';
-import { UpgradesSection } from '@/components/coffee/UpgradesSection';
-import { Modals } from '@/components/coffee/Modals';
-import Sidebar from '@/components/sidebar/Sidebar';
-import CleanBackground from '@/components/CleanBackground';
+import { 
+  LoadingScreen, 
+  GameHeader, 
+  BeanClicker, 
+  EquipmentSection, 
+  UpgradesSection, 
+  Modals} from '@/components/coffee';
+import Sidebar from '@/components/sidebar/sidebar';
+import CleanBackground from '@/components/clean-background';
 
 const CoffeeBrewIdleGame: React.FC = () => {
   const {

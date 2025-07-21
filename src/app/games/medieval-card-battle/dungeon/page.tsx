@@ -9,7 +9,7 @@ import { ArrowLeft, Coins, Lock, CheckCircle, Swords } from "lucide-react"
 import { DUNGEON_STAGES } from "@/data/dungeon-stages"
 import { getPlayerProgress } from "@/lib/medieval/player-progress"
 import type { PlayerProgress, DungeonStage } from "@/types/medieval"
-import Sidebar from "@/components/sidebar/Sidebar"
+import Sidebar from "@/components/sidebar/sidebar"
 
 export default function DungeonPage() {
   const router = useRouter()

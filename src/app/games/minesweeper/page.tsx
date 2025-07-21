@@ -2,7 +2,10 @@
 'use client';
 
 import React, { useReducer, useMemo, useCallback } from 'react';
+import Sidebar from '@/components/sidebar/sidebar';
+import CleanBackground from '@/components/clean-background';
 import { DIFFICULTIES, Difficulty } from '@/types/minesweeper';
+import { initialState, minesweeperReducer } from '@/lib/reducer/minesweeper';
 import {
   useAnnouncements,
   useFocusedCell,
@@ -16,18 +19,17 @@ import {
   useParticleSystem,
   useAnimationSystem,
   useGameScoring
-} from '@/hooks/minesweeper';
-import { initialState, minesweeperReducer } from '@/lib/reducer/minesweeper';
-import { GameControls } from '@/components/minesweeper/GameControl';
-import { GameInstructions } from '@/components/minesweeper/GameInstruction';
-import { GameMessages } from '@/components/minesweeper/GameMessages';
-import { MobileHelp } from '@/components/minesweeper/MobileHelp';
-import { ScoreDisplay } from '@/components/minesweeper/ScoreDisplay';
-import { Leaderboard } from '@/components/minesweeper/Leaderboard';
-import Sidebar from '@/components/sidebar/Sidebar';
-import CleanBackground from '@/components/CleanBackground';
-import { OptimizedGrid } from '@/components/minesweeper/OptimizedGrid';
-import { DynamicHeader } from '@/components/minesweeper/Hedaer';
+} from '@/hooks/games/minesweeper';
+import { 
+  GameControls, 
+  GameInstructions, 
+  GameMessages, 
+  MobileHelp, 
+  ScoreDisplay, 
+  Leaderboard, 
+  OptimizedGrid, 
+  DynamicHeader } from '@/components/minesweeper';
+
 
 // Main optimized component
 export default function OptimizedMinesweeperPage() {

@@ -1,4 +1,3 @@
-// components/uno/Card.tsx
 import React from 'react';
 import { Card as CardType, CardColor } from '@/types/uno';
 import { getCardDisplayValue } from '@/utils/uno';

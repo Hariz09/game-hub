@@ -2,7 +2,7 @@
 
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
-import { useNavigation } from "@/hooks/useNavigation";
+import { useNavigation } from "@/hooks/use-navigation";
 
 export function LogoutButton() {
   const { navigateTo, isLoading } = useNavigation();

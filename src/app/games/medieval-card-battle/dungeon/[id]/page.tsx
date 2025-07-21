@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Coins, ArrowLeft, Swords, HelpCircle, Eye } from "lucide-react"
-import { useMedievalGame } from "@/hooks/medieval/use-medieval-game"
+import { useMedievalGame } from "@/hooks/games/medieval/use-medieval-game"
 import { PlayerStatus } from "@/components/medieval/player-status"
 import { Battlefield } from "@/components/medieval/battlefield"
 import { ArmyDisplay } from "@/components/medieval/army-display"
@@ -26,7 +26,7 @@ import {
 import { DUNGEON_STAGES } from "@/data/dungeon-stages"
 import { getPlayerProgress, completeDungeon } from "@/lib/medieval/player-progress"
 import type { DungeonStage, PlayerProgress, GameCard } from "@/types/medieval"
-import Sidebar from "@/components/sidebar/Sidebar"
+import Sidebar from "@/components/sidebar/sidebar"
 
 export default function DungeonBattlePage() {
   const router = useRouter()

@@ -8,15 +8,13 @@ import { Label } from '@/components/ui/label'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Badge } from '@/components/ui/badge'
 import { Trophy, User } from 'lucide-react'
-import { GameBoard } from './GameBoard'
-import { NextPiece } from './NextPiece'
-import { useGameLogic } from '@/hooks/useTetrisLogic'
-import { GameScoreService, LeaderboardEntry, UserBestScore, UserProfile } from '@/hooks/useGameScore'
+import { GameBoard } from './game-board'
+import { NextPiece } from './next-piece'
+import { useGameLogic } from '@/hooks/games/tetris/use-tetris-logic'
+import { GameScoreService, LeaderboardEntry, UserBestScore, UserProfile } from '@/hooks/games/use-game-score'
 
 // Import the new game card components
-import GameActionsCard from '@/components/GameCards/ActionsCard'
-import LeaderboardCard from '@/components/GameCards/Leaderboard'
-import UserBestScoreCard from '@/components/GameCards/UserBestScore'
+import {GameActionsCard, LeaderboardCard, UserBestScoreCard} from '@/components/game-cards'
 
 interface GameStats {
   startTime: number

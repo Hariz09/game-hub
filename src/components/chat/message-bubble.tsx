@@ -1,5 +1,4 @@
-// components/Chat/MessageBubble.tsx
-import { EnhancedMessage } from '@/hooks'
+import { EnhancedMessage } from '@/hooks/chat'
 import { cn } from '@/lib/utils'
 import { Check, CheckCheck, Reply } from 'lucide-react'
 import { Button } from '@/components/ui/button'

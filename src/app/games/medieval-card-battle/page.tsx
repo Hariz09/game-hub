@@ -12,7 +12,7 @@ import { getPlayerProgress, resetProgress } from "@/lib/medieval/player-progress
 import type { PlayerProgress, StageConfig } from "@/types/medieval"
 import { EnhancedCard } from "@/components/medieval/enhanced-card"
 import { CardGallery } from "@/components/medieval/card-gallery"
-import Sidebar from "@/components/sidebar/Sidebar"
+import Sidebar from "@/components/sidebar/sidebar"
 
 export default function CampaignPage() {
   const router = useRouter()

@@ -5,7 +5,7 @@ import { forwardRef, ReactNode, useState, useTransition, useEffect } from "react
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-import CleanBackground from "../CleanBackground";
+import CleanBackground from "../clean-background";
 
 // Input field dengan styling gaming theme
 interface AuthInputProps extends React.InputHTMLAttributes<HTMLInputElement> {

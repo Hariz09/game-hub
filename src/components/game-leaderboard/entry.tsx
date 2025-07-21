@@ -1,5 +1,5 @@
 import React from 'react';
-import { GameLeaderboardEntry as GameLeaderboardEntryType } from '@/hooks/useGameLeaderboard';
+import { GameLeaderboardEntry as GameLeaderboardEntryType } from '@/hooks/games/use-game-leaderboard';
 
 interface GameLeaderboardEntryProps {
   player: GameLeaderboardEntryType;

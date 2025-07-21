@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useLogin } from "@/hooks/useLogin";
+import { useLogin } from "@/hooks/auth/use-login";
 import { AuthLayout, AuthInput, AuthPasswordInput, AuthButton, ErrorMessage, AuthLink } from "./auth-components";
 
 export function LoginForm({}: React.ComponentPropsWithoutRef<"div">) {
