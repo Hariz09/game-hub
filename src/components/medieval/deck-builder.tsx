@@ -157,6 +157,7 @@ export const DeckBuilder: React.FC<DeckBuilderProps> = ({
                     <option value="all">All Rarities</option>
                     <option value="common">Common</option>
                     <option value="rare">Rare</option>
+                    <option value="epic">Epic</option>
                     <option value="legendary">Legendary</option>
                   </select>
                 </div>

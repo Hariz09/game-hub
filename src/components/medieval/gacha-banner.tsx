@@ -130,31 +130,30 @@ export const GachaBannerComponent: React.FC<GachaBannerProps> = ({ banner, onPul
             <Progress value={completion.percentage} className="w-full" />
           </div>
 
-          {/* Current Drop Rates */}
-          <div className="bg-white/50 rounded-lg p-4">
+            {/* Current Drop Rates */}
+            <div className="bg-white/50 rounded-lg p-4">
             <h4 className="font-semibold mb-2 text-purple-800">Current Drop Rates</h4>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
-              <div className="text-center p-2 bg-yellow-50 rounded">
-                <div className="text-yellow-600 font-bold">{currentRates.legendary.toFixed(1)}%</div>
-                <div className="text-gray-600">Legendary</div>
+              {[
+              { key: "legendary", label: "Legendary", color: "yellow" },
+              { key: "epic", label: "Epic", color: "purple" },
+              { key: "rare", label: "Rare", color: "blue" },
+              { key: "common", label: "Common", color: "gray" },
+              ].map(({ key, label, color }) => (
+              <div key={key} className={`text-center p-2 bg-${color}-50 rounded`}>
+                <div className={`text-${color}-600 font-bold`}>
+                {currentRates[key as keyof typeof currentRates].toFixed(1) === "0.0"
+                  ? "All cards owned"
+                  : `${currentRates[key as keyof typeof currentRates].toFixed(1)}%`}
+                </div>
+                <div className="text-gray-600">{label}</div>
               </div>
-              <div className="text-center p-2 bg-purple-50 rounded">
-                <div className="text-purple-600 font-bold">{currentRates.epic.toFixed(1)}%</div>
-                <div className="text-gray-600">Epic</div>
-              </div>
-              <div className="text-center p-2 bg-blue-50 rounded">
-                <div className="text-blue-600 font-bold">{currentRates.rare.toFixed(1)}%</div>
-                <div className="text-gray-600">Rare</div>
-              </div>
-              <div className="text-center p-2 bg-gray-50 rounded">
-                <div className="text-gray-600 font-bold">{currentRates.common.toFixed(1)}%</div>
-                <div className="text-gray-600">Common</div>
-              </div>
+              ))}
             </div>
             <p className="text-xs text-purple-600 mt-2">
               * Rates automatically adjust as you obtain cards from this banner
             </p>
-          </div>
+            </div>
 
           {/* Featured Cards Preview */}
           <div>

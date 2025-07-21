@@ -59,6 +59,10 @@ export const CardGallery: React.FC<CardGalleryProps> = ({ ownedCards, isOpen, on
         total: ALL_CARDS_WITH_BANNERS.filter((card) => card.rarity === "rare").length,
         owned: ALL_CARDS_WITH_BANNERS.filter((card) => card.rarity === "rare" && isCardOwned(card)).length,
       },
+      epic: {
+        total: ALL_CARDS_WITH_BANNERS.filter((card) => card.rarity === "epic").length,
+        owned: ALL_CARDS_WITH_BANNERS.filter((card) => card.rarity === "epic" && isCardOwned(card)).length,
+      },
       legendary: {
         total: ALL_CARDS_WITH_BANNERS.filter((card) => card.rarity === "legendary").length,
         owned: ALL_CARDS_WITH_BANNERS.filter((card) => card.rarity === "legendary" && isCardOwned(card)).length,
@@ -141,6 +145,12 @@ export const CardGallery: React.FC<CardGalleryProps> = ({ ownedCards, isOpen, on
                       </span>
                     </div>
                     <div className="flex justify-between">
+                      <span>Epic:</span>
+                      <span>
+                        {stats.rarityStats.epic.owned}/{stats.rarityStats.epic.total}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
                       <span>Legendary:</span>
                       <span>
                         {stats.rarityStats.legendary.owned}/{stats.rarityStats.legendary.total}
@@ -214,6 +224,7 @@ export const CardGallery: React.FC<CardGalleryProps> = ({ ownedCards, isOpen, on
               <option value="all">All Rarities</option>
               <option value="common">Common</option>
               <option value="rare">Rare</option>
+              <option value="epic">Epic</option>
               <option value="legendary">Legendary</option>
             </select>
 

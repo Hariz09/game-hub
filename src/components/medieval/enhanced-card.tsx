@@ -35,6 +35,13 @@ export const EnhancedCard: React.FC<EnhancedCardProps> = ({
           glow: "shadow-yellow-400/50",
           accent: "text-yellow-200",
         }
+      case "epic":
+        return {
+          gradient: "from-purple-800 via-purple-600 via-fuchsia-500 to-purple-300",
+          border: "border-purple-400",
+          glow: "shadow-purple-400/50",
+          accent: "text-purple-200",
+        }
       case "rare":
         return {
           gradient: "from-blue-700 via-cyan-600 via-blue-500 to-cyan-400",

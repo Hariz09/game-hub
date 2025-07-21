@@ -116,6 +116,10 @@ export const DeckViewer: React.FC<DeckViewerProps> = ({ player, enemy, isOpen, o
                     <Badge variant="outline">{playerRarityStats.rare}</Badge>
                   </div>
                   <div className="flex justify-between text-sm">
+                    <span>Epic:</span>
+                    <Badge variant="outline">{playerRarityStats.epic}</Badge>
+                  </div>
+                  <div className="flex justify-between text-sm">
                     <span>Legendary:</span>
                     <Badge variant="outline">{playerRarityStats.legendary}</Badge>
                   </div>
@@ -202,6 +206,10 @@ export const DeckViewer: React.FC<DeckViewerProps> = ({ player, enemy, isOpen, o
                   <div className="flex justify-between text-sm">
                     <span>Rare:</span>
                     <Badge variant="outline">{enemyRarityStats.rare}</Badge>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span>Epic:</span>
+                    <Badge variant="outline">{enemyRarityStats.epic}</Badge>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Legendary:</span>
