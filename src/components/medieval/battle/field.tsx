@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Crown, Shield, ArrowUp } from "lucide-react"
 import type { GameCard, Player } from "@/types/medieval"
-import { EnhancedCard } from "./enhanced-card"
+import { EnhancedCard } from "../enhanced-card"
 
 interface BattlefieldProps {
   player: Player

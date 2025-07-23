@@ -1,9 +1,9 @@
 
 export { PlayerStatus } from "@/components/medieval/player-status"
-export { Battlefield } from "@/components/medieval/battlefield"
+export { Battlefield } from "@/components/medieval/battle/field"
 export { ArmyDisplay } from "@/components/medieval/army-display"
 export { PlayerHand } from "@/components/medieval/player-hand"
-export { BattleLog } from "@/components/medieval/battle-log"
+export { BattleLog } from "@/components/medieval/battle/log"
 export { DeckViewer } from "@/components/medieval/deck-viewer"
 export { HelpModal } from "@/components/medieval/help-modal"
 export { DeckBuilder } from "@/components/medieval/deck-builder"
