@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { X, Sparkles, Star, Gem, Shield, Users } from "lucide-react"
 import type { GachaPull } from "@/types/medieval"
-import { EnhancedCard } from "./enhanced-card"
+import { EnhancedCard } from "../enhanced-card"
 
 interface GachaResultsProps {
   results: GachaPull[]

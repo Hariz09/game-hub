@@ -8,8 +8,8 @@ import { ArrowLeft, Coins, Sparkles } from "lucide-react"
 import { GACHA_BANNERS } from "@/data/gacha-banners"
 import { getPlayerProgress } from "@/lib/medieval/player-progress"
 import type { PlayerProgress, GachaPull } from "@/types/medieval"
-import { GachaBannerComponent } from "@/components/medieval/gacha-banner"
-import { GachaResults } from "@/components/medieval/gacha-results"
+import { GachaBannerComponent } from "@/components/medieval/gacha/banner"
+import { GachaResults } from "@/components/medieval/gacha/results"
 import Sidebar from "@/components/sidebar/sidebar"
 
 export default function GachaPage() {

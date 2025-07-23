@@ -251,10 +251,6 @@ export const EnhancedCard: React.FC<EnhancedCardProps> = ({
           {/* Ability section */}
           <div className="relative">
             <div className="bg-gradient-to-br from-black/60 via-black/40 to-black/60 rounded p-1.5 border border-amber-200/40 backdrop-blur-sm">
-              <div className="flex items-center gap-1 mb-0.5 relative z-10">
-                <Star className="w-2.5 h-2.5 text-amber-300" />
-                <span className="text-amber-200 font-bold text-[10px] uppercase tracking-wider">Ability</span>
-              </div>
               <p className="text-amber-50 text-[9px] leading-tight relative z-10 line-clamp-3">{card.ability}</p>
             </div>
           </div>

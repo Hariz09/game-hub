@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { Coins, Star, Sparkles, Eye, EyeOff, HelpCircle, Gem, Shield, Users } from "lucide-react"
 import type { GachaBanner, GachaPull } from "@/types/medieval"
-import { EnhancedCard } from "./enhanced-card"
+import { EnhancedCard } from "../enhanced-card"
 import {
   performPull,
   canAffordPull,
@@ -17,7 +17,7 @@ import {
   getBannerCompletion,
 } from "@/lib/medieval/gacha-system"
 import { getPlayerProgress, getBannerProgress } from "@/lib/medieval/player-progress"
-import { GachaHelpModal } from "./gacha-help-modal"
+import { GachaHelpModal } from "./help-modal"
 
 interface GachaBannerProps {
   banner: GachaBanner

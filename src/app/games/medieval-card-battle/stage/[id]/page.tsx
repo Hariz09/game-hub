@@ -7,15 +7,16 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Zap, Eye, HelpCircle, ArrowLeft, Swords } from "lucide-react"
 import { useMedievalGame } from "@/hooks/games/medieval/use-medieval-game"
-import { PlayerStatus } from "@/components/medieval/player-status"
-import { Battlefield } from "@/components/medieval/battlefield"
-import { ArmyDisplay } from "@/components/medieval/army-display"
-import { PlayerHand } from "@/components/medieval/player-hand"
-import { BattleLog } from "@/components/medieval/battle-log"
-import { DeckViewer } from "@/components/medieval/deck-viewer"
-import { HelpModal } from "@/components/medieval/help-modal"
-import { DeckBuilder } from "@/components/medieval/deck-builder"
-import { EnhancedCard } from "@/components/medieval/enhanced-card"
+import { 
+  ArmyDisplay, 
+  BattleLog, 
+  Battlefield, 
+  DeckBuilder, 
+  DeckViewer, 
+  EnhancedCard, 
+  HelpModal, 
+  PlayerHand, 
+  PlayerStatus } from "@/components/medieval"
 import {
   getAvailableHandCards,
   canPlayCard,
